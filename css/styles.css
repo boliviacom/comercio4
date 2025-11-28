@@ -1,0 +1,159 @@
+body,
+html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    /* Asegura que ocupe toda la pantalla */
+}
+
+main.content-grid {
+    flex: 1;
+    margin-bottom: 20px;
+}
+
+
+/* Estilo del Header */
+.header-custom {
+    background-color: #282c34;
+    color: white;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100% !important;
+    /* Asegura que el Header ocupe toda la pantalla */
+    box-sizing: border-box !important;
+    /* Incluye el padding dentro del ancho total */
+    margin: 0 !important;
+    /* Elimina margen que podría causar la línea blanca */
+}
+
+
+/* Contenido principal */
+.content {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+    flex: 1;
+    /* Permite que el contenido principal ocupe todo el espacio disponible */
+}
+
+.column {
+    flex: 1;
+    min-width: 300px;
+    padding: 10px;
+}
+
+.text {
+    text-align: center;
+}
+
+.image {
+    width: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+
+.footer .div5 {
+    grid-column: 1 / -1;
+    /* Ocupa toda la fila */
+    text-align: center;
+    padding: 10px;
+    background-color: #5A4325;
+    /* Color más oscuro para diferenciar derechos reservados */
+}
+
+/* Pantallas pequeñas */
+@media (max-width: 768px) {
+    .header-custom {
+        flex-direction: column;
+        text-align: center;
+        padding: 10px;
+    }
+
+    .content {
+        flex-direction: column;
+    }
+
+    .column {
+        width: 100%;
+    }
+
+    .image {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .parent {
+        display: flex !important;
+        flex-direction: column;
+        /* Apila los elementos verticalmente */
+        gap: 15px !important;
+        /* Espacio entre los divs */
+        padding: 10px;
+        justify-content: center;
+        /* Centra los elementos verticalmente */
+        align-items: center;
+        /* Centra los elementos horizontalmente */
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .parent div {
+        text-align: center;
+    }
+}
+
+/* Pantallas medianas */
+@media (min-width: 769px) and (max-width: 996px) {
+    .header-custom {
+        padding: 20px;
+    }
+
+    .column {
+        padding: 15px;
+    }
+
+    .image {
+        width: 90%;
+    }
+
+    .footer {
+        grid-template-columns: repeat(2, 1fr);
+        /* 2 columnas en pantallas medianas */
+        grid-template-rows: repeat(3, auto);
+        /* 3 filas */
+    }
+}
+
+/* Pantallas grandes */
+@media (min-width: 997px) {
+    .header-custom {
+        padding: 30px 40px;
+    }
+
+    .column {
+        padding: 20px;
+    }
+
+    .image {
+        width: 100%;
+    }
+
+    .footer {
+        grid-template-columns: repeat(4, 1fr);
+        /* Mantiene 4 columnas en pantallas grandes */
+        grid-template-rows: repeat(2, auto);
+        /* 2 filas */
+    }
+}

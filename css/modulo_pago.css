@@ -1,0 +1,582 @@
+:root {
+    --color-primary: #1e8449;
+    --color-secondary: #2c3e50;
+    --color-accent: #2ecc71;
+    --color-border-light: #dcdde1;
+    --color-background-light: #e2ff9b61;
+    --color-shadow: rgba(45, 80, 44, 0.1);
+    --font-family: 'Inter', sans-serif;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--color-background-light);
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+}
+
+/* El footer está forzado a 0 solo si existiera en el entorno */
+footer {
+    margin-top: 0 !important;
+}
+
+
+.checkout-container {
+    margin: 2rem 20rem; 
+    padding: 30px;
+    background-color: #fff;
+    max-width: 1400px;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px var(--color-shadow);
+
+    /* Definición de Columnas: 65% (Forms) | 35% (Summary/Payment) */
+    grid-template-columns: 65% 35%;
+
+    /* Asignación de nombres de áreas: Una sola fila */
+    grid-template-areas:
+        "forms summary";
+}
+
+/* ASIGNACIÓN DE ÁREAS A LOS CONTENEDORES */
+
+.forms-column {
+    grid-area: forms;
+    /* Columna Izquierda */
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.summary-column {
+    grid-area: summary;
+    /* Columna Derecha (Resumen, Pago, Total) */
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Quitamos la necesidad del Resumen de carrito de ocupar todo el ancho (grid-column: 1 / -1) */
+.resumen-carrito {
+    margin-top: 0;
+}
+
+/* 4. ESTILOS DE CONTENEDORES INDIVIDUALES */
+
+.acciones-finales,
+.formulario,
+.resumen-carrito,
+.metodo-pago-container {
+    padding: 25px;
+    border: 1px solid var(--color-border-light);
+    /* Borde sutil */
+    box-shadow: 0 3px 10px var(--color-shadow);
+    /* Sombra suave */
+    background-color: #fff;
+    border-radius: 10px;
+}
+
+.formulario,
+.metodo-pago-container,
+.acciones-finales {
+    flex: 1;
+}
+
+/* Títulos */
+.section-title {
+    font-size: 1.5rem;
+    /* 24px */
+    color: var(--color-secondary);
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-align: left;
+    /* Títulos a la izquierda, más profesional */
+    border-bottom: 2px solid var(--color-primary);
+    padding-bottom: 10px;
+}
+
+.subsection-title {
+    font-weight: 700;
+    /* Lo hacemos más fuerte para diferenciar bloques */
+    font-size: 1.25rem;
+    /* Más grande */
+    margin-top: 20px;
+    /* Separación de la línea divisoria */
+    margin-bottom: 15px;
+    color: var(--color-primary);
+}
+
+/* ====================================================================== */
+/* ESTILOS DE FORMULARIO (INPUTS y SELECTS) */
+/* ====================================================================== */
+
+.form-dato {
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid var(--color-border-light);
+    /* Borde más delgado */
+    border-radius: 6px;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-dato:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.2);
+    outline: none;
+}
+
+select {
+    border: 1px solid var(--color-border-light);
+    padding-right: 30px;
+    /* Espacio para flecha custom */
+}
+
+.cliente-label {
+    font-weight: 600;
+    font-size: 1rem;
+    /* Más pequeño para armonizar */
+    display: block;
+    margin-bottom: 5px;
+    color: var(--color-secondary);
+}
+
+.form-label-small {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.form-label-critical {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: var(--color-primary);
+}
+
+.text-hint {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    margin-top: 5px;
+}
+
+.divider {
+    margin: 25px 0;
+    border: 0;
+    border-top: 1px solid var(--color-border-light);
+}
+
+
+
+
+button {
+    padding: 12px;
+    margin: 8px 0;
+    width: 45%;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+    background-color: #6560608a;
+}
+
+.btn-primary {
+    background-color: var(--color-accent);
+    /* Verde Éxito */
+    color: white;
+    font-size: 1.1rem;
+}
+
+.btn-primary:hover {
+    background-color: #27ae60;
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background-color: #95a5a6;
+    /* Gris Suave */
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #7f8c8d;
+}
+
+.btn-tertiary {
+    background-color: #e74c3c;
+    /* Rojo para 'Vaciar' */
+    color: white;
+}
+
+.btn-tertiary:hover {
+    background-color: #c0392b;
+}
+
+.acciones-finales {
+    text-align: center;
+}
+
+.total-label {
+    font-size: 1.1rem;
+    color: var(--color-secondary);
+    font-weight: 500;
+    margin: 0;
+}
+
+.total-amount {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    display: block;
+    margin-top: 5px;
+    margin-bottom: 25px;
+}
+
+.pago-finalizar{
+    background-color: #80cc28;
+    color: white;
+}
+.pago-vaciar{
+    background-color: #c0392b;
+    color: white;
+}
+
+.metodo-pago-container .section-title {
+    text-align: center;
+}
+
+.metodo-pago-opciones {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.metodo-opcion {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 10px;
+    transition: background-color 0.3s;
+}
+
+.metodo-img {
+    width: 100px !important;
+    height: 100px !important;
+    background-color: #ecf0f1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: #7f8c8d;
+
+    border: 3px solid transparent;
+    border-radius: 8px;
+    transition: border-color 0.3s, transform 0.2s, box-shadow 0.3s;
+}
+
+.metodo-opcion:hover .metodo-img {
+    transform: scale(1.05);
+    border-color: var(--color-border-light);
+}
+
+.metodo-img.seleccionado {
+    border-color: var(--color-accent);
+    /* Borde Seleccionado: Verde Éxito */
+    box-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
+}
+
+.metodo-texto {
+    font-weight: 600;
+    margin-top: 5px;
+    color: var(--color-secondary);
+}
+
+/* ====================================================================== */
+/* ESTILOS DE RESUMEN DE CARRITO */
+/* ====================================================================== */
+
+.resumen-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-title-large {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--color-secondary);
+    margin: 0;
+}
+
+.pago-vaciar {
+    padding: 8px 16px;
+    max-width: 150px;
+    font-size: 0.9rem;
+}
+
+.pago-cart-items {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding-top: 10px;
+}
+
+.pago-cart-item {
+    display: flex !important;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border: 1px solid #ecf0f1;
+    /* Borde muy sutil */
+    border-left: 5px solid var(--color-primary);
+    /* Borde de acento */
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.pago-img {
+    width: 60px;
+    /* Más pequeño */
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.pago-item-detalles {
+    flex: 1;
+}
+
+.pago-item-detalles h4 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-secondary);
+}
+
+.pago-item-detalles p {
+    margin: 3px 0;
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
+
+.pago-controles {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.pago-controles .cantidad-texto {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.pago-controles button {
+    width: 25px;
+    height: 25px;
+    padding: 0 !important;
+    margin: 0 !important;
+    font-size: 16px;
+    border-radius: 4px;
+}
+
+.pago-controles .menos {
+    background-color: #ecf0f1;
+    color: var(--color-secondary);
+}
+
+.pago-controles .mas {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+.pago-controles .eliminar {
+    background-color: #e74c3c;
+    color: white;
+    font-size: 10px;
+    width: 20px;
+    height: 20px;
+    margin-left: 10px !important;
+}
+
+.item-subtotal {
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-left: auto;
+    /* Empuja al final */
+}
+
+/* ====================================================================== */
+/* MEDIA QUERIES (RESPONSIVE) */
+/* ====================================================================== */
+
+@media (max-width: 1024px) {
+    .checkout-container {
+        grid-template-columns: 1fr;
+        /* Stack Forms above Summary */
+        grid-template-areas:
+            "forms"
+            "summary";
+        padding: 20px;
+        margin: 15px;
+    }
+
+    .forms-column,
+    .summary-column {
+        gap: 20px;
+    }
+
+    .section-title {
+        text-align: center;
+    }
+}
+
+@media (max-width: 600px) {
+    .section-title {
+        font-size: 1.3rem;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    .total-amount {
+        font-size: 2rem;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        font-size: 1rem;
+        padding: 10px;
+    }
+
+    .resumen-header h2 {
+        font-size: 1.3rem;
+    }
+
+    .pago-vaciar {
+        font-size: 0.8rem !important;
+        padding: 8px 10px !important;
+    }
+
+    .pago-cart-items {
+        grid-template-columns: 1fr;
+    }
+
+    .pago-cart-item {
+        flex-direction: row !important;
+        align-items: center;
+    }
+
+    .pago-img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .pago-controles {
+        width: auto;
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+    }
+
+    .item-subtotal {
+        margin-left: auto;
+    }
+
+    .metodo-img {
+        width: 80px !important;
+        height: 80px !important;
+    }
+
+    .pago-total {
+        font-size: 2rem !important;
+    }
+    h1{
+        font-size: 1.5rem;
+    }
+}
+
+
+
+.modal-pago {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+.label-izquierda {
+    display: block; /* Ocupa toda la línea */
+    text-align: left; /* Alinea el texto a la izquierda */
+    margin-bottom: 5px; /* Espacio entre el label y el input */
+    font-weight: bold; /* (Opcional) Estilizar el label */
+    margin-left: 30px;
+}
+
+
+.modal-contenido {
+    background: white;
+    padding: 10px 10px 15px 11px;
+    border-radius: 10px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+}
+.modal-contenido input {
+    display: block;
+    margin: 10px auto;
+    width: 80%;
+    padding: 10px;
+    font-size: 1em;
+}
+
+.botones-modal button {
+    margin: 10px 8px 2px 10px;
+    padding: 10px 19px !important;
+    font-size: 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    justify-content: center !important;
+    width: 345px;
+}
+
+.botones-modal button:first-child {
+    background-color: #28a745;
+    color: white;
+}
+
+.botones-modal button:last-child {
+    background-color: #dc3545;
+    color: white;
+}
+
+.pago-total{
+    color: #1e8449;
+}
+
+h2{
+    text-align: center;
+    color: #063519;
+}
+
+h1{
+    text-align: center;
+    color: #063519;
+    margin-top: 0;
+}

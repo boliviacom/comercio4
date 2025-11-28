@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vegan Products - Inicio</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/nav.css">
+    <link rel="stylesheet" href="css/carrusel.css">
+    <link rel="stylesheet" href="css/carrito.css">
+    <link rel="stylesheet" href="css/busqueda.css">
+    <link rel="stylesheet" href="css/modulo_pago.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="imagenes/logo.png" alt="PetShop Logo">
+                </a>
+            </div>
+
+            <div class="search-bar-container">
+                <div class="search-bar">
+                    <input type="text" id="searchBar" placeholder="Buscar productos...">
+                    <img src="imagenes/buscar.png" alt="Ícono de búsqueda" class="search-image">
+                    <div id="searchModal" class="search-modal hidden">
+                        <ul id="resultsList"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="actions">
+                <a href="inicio_sesion.html" class="login" id="login-link">
+                    <img src="imagenes/inicio_sesion.png" alt="Iniciar Sesión">
+                    <span>Iniciar sesión</span>
+                </a>
+                <a href="#" class="login" id="logout-link" style="display: none;">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEeklEQVR4nO1aSYgcZRT+J5m4xCVOknp/dxwnElun3usZFUfcsQ8uRB0Tu9//28OMGCM4R2+Ct0hEBQ9K0GhA9OTF9aInEwyCgiLiEg9OHDSJBkTcoyZRo/KqZ0J19d9jV3VV97Tkg4I+/Mv76r16ayt1Av9T5GzB04y3A+MT2tBOYDygGQ9pQ//MPb9opoPa0C5ZA5YmZY9aDBi0g6fmmDaBwTc107GQ0K09wR58RxvarO+48LSuENAW79OM38QWvskDjN9rS/d3jJDm4jgwfZEWAYeWDkIFb8uMwNpNa0/RjDsWEOJvMPSuNvQQWNqwuupf4Fk6fX7/qg3DZ3iWCsC4UTM9CIzvLWiOjM+nrh2YGNFg6AP3pfhjIHxldF3cc3V1+NyAlKHvmpD5MG9pKBUStctw1mHTR4HxkZVThTPbvWPArlsxp6WjjnsOeNXieW1rQjN+3nC4oU912R9RKUOX/RHRgoPM/lUTw2sSHVpYXzgZDL7vMKVX8uNjy1VGyI+PLQdDLzqcwOOJDgSDTzrezHPKqqUqa2xRS8DQsxEr2Bb7HI+LNzreyKsdITGPLWpJ4EQkvhh8e3XZz6vYJsX0WYTIXnGfqpegGe+NfBN/epYuVr0EsnRSkOzVE3msK8LYwIz7Eu2V7DUSkA4NWlqZupD/JYehzcD4KzB9C9Yvxz4AmF7vujasWhqk/CHT1harLe+Xj1kz/lFHJIOg15LrZfFU9d+pNv5ES/tzFbw5Gr1Vl+BVilwTPgEZ8dltB6AUoS1WE5GRgBchMtUxqdMkA4b2hDfkeORStQig45LRTF+HFyfONufdeIplsHZXkn9JkeYi8nN4YeI6o5bwuQullB9g3O8i8lN4kRQ7iYgo1Ze5NszxgD3bcDsY/KpOI/b8sxMSUTnGmxyJZ7raMHQEKnh9w+Xa4McRtperRQBgukcaG1ES2vq3NNmAL4UXe8a/s+NSt0tCoA1ujXiFp1SvkRCA9W+IEJlRXQIYmkpEIlT0Hwlvzpf9S1QXAJGksWUS85AOSb2fpu2qC4BQHIpNIjhA2pn1RH73LOUyk3gBOcDQPnHhwHhd0qJmb8QN71C9CKh5i/BHfwysf6XqOZRK/Zrpk4iJfTk0OTrQRan6Eu3yLF3jaPnvlC6L6hSmx5ZJLJsbV+yRZnqic4Dx4cYcB1/uCJnpsWVyVzoetFTqB4O7HQnbrizNbGhydEAzvdGYstOjiQ9dsfGisxqSyZpv3+dVilenyuC4SWPDLEayjLYnwBJHXGSCb4jpmdjNZQfkDG3oaecojmmmnWq1QTNNzExUfliESFLjS09ZbB8M/tak5ngr/Vm8uGVpGS08wJwNBqaW7oKyf8WaavEcsXl5ETIL1JYuq7VDabvThEwodhnalqlj8bh4lTb4UWbVH9NMroLXqs4FTbzbNV9M+kipDZamxfWqjkNys0rxVpn5SYIZW3imw2DwtaCtUyr1q8UA+VuHZKqa8QEw9IKYn7RrgPEHmcXLb0l9aiU1bvUsrc9yqHoCqsv4F8YM+N+BDeJuAAAAAElFTkSuQmCC"
+                        alt="logout-rounded">
+                    <span>Cerrar sesión</span>
+                </a>
+            </div>
+        </header>
+        <nav>
+            <div class="menu-container">
+                <div class="menu-button">≡</div>
+                <ul class="menu">
+                    <li>
+                        <a href="productos.html?categoria=Edulcorantes">Edulcorantes</a>
+                    </li>
+                    <li>
+                        <a href="productos.html?categoria=Galletas">Galletas</a>
+                    </li>
+                    <li>
+                        <a href="productos.html?categoria=Pastas">Pastas</a>
+                    </li>
+                    <li>
+                        <a href="productos.html?categoria=Bebidas">Bebidas</a>
+                    </li>
+                </ul>
+            </div>
+            <ul>
+                <li class="categorias">
+                    <div class="menu-container1">
+                        <div class="menu-button">CATEGORÍAS</div>
+                        <ul class="menu">
+                            <li>
+                                <a href="productos.html?categoria=Edulcorantes">Edulcorantes</a>
+                            </li>
+                            <li>
+                                <a href="productos.html?categoria=Galletas">Galletas</a>
+                            </li>
+                            <li>
+                                <a href="productos.html?categoria=Pastas">Pastas</a>
+                            </li>
+                            <li>
+                                <a href="productos.html?categoria=Bebidas">Bebidas</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="fondo-menu menu1"><a href="index.html">Inicio</a></li>
+                <li class="menu1"><a href="productos.html?categoria=Edulcorantes">Edulcorantes</a></li>
+                <li class="menu1"><a href="productos.html?categoria=Galletas">Galletas</a></li>
+                <li class="menu1"><a href="productos.html?categoria=Pastas">Pastas</a></li>
+                <li class="menu1"><a href="productos.html?categoria=Bebidas">Bebidas</a></li>
+            </ul>
+        </nav>
+        <section class="checkout-container">
+            <h1>Proceso de Finalización de Compra</h1>
+
+            <div class="datos-y-entrega-container">
+
+                <div class="formulario">
+                    <h2>Datos del Cliente</h2>
+                    <form id="pago-form-datos">
+                        <label for="nombre" class="cliente-label">Nombre completo:</label>
+                        <input type="text" id="nombre" class="form-dato">
+
+                        <label for="ci" class="cliente-label">C.I. (Carnet de Identidad):</label>
+                        <input type="text" id="ci" class="form-dato">
+
+                        <label for="celular" class="cliente-label">Celular:</label>
+                        <input type="tel" id="celular" class="form-dato">
+
+                        <label for="email" class="cliente-label">Correo Electrónico:</label>
+                        <input type="email" id="email" class="form-dato" required>
+                    </form>
+                </div>
+
+                <div class="formulario">
+                    <h2>Datos de Entrega y Ubicación</h2>
+
+                    <p class="cliente-label mb-8">Seleccione la ubicación geográfica y añada una referencia detallada.
+                    </p>
+
+                    <form id="addressForm">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+
+                            <div>
+                                <label for="id_departamento" class="cliente-label mb-1">Departamento <span
+                                        class="text-red-500">*</span></label>
+                                <select id="id_departamento" required
+                                    class="form-dato w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                                    <option value="">Seleccione Departamento</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="id_municipio" class="cliente-label mb-1">Municipio <span
+                                        class="text-red-500">*</span></label>
+                                <select id="id_municipio" required disabled
+                                    class="form-dato w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-60">
+                                    <option value="">Seleccione Municipio</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="id_localidad" class="cliente-label mb-1">Localidad / Ciudad <span
+                                        class="text-red-500">*</span></label>
+                                <select id="id_localidad" required disabled
+                                    class="form-dato w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-60">
+                                    <option value="">Seleccione Localidad</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="id_zona" class="cliente-label mb-1">Zona / Barrio</label>
+                                <select id="id_zona" disabled
+                                    class="form-dato w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-60">
+                                    <option value="">Seleccione Zona (Opcional)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <hr class="mb-8" style="margin: 20px 0; border-color: #ddd;">
+
+                        <h3 style="font-weight: bold; margin-bottom: 10px;">Detalles de la Vivienda</h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                            <div class="md:col-span-2 relative">
+                                <label for="calle_avenida" class="cliente-label mb-1">
+                                    Calle o Avenida <span style="color: red;">*</span>
+                                </label>
+                                <input type="text" id="calle_avenida" maxlength="150" required
+                                    placeholder="Ej: Av. 6 de Agosto"
+                                    class="form-dato w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                                <div id="autocomplete-suggestions"
+                                    class="absolute w-full bg-white border border-t-0 rounded-b-lg shadow-lg hidden">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="numero_casa_edificio" class="cliente-label mb-1">Nro. Casa/Edificio</label>
+                                <input type="text" id="numero_casa_edificio" maxlength="20"
+                                    placeholder="Ej: 2530 o Dpto. 4B"
+                                    class="form-dato w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <label for="referencia_adicional" class="cliente-label mb-1" style="font-weight: bold;">
+                                Referencia Adicional (¡CRÍTICO para la entrega!)</label>
+                            <textarea id="referencia_adicional" rows="3" maxlength="500" required
+                                placeholder="Ej: Casa color amarillo con reja negra, frente al Supermercado. Tocar el timbre."
+                                class="form-dato w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-inner"></textarea>
+                            <p style="font-size: 0.75rem; color: #6b7280; margin-top: 5px;">Es fundamental para que el
+                                repartidor encuentre tu ubicación.</p>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+            <div class="pago-y-total-container">
+
+                <div class="metodo-pago-container">
+                    <h2>Método de Pago</h2>
+                    <div class="metodo-pago-opciones">
+                        <div class="metodo-opcion" id="opcion-tarjeta" onclick="seleccionarMetodo('Tarjeta')">
+                            <img src="imagenes/tarjeta-de-credito.png" alt="Tarjeta"
+                                class="metodo-img metodo-seleccionable" id="opcion-tarjeta">
+                            <p class="metodo-texto">Tarjeta</p>
+                        </div>
+                        <div class="metodo-opcion" id="opcion-transferencia"
+                            onclick="seleccionarMetodo('Transferencia')">
+                            <img src="imagenes/telefono-inteligente.png" alt="Transferencia"
+                                class="metodo-img metodo-seleccionable" id="opcion-transferencia">
+                            <p class="metodo-texto">Transferencia</p>
+                        </div>
+                        <div class="metodo-opcion" id="opcion-efectivo" onclick="seleccionarMetodo('Efectivo')">
+                            <img src="imagenes/dinero-en-efectivo.png" alt="Efectivo"
+                                class="metodo-img metodo-seleccionable" id="opcion-efectivo">
+                            <p class="metodo-texto">Efectivo</p>
+                        </div>
+                    </div>
+                    <input type="hidden" id="metodo-seleccionado" value="">
+                </div>
+
+                <div class="acciones-finales">
+                    <h2> <span class="pago-total" id="totalFinal">Bs. 0.00</span></h2>
+                    <button onclick="window.location.href='index.html'">Seguir Comprando</button>
+                    <button class="pago-finalizar">Finalizar Compra</button>
+                </div>
+
+            </div>
+            <div class="resumen-carrito">
+                <div class="resumen-header">
+                    <h2>Resumen de Carrito</h2>
+                    <button class="pago-vaciar" onclick="vaciarCarrito()">Vaciar Carrito</button>
+                </div>
+                <div class="pago-cart-items" id="listaCarrito"></div>
+            </div>
+
+        </section>
+        <!-- Footer -->
+        <footer class="parent">
+            <div class="div1">
+                <div class="info">
+                    <h3 class="footer-title">UBICACIÓN</h3>
+                    <div class="ubicaciones">
+                        <img src="imagenes/icons8-ubicación-24.png" alt="">
+                        <p>Av. Busch y Tercer Anillo </p>
+                    </div>
+                    <div class="ubicaciones">
+                        <img src="imagenes/icons8-ubicación-24.png" alt="">
+                        <p>Av. America esq. Av Pando </p>
+                    </div>
+                </div>
+            </div>
+            <div class="div2">
+                <div class="info">
+                    <h3 class="footer-title">CONTACTANOS</h3>
+                    <p>Atención Telefónica</p>
+                    <p>(591) 54488474</p>
+                </div>
+            </div>
+            <div class="div3">
+                <div class="info">
+                    <h3 class="footer-title ayuda-title">AYUDA</h3>
+                    <a href="preguntas_frecuentes.html">Preguntas frecuentes</a>
+                    <a href="terminos_condiciones.html">Términos y condiciones</a>
+                    <a href="politica_privacidad.html">Política de privacidad</a>
+                </div>
+            </div>
+            <div class="div4">
+                <p>SÍGUENOS EN:</p>
+                <div class="imagenes-redes-sociales">
+                    <a href="https://www.facebook.com/verdenaturalmarket" target="_blank" rel="noopener noreferrer">
+                        <img src="imagenes/icons8-facebook-48.png" alt="facebook">
+                    </a>
+                    <a href="https://www.instagram.com/verdenaturalmarket/" target="_blank" rel="noopener noreferrer">
+                        <img src="imagenes/icons8-instagram-48.png" alt="instagram">
+                    </a>
+                    <a href="https://www.tiktok.com/@verdenaturalmarket" target="_blank" rel="noopener noreferrer">
+                        <img src="imagenes/icons8-tiktok-48.png" alt="tiktok">
+                    </a>
+                </div>
+            </div>
+            <div class="div5">
+                <p>© VEGAN PRODUCTS - 2025</p>
+            </div>
+        </footer>
+    </div>
+    <!-- Modal Tarjeta -->
+    <div id="modal-tarjeta" class="modal-pago" style="display:none;">
+        <div class="modal-contenido">
+            <h3>Pago con Tarjeta</h3>
+            <label for="numero-tarjeta" class="label-izquierda">Número de Tarjeta (16 dígitos):</label>
+            <input type="text" id="numero-tarjeta" maxlength="16" pattern="\d{16}" placeholder="1234 5678 9012 3456">
+
+            <label for="codigo-seguridad" class="label-izquierda">Código de Seguridad (4 dígitos):</label>
+            <input type="text" id="codigo-seguridad" maxlength="4" pattern="\d{4}" placeholder="1234">
+
+            <div class="botones-modal">
+                <button onclick="confirmarTarjeta()">Confirmar</button>
+                <button onclick="cerrarModal('modal-tarjeta')">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Transferencia -->
+    <div id="modal-transferencia" class="modal-pago" style="display:none;">
+        <div class="modal-contenido">
+            <h3>Pago por Transferencia</h3>
+            <canvas id="qr-canvas"></canvas>
+            <p>Escanea este código para completar el pago</p>
+
+            <div class="botones-modal">
+                <button onclick="confirmarTransferencia()">Pago Completado</button>
+                <button onclick="cerrarModal('modal-transferencia')">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script src="https://unpkg.com/jspdf-autotable@3.5.25/dist/jspdf.plugin.autotable.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+
+    <script type="module" src="js/supabaseClient.js"></script>
+    <script type="module" src="js/cerrar_sesion.js"></script>
+    <script type="module" src="js/GeoManager.js"></script>
+    <script type="module" src="js/DirectionManager.js"></script>
+    <script type="module" src="js/OrderManager.js"></script>
+
+    <script type="module" src="js/productManager.js"></script>
+    <script type="module" src="js/productos.js"></script>
+    <script type="module" src="js/buscador.js"></script>
+
+    <script type="module" src="js/resumen.js"></script>
+    <script src="js/nav.js"></script>
+</body>
+
+</html>

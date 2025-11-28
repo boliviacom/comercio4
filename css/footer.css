@@ -1,0 +1,166 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+.parent {
+    font-family: 'kanit', sans-serif;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto auto auto;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    background-color: #17542A; 
+    color: #fff;
+    padding: 10px 0 !important;
+    bottom: 0;
+    width: 100% !important;
+    z-index: 10;
+    align-items: start;
+    margin-top: 20px;
+}
+
+.div1, .div2, .div3 {
+    display: flex;
+    flex-direction: column; /* Coloca todo el contenido en columna */
+    align-items: center; /* Centra horizontalmente */
+    justify-content: center; /* Centra verticalmente */
+}
+
+.div3 .ayuda-title {
+    text-align: center; /* Centra el texto del título de "AYUDA" */
+}
+
+.div4 {
+    grid-area: 1 / 4 / 2 / 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+.div4 p {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.div5 {
+    grid-area: 2 / 1 / 3 / 5;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #17542A;
+    font-weight: bolder;
+    font-size: 20px;
+    line-height: 1;
+    padding: 0;
+    margin: 0;
+    height: 20px;
+}
+
+.footer-title {
+    font-size: 20px;
+    margin: 0;
+    line-height: 1;
+    text-align: center; /* Asegura que todos los títulos estén centrados */
+}
+
+.imagenes-redes-sociales {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-top: 6px;
+    margin-bottom: 15px;
+}
+
+.ubicaciones {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.ubicaciones:last-child {
+    margin-bottom: 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.ubicaciones img {
+    width: 24px;
+    height: 24px;
+}
+
+.ubicaciones p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.info a {
+    color: #fff;
+    text-decoration: none;
+    text-align: center; /* Centra los enlaces */
+    display: flex;
+    align-items: center;
+    margin-top: 4px;
+}
+.div2 .info .footer-title{
+    margin-bottom: 5px !important;
+}
+.div1 .info .footer-title{
+    margin-bottom: 5px !important;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    .parent {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px; /* Mayor espacio para móviles */
+    }
+
+    .div1, .div2, .div4, .div5 {
+        text-align: center; /* Centra todo */
+        display: flex;
+        flex-direction: column; /* Todos los elementos en columna */
+        align-items: center; /* Asegura que estén centrados */
+    }
+
+    .div3 {
+        justify-self: center !important; /* Centra horizontalmente el div3 */
+    }
+
+    .footer-title, .ayuda-title {
+        text-align: center !important; /* Centra los títulos en pantallas pequeñas */
+    }
+
+    .ubicaciones {
+        margin-top: 15px !important;
+        flex-direction: row; /* Íconos y texto en columna */
+        align-items: center; /* Centra los elementos */
+        gap: 5px; /* Reduce el espacio para móviles */
+    }
+
+    .ubicaciones img {
+        margin-bottom: 5px; /* Espacio entre el ícono y texto */
+    }
+
+    .imagenes-redes-sociales {
+        flex-direction: row; /* Íconos en columna */
+        gap: 10px; /* Espacio entre íconos */
+    }
+    .div3 .info a {
+        margin-bottom: 10px; /* Espacio entre cada enlace */
+        display: block; /* Asegura que cada enlace ocupe una línea completa */
+    }
+    .div3 .ayuda-title {
+        margin-bottom: 15px; /* Añade espacio entre el título y los textos debajo */
+        text-align: center; /* Mantiene el título centrado */
+    }
+    .div2 .info .footer-title{
+        margin-bottom: 15px !important;
+    }
+}

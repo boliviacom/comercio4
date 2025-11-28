@@ -1,0 +1,89 @@
+/* --- Contenedor de la barra de búsqueda --- */
+.search-bar-container {
+    position: relative;
+    width: 45%; 
+    /* El input ya tiene estilos en header.css, no lo tocamos aquí. */
+}
+
+/* --- Modal de Resultados --- */
+.search-modal {
+    position: absolute;
+    top: 100%; /* Justo debajo del input */
+    left: 0;
+    width: 100%;
+    max-height: 250px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-top: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1001; 
+    overflow-y: auto;
+    border-radius: 0 0 5px 5px;
+    padding: 0; 
+    
+    transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Estado oculto del modal */
+.search-modal.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-5px);
+}
+
+.search-modal ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* --- Estilo de cada Resultado (li) --- */
+.search-result-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 15px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    gap: 10px;
+    color: #333; /* Color de texto estándar */
+}
+
+/* 🟢 CAMBIO CLAVE: Estilos Hover con la paleta verde */
+.search-result-item:hover {
+    background-color: #E2FF9B; /* Fondo verde claro del header */
+    color: #333; /* Color de texto oscuro para buen contraste */
+}
+
+/* Imagen del producto */
+.search-result-item .result-img {
+    width: 40px; 
+    height: 40px;
+    object-fit: cover;
+    border-radius: 5px;
+    flex-shrink: 0; 
+}
+
+/* Nombre del producto */
+.search-result-item .result-name {
+    margin: 0;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
+
+/* Mensaje de "No resultados" */
+.search-modal li.no-results {
+    padding: 10px 15px;
+    color: #888;
+    cursor: default;
+    text-align: center;
+}
+
+.search-modal li.no-results:hover {
+    background-color: transparent;
+    color: #888;
+}

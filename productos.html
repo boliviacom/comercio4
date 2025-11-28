@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vegan Products/catálogo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bigshot+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/nav.css">
+    <link rel="stylesheet" href="css/catalogo.css">
+    <link rel="stylesheet" href="css/carrito.css">
+    <link rel="stylesheet" href="css/busqueda.css">
+    <link rel="stylesheet" href="css/info_producto.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="imagenes/logo.png" alt="PetShop Logo">
+                </a>
+            </div>
+
+            <div class="search-bar-container">
+                <div class="search-bar">
+                    <input type="text" id="searchBar" placeholder="Buscar productos...">
+                    <img src="imagenes/buscar.png" alt="Ícono de búsqueda" class="search-image">
+                    <div id="searchModal" class="search-modal hidden">
+                        <ul id="resultsList"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="actions">
+                <a href="inicio_sesion.html" class="login" id="login-link">
+                    <img src="imagenes/inicio_sesion.png" alt="Iniciar Sesión">
+                    <span>Iniciar sesión</span>
+                </a>
+                <a href="#" class="login" id="logout-link" style="display: none;">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEeklEQVR4nO1aSYgcZRT+J5m4xCVOknp/dxwnElun3usZFUfcsQ8uRB0Tu9//28OMGCM4R2+Ct0hEBQ9K0GhA9OTF9aInEwyCgiLiEg9OHDSJBkTcoyZRo/KqZ0J19d9jV3VV97Tkg4I+/Mv76r16ayt1Av9T5GzB04y3A+MT2tBOYDygGQ9pQ//MPb9opoPa0C5ZA5YmZY9aDBi0g6fmmDaBwTc107GQ0K09wR58RxvarO+48LSuENAW79OM38QWvskDjN9rS/d3jJDm4jgwfZEWAYeWDkIFb8uMwNpNa0/RjDsWEOJvMPSuNvQQWNqwuupf4Fk6fX7/qg3DZ3iWCsC4UTM9CIzvLWiOjM+nrh2YGNFg6AP3pfhjIHxldF3cc3V1+NyAlKHvmpD5MG9pKBUStctw1mHTR4HxkZVThTPbvWPArlsxp6WjjnsOeNXieW1rQjN+3nC4oU912R9RKUOX/RHRgoPM/lUTw2sSHVpYXzgZDL7vMKVX8uNjy1VGyI+PLQdDLzqcwOOJDgSDTzrezHPKqqUqa2xRS8DQsxEr2Bb7HI+LNzreyKsdITGPLWpJ4EQkvhh8e3XZz6vYJsX0WYTIXnGfqpegGe+NfBN/epYuVr0EsnRSkOzVE3msK8LYwIz7Eu2V7DUSkA4NWlqZupD/JYehzcD4KzB9C9Yvxz4AmF7vujasWhqk/CHT1harLe+Xj1kz/lFHJIOg15LrZfFU9d+pNv5ES/tzFbw5Gr1Vl+BVilwTPgEZ8dltB6AUoS1WE5GRgBchMtUxqdMkA4b2hDfkeORStQig45LRTF+HFyfONufdeIplsHZXkn9JkeYi8nN4YeI6o5bwuQullB9g3O8i8lN4kRQ7iYgo1Ze5NszxgD3bcDsY/KpOI/b8sxMSUTnGmxyJZ7raMHQEKnh9w+Xa4McRtperRQBgukcaG1ES2vq3NNmAL4UXe8a/s+NSt0tCoA1ujXiFp1SvkRCA9W+IEJlRXQIYmkpEIlT0Hwlvzpf9S1QXAJGksWUS85AOSb2fpu2qC4BQHIpNIjhA2pn1RH73LOUyk3gBOcDQPnHhwHhd0qJmb8QN71C9CKh5i/BHfwysf6XqOZRK/Zrpk4iJfTk0OTrQRan6Eu3yLF3jaPnvlC6L6hSmx5ZJLJsbV+yRZnqic4Dx4cYcB1/uCJnpsWVyVzoetFTqB4O7HQnbrizNbGhydEAzvdGYstOjiQ9dsfGisxqSyZpv3+dVilenyuC4SWPDLEayjLYnwBJHXGSCb4jpmdjNZQfkDG3oaecojmmmnWq1QTNNzExUfliESFLjS09ZbB8M/tak5ngr/Vm8uGVpGS08wJwNBqaW7oKyf8WaavEcsXl5ETIL1JYuq7VDabvThEwodhnalqlj8bh4lTb4UWbVH9NMroLXqs4FTbzbNV9M+kipDZamxfWqjkNys0rxVpn5SYIZW3imw2DwtaCtUyr1q8UA+VuHZKqa8QEw9IKYn7RrgPEHmcXLb0l9aiU1bvUsrc9yqHoCqsv4F8YM+N+BDeJuAAAAAElFTkSuQmCC"
+                        alt="logout-rounded">
+                    <span>Cerrar sesión</span>
+                </a>
+                <div class="cart">
+                    <img src="imagenes/carrito.png" alt="Carrito">
+                    <span class="cart-count">0</span>
+                </div>
+            </div>
+        </header>
+        <nav>
+            <div class="menu-container">
+                <div class="menu-button">≡</div>
+                <ul class="menu">
+                    <li>
+                        <a href="productos.html?categoria=Edulcorantes">Edulcorantes</a>
+                    </li>
+                    <li>
+                        <a href="productos.html?categoria=Galletas">Galletas</a>
+                    </li>
+                    <li>
+                        <a href="productos.html?categoria=Pastas">Pastas</a>
+                    </li>
+                    <li>
+                        <a href="productos.html?categoria=Bebidas">Bebidas</a>
+                    </li>
+                </ul>
+            </div>
+            <ul>
+                <li class="categorias">
+                    <div class="menu-container1">
+                        <div class="menu-button">CATEGORÍAS</div>
+                        <ul class="menu">
+                            <li>
+                                <a href="productos.html?categoria=Edulcorantes">Edulcorantes</a>
+                            </li>
+                            <li>
+                                <a href="productos.html?categoria=Galletas">Galletas</a>
+                            </li>
+                            <li>
+                                <a href="productos.html?categoria=Pastas">Pastas</a>
+                            </li>
+                            <li>
+                                <a href="productos.html?categoria=Bebidas">Bebidas</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="fondo-menu menu1"><a href="index.html" class="active">Inicio</a></li>
+                <li class="menu1"><a href="productos.html?categoria=Edulcorantes">Edulcorantes</a></li>
+                <li class="menu1"><a href="productos.html?categoria=Galletas">Galletas</a></li>
+                <li class="menu1"><a href="productos.html?categoria=Pastas">Pastas</a></li>
+                <li class="menu1"><a href="productos.html?categoria=Bebidas">Bebidas</a></li>
+            </ul>
+        </nav>
+        <section class="contenido">
+            <div class="breadcrumb">
+                <a href="index.html">Inicio</a> /
+                <span class="activo" id="breadcrumb-activo">Cargando...</span>
+            </div>
+
+            <h1 class="titulo-categoria" id="titulo-categoria">Cargando Categoría...</h1>
+
+            <div class="contenedor">
+                <section class="catalogo" id="productos-listado">
+                    <p>Cargando productos...</p>
+                </section>
+            </div>
+        </section>
+        <!-- Footer -->
+        <footer class="parent">
+            <div class="div1">
+                <div class="info">
+                    <h3 class="footer-title">UBICACIÓN</h3>
+                    <div class="ubicaciones">
+                        <img src="imagenes/icons8-ubicación-24.png" alt="">
+                        <p>Av. Busch y Tercer Anillo </p>
+                    </div>
+                    <div class="ubicaciones">
+                        <img src="imagenes/icons8-ubicación-24.png" alt="">
+                        <p>Av. America esq. Av Pando </p>
+                    </div>
+                </div>
+            </div>
+            <div class="div2">
+                <div class="info">
+                    <h3 class="footer-title">CONTACTANOS</h3>
+                    <p>Atención Telefónica</p>
+                    <p>(591) 54488474</p>
+                </div>
+            </div>
+            <div class="div3">
+                <div class="info">
+                    <h3 class="footer-title ayuda-title">AYUDA</h3>
+                    <a href="preguntas_frecuentes.html">Preguntas frecuentes</a>
+                    <a href="terminos_condiciones.html">Términos y condiciones</a>
+                    <a href="politica_privacidad.html">Política de privacidad</a>
+                </div>
+            </div>
+            <div class="div4">
+                <p>SÍGUENOS EN:</p>
+                <div class="imagenes-redes-sociales">
+                    <a href="https://www.facebook.com/verdenaturalmarket" target="_blank" rel="noopener noreferrer">
+                        <img src="imagenes/icons8-facebook-48.png" alt="facebook">
+                    </a>
+                    <a href="https://www.instagram.com/verdenaturalmarket/" target="_blank" rel="noopener noreferrer">
+                        <img src="imagenes/icons8-instagram-48.png" alt="instagram">
+                    </a>
+                    <a href="https://www.tiktok.com/@verdenaturalmarket" target="_blank" rel="noopener noreferrer">
+                        <img src="imagenes/icons8-tiktok-48.png" alt="tiktok">
+                    </a>
+                </div>
+            </div>
+            <div class="div5">
+                <p>© Pet Shop - 2025</p>
+            </div>
+        </footer>
+    </div>
+    <div class="cart-container">
+        <div class="cart-content">
+            <div class="cart-header">
+                <h2>Carrito de compras</h2>
+                <button class="close-cart">❌</button>
+            </div>
+            <div class="cart-items"></div>
+            <p class="total-price">Total: Bs. 0,00</p>
+
+            <div class="cart-actions">
+                <button class="vaciar-carrito">🗑 Vaciar Carrito</button>
+                <a href="formulario_pago.html" class="finalizar-compra">🛒 Finalizar Compra</a>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="info-form-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="form-modal-title">Solicitar Información</h2>
+                <button class="close-modal" id="close-form-modal">❌</button>
+            </div>
+            <form id="solicitud-info-form">
+                <input type="hidden" id="form-product-id" name="product_id">
+
+                <div class="form-group">
+                    <label for="nombre-completo">Nombre Completo:</label>
+                    <input type="text" id="nombre-completo" name="nombre_completo" required placeholder="Tu nombre">
+                </div>
+
+                <div class="form-group">
+                    <label for="correo-electronico">Correo Electrónico:</label>
+                    <input type="email" id="correo-electronico" name="correo_electronico" required
+                        placeholder="tu.correo@ejemplo.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="comentario">Comentario:</label>
+                    <textarea id="comentario" name="comentario" rows="4" required
+                        placeholder="Me gustaría saber más sobre este producto."></textarea>
+                </div>
+
+                <button type="submit" class="btn-primary-form">Enviar Solicitud</button>
+            </form>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="js/supabaseClient.js"></script>
+    <script type="module" src="js/productos.js"></script>
+    <script type="module" src="js/carrito.js"></script>
+    <script type="module" src="js/cerrar_sesion.js"></script>
+    <script type="module" src="js/productManager.js"></script>
+    <script type="module" src="js/buscador.js"></script>
+    <script src="js/nav.js"></script>
+</body>
+
+</html>

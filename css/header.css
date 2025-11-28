@@ -1,0 +1,150 @@
+.header {
+  background-color: #E2FF9B;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo img {
+  height: 70px !important;
+}
+
+.search-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+
+.search-bar input {
+  height: 40px;
+  padding-right: 40px !important;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.search-bar .search-image {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 18px;
+  width: 18px;
+  opacity: 0.5;
+  cursor: none;
+}
+
+.search-bar .search-icon.active {
+  opacity: 0.5;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.login {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.login img {
+  height: 25px;
+}
+
+.login span {
+  font-size: 14px;
+  color: #333;
+}
+
+.cart img {
+  height: 30px !important;
+  cursor: pointer;
+}
+
+.header-custom {
+  width: 100vw;
+  background-color: #f8f9fa;
+}
+
+/* Pantallas pequeñas */
+@media (max-width: 768px) {
+  .header {
+    text-align: center;
+    gap: 15px;
+    padding: 10px;
+  }
+
+  .search-bar {
+    gap: 5px;
+  }
+
+  .actions {
+    gap: 10px;
+  }
+
+  .logo img {
+    height: 40px !important;
+    text-align: left;
+  }
+
+  .login img,
+  .cart img {
+    height: 20px !important;
+  }
+
+  span {
+    font-size: 8px !important;
+  }
+}
+
+/* Pantallas medianas */
+@media (min-width: 769px) and (max-width: 996px) {
+  .header {
+    padding: 15px;
+  }
+
+  .search-bar input {
+    font-size: 13px;
+  }
+
+  .logo img {
+    height: 45px;
+    text-align: left;
+  }
+
+  .login img,
+  .cart img {
+    height: 22px;
+  }
+}
+
+/* Pantallas grandes */
+@media (min-width: 997px) {
+  .header {
+    padding: 20px 40px;
+    justify-content: space-between;
+  }
+
+  .search-bar input {
+    font-size: 16px;
+  }
+
+  .logo img {
+    height: 50px;
+    text-align: left;
+  }
+
+  .login img,
+  .cart img {
+    height: 25px;
+  }
+}

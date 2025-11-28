@@ -1,0 +1,403 @@
+.content {
+    text-align: center;
+    padding: 20px;
+}
+
+/* Carrusel */
+.carousel {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.carousel-container {
+    position: relative;
+    max-width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+    height: auto;
+
+}
+
+.carousel-slide {
+    min-width: 100%;
+}
+
+.carousel-slide img {
+    width: 100%;
+    /* Ajusta al ancho del contenedor */
+    height: auto;
+    /* Mantiene proporción para evitar cortes */
+    object-fit: contain;
+    /* Escala la imagen sin recortar */
+    display: block;
+    /* Elimina espacios adicionales */
+}
+
+/* Botones de navegación */
+.carousel-btn {
+    position: absolute;
+    top: 11% !important;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 10px 15px;
+    z-index: 10;
+}
+
+.carousel-btn.prev {
+    left: 10px;
+}
+
+.carousel-btn.next {
+    right: 10px;
+}
+
+.carousel-btn:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+
+/* Título */
+.section-title {
+    margin: 20px 0;
+    font-size: 50px;
+    color: #333;
+    text-align: center;
+}
+
+/* Galería */
+.image-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    /* Permite que las imágenes se acomoden en filas */
+    justify-content: center;
+    /* Centra las imágenes en el contenedor */
+    gap: 20px;
+    /* Espacio entre las imágenes */
+    margin-top: 20px;
+    /* Separación de la galería respecto al carrusel */
+}
+
+.image-gallery a {
+    text-decoration: none;
+    /* Elimina el subrayado de los enlaces */
+}
+
+.image-gallery img {
+    width: 400px;
+    /* Ancho inicial de las imágenes */
+    height: 300px;
+    /* Ajusta la altura automáticamente */
+    border-radius: 10px;
+    /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Sombra ligera */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    /* Transiciones suaves */
+}
+
+.image-gallery img:hover {
+    transform: scale(1.05);
+    /* Efecto de zoom al pasar el cursor */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    /* Sombra más pronunciada */
+}
+
+/* Responsividad para pantallas pequeñas */
+@media (max-width: 768px) {
+    .section-title {
+        margin: 20px 0;
+        font-size: 20px;
+        color: #333;
+        text-align: center;
+    }
+
+    .carousel-btn {
+        position: absolute;
+        top: 4% !important;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        font-size: 2rem;
+        cursor: pointer;
+        padding: 10px 15px;
+        z-index: 10;
+    }
+
+    .carousel-btn.prev {
+        left: 10px;
+    }
+
+    .carousel-btn.next {
+        right: 10px;
+    }
+
+    .carousel-btn:hover {
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+}
+
+@media (max-width: 375px) {
+    button {
+        position: absolute;
+        top: 3% !important;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        font-size: 2rem;
+        cursor: pointer;
+        padding: 10px 15px;
+        z-index: 10;
+    }
+}
+
+@media (min-width: 200px) and (max-width: 480px) {
+    .carousel-btn {
+        position: absolute;
+        top: 2.5% !important;
+        ;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        font-size: 10px;
+        cursor: pointer;
+        padding: 10px 15px;
+        z-index: 10;
+    }
+
+    .carousel-btn.prev {
+        left: 10px;
+    }
+
+    .carousel-btn.next {
+        right: 10px;
+    }
+
+    .carousel-btn:hover {
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+
+}
+
+/* Pantallas medianas */
+@media (min-width: 769px) and (max-width: 996px) {
+    .carousel-btn {
+        position: absolute;
+        top: 5% !important;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        font-size: 2rem;
+        cursor: pointer;
+        padding: 10px 15px;
+        z-index: 10;
+    }
+
+    .carousel-btn.prev {
+        left: 10px;
+    }
+
+    .carousel-btn.next {
+        right: 10px;
+    }
+
+    .carousel-btn:hover {
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+
+}
+
+@media (min-width: 804px) and (max-width: 1208px) {
+    .carousel-btn {
+        position: absolute;
+        top: 8% !important;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        font-size: 2rem;
+        cursor: pointer;
+        padding: 10px 15px;
+        z-index: 10;
+    }
+
+    .carousel-btn.prev {
+        left: 10px;
+    }
+
+    .carousel-btn.next {
+        right: 10px;
+    }
+
+    .carousel-btn:hover {
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+
+}
+
+/* Variables CSS dinámicas (configuración base) */
+:root {
+    --animation-duration: 40s;
+    /* Se ajusta por JS */
+    --scroll-distance: -102rem;
+    /* Se ajusta por JS */
+    --slide-width: 12rem;
+    /* Ancho fijo de cada producto */
+    --slide-gap: 3rem;
+    /* Espacio fijo entre productos */
+}
+
+/* Contenedor Principal del Carrusel Infinito */
+.slider {
+    width: 100%;
+    margin: auto;
+    height: auto;
+    overflow: hidden;
+    /* Oculta los elementos que se salen del ancho */
+    position: relative;
+    box-shadow: 10px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* Degradado de Desvanecimiento (Shadow Mask) en los bordes) */
+.slider::before,
+.slider::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    z-index: 2;
+    width: 150px;
+    height: 100%;
+    pointer-events: none;
+}
+
+.slider::before {
+    left: 0;
+    background: linear-gradient(to right,
+            rgb(255, 255, 255) 0%,
+            /* Color de fondo del body/slider */
+            rgba(255, 255, 255, 0) 100%);
+}
+
+.slider::after {
+    right: 0;
+    background: linear-gradient(to left,
+            rgb(255, 255, 255) 0%,
+            /* Color de fondo del body/slider */
+            rgba(255, 255, 255, 0) 100%);
+}
+
+/* Pista de Deslizamiento (Contiene todos los slides) */
+.slide__track {
+    display: flex;
+    gap: var(--slide-gap);
+    /* 3rem */
+    padding: 1.5rem 0;
+    height: auto;
+    /* El ancho total se calcula dinámicamente en JavaScript */
+    align-items: center;
+    justify-content: flex-start;
+    /* Animación infinita, usa las variables ajustadas por JS */
+    animation: scroll var(--animation-duration) linear infinite;
+    box-sizing: border-box;
+}
+
+.slide__track:hover {
+    animation-play-state: paused;
+    /* Pausa al pasar el ratón */
+}
+
+/* Item Individual del Producto */
+.slide {
+    min-width: var(--slide-width) !important;
+    height: 13.3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #ffffff90;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    padding: 0.5rem;
+}
+
+.slide:hover {
+    background: #ffffff;
+    transform: scale(1.05) translateY(-5px);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+}
+
+.slide__link {
+    text-decoration: none;
+    color: #222831;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.carrusel-img {
+    object-fit: contain;
+    width: 100%;
+    height: 8rem;
+    border-radius: 5px;
+    margin-bottom: 0.5rem;
+}
+
+.product__name {
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    padding: 0.5rem 0;
+    
+    /* ESTILOS PARA EVITAR DESBORDAMIENTO HORIZONTAL */
+    /* Asegura que el contenido no exceda el ancho del padre */
+    max-width: 100%; 
+    /* Fuerza al texto a ocupar el espacio disponible */
+    word-break: break-word; 
+    
+    /* Estilos para limitar a 2 líneas (como ya lo tenías) */
+    display: -webkit-box;
+    line-clamp: 2 !important;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        /* Desplaza por la distancia calculada en JS (ej. -102rem) */
+        transform: translateX(var(--scroll-distance));
+    }
+}
+
+/* Responsividad para móviles */
+@media (max-width: 768px) {
+    
+    .slide__track {
+        gap: 1.5rem;
+        padding: 0;
+    }
+
+    .slide {
+        min-width: 2rem;
+        height: 10rem;
+    }
+
+    .carrusel-img {
+        height: 6rem;
+    }
+}

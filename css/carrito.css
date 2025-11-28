@@ -1,0 +1,318 @@
+.cart {
+    position: relative;
+}
+
+.cart-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #E74C3C; /* Rojo para alerta, se mantiene */
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.cart-item {
+    transition: all 0.3s ease-out;
+}
+
+
+/* 🛒 Diseño principal del carrito */
+.cart-container {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 550px; /* Ancho en pantallas grandes */
+    height: 100vh;
+    background-color: white;
+    box-shadow: -5px 0 10px rgba(0, 0, 0, 0.2);
+    transition: right 0.3s ease-in-out;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    z-index: 2000;
+}
+
+.cart-container.active {
+    right: 0;
+}
+
+/* 🎯 Estilos del Header */
+.cart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.close-cart {
+    background: none;
+    border: none;
+    font-size: 22px;
+    color: black !important;
+    cursor: pointer;
+}
+
+/* 📜 Contenedor de productos con scroll */
+.cart-items {
+    flex-grow: 1;
+    overflow-y: auto;
+    max-height: 400px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* 🛍 Diseño de cada producto */
+.cart-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.cart-item img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+.cart-item span {
+    max-width: 160px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* 🔼🔽 Controles de cantidad */
+.cart-item .cantidad {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+/* Botones del carrito */
+.cart-item .cantidad button {
+    border: none;
+    padding: 6px 8px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+/* 🔽 Decrementador (-) */
+.decrementar-carrito {
+    background-color: #DCE8E0; /* 🟢 Verde muy claro, reemplaza #E5E3CE */
+    color: black;
+}
+
+/* 🔼 Incrementador (+) */
+.incrementar-carrito {
+    background-color: #17542A; /* 🟢 Verde principal, reemplaza #2C1608 */
+    color: white;
+}
+
+/* Efecto al pasar el mouse */
+.decrementar-carrito:hover {
+    background-color: #B0C7B9; /* 🟢 Verde claro de hover, reemplaza #bcb56e */
+}
+.decrementar-carrito:active{
+    transform: scale(0.95);
+}
+.incrementar-carrito:hover {
+    background-color: #367a4c; /* 🟢 Verde oscuro de hover, reemplaza #84451f */
+}
+.incrementar-carrito:active{
+    transform: scale(0.95);
+}
+/* 💰 Subtotal visible */
+.cart-item .subtotal {
+    font-weight: bold;
+}
+
+/* 🗑 Botón de eliminar con icono de basurero */
+.cart-item .eliminar {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.cart-item .eliminar img {
+    width: 22px;
+    height: 22px;
+}
+
+/* 🔻 Mantener los botones en la parte baja */
+.cart-actions {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #ccc;
+}
+
+/* 🚀 Botones de acción */
+.vaciar-carrito {
+    padding: 12px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    justify-content: center;
+}
+.finalizar-compra {
+    display: inline-block;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    background-color: #80CC28; /* 🟢 Verde vibrante (Success), reemplaza #28a745 */
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.vaciar-carrito img, .finalizar-compra img {
+    width: 20px;
+    height: 20px;
+}
+
+.vaciar-carrito {
+    background: #E74C3C; /* Rojo para advertencia, se mantiene */
+    color: white;
+}
+
+
+/* 📱✨ Responsive - Pantallas medianas (769px - 1100px) */
+@media (max-width: 1100px) {
+    .cart-container {
+        width: 450px; /* Ajustamos ancho */
+    }
+
+    .cart-item span {
+        max-width: 140px;
+    }
+    .cart-count {
+        font-size: 0.5rem !important;
+        width: 1rem;
+        height: 1rem;
+    }
+
+    .vaciar-carrito{
+        font-size: 14px;
+        padding: 10px;
+    }
+    .finalizar-compra {
+        font-size: 14px;
+        padding: 10px 0px 10px 1px !important;
+    }
+}
+
+/* 📱✅ Responsive - Pantallas pequeñas (menos de 768px) */
+@media (max-width: 768px) {
+    .cart-container {
+        width: 350px; /* Ocupa toda la pantalla */
+        right: -5000px;
+    }
+
+    .cart-header h2 {
+        font-size: 18px;
+    }
+
+    .cart-item {
+        flex-wrap: wrap; /* Permite que los elementos no se solapen */
+        text-align: center;
+    }
+
+    .cart-item img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .cart-item span {
+        font-size: 14px;
+        max-width: 120px;
+    }
+
+    .cart-item .cantidad button {
+        width: 22px;
+        height: 22px;
+    }
+
+    .cart-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .vaciar-carrito{
+        font-size: 14px;
+        padding: 10px;
+    }
+    .finalizar-compra {
+        font-size: 14px;
+        padding: 10px 0px 10px 1px !important;
+    }
+
+    
+    .cart-item .cantidad button {
+        border: none;
+        padding: 10px 7px;
+        font-size: 5px;
+        cursor: pointer;
+        width: 10px;
+        height: 10px;
+        font-weight: bold;
+        border-radius: 2px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    
+    /* 🔽 Decrementador (-) */
+    .decrementar-carrito {
+        background-color: #DCE8E0; /* 🟢 Verde muy claro */
+        color: black;
+    }
+    
+    /* 🔼 Incrementador (+) */
+    .incrementar-carrito {
+        background-color: #17542A; /* 🟢 Verde principal */
+        color: white;
+    }
+    
+    /* Efecto al pasar el mouse */
+    .decrementar-carrito:hover {
+        background-color: #B0C7B9; 
+    }
+    
+    .incrementar-carrito:hover {
+        background-color: #367a4c; /* Verde más oscuro de hover */
+    }
+    .cart-items {
+        flex-grow: 1;
+        overflow-y: auto;
+        max-height: 350px;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+}

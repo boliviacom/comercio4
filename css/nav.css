@@ -1,0 +1,394 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+/* ESTILOS DE ESCRITORIO (Verdes originales) */
+nav {
+    font-family: 'kanit', sans-serif;
+    font-weight: bolder;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 8vh;
+    background-color: #80CC28;
+    /* Verde Principal */
+    position: sticky;
+    z-index: 1000;
+}
+
+nav ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding-right: 6%;
+}
+
+nav ul li {
+    list-style-type: none;
+    height: 100%;
+}
+
+nav ul .categorias {
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    color: white;
+    margin-right: 10%;
+}
+
+nav ul .menu1 {
+    display: flex;
+    justify-self: center;
+    align-items: center;
+    width: 15%;
+}
+
+nav ul .menu1 a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+nav ul li a {
+    color: white;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+nav ul li a:hover {
+    color: #ffffff;
+    background-color: rgb(79, 134, 15);
+    /* Verde Hover */
+    border: none;
+}
+
+nav ul li a.active {
+    color: #ffffff;
+    background-color: #17542A;
+    /* Verde Activo */
+}
+
+.menu-container1 {
+    width: 160px;
+    position: relative;
+    display: inline-block;
+    margin-left: 5%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu-button {
+    background-color: #333;
+    color: white;
+    cursor: pointer;
+    text-align: center;
+    border: none;
+    background-color: #80CC28;
+    /* Verde Principal */
+    width: 100%;
+    font-size: 15px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /*border: solid blue 1px;*/
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: white;
+    display: none;
+    position: absolute;
+    left: 0;
+    width: 300px;
+}
+
+.menu-container1:hover .menu {
+    display: block;
+}
+
+.menu-button:hover {
+    background-color: rgb(79, 134, 15);
+    /* Verde Hover */
+    color: white;
+}
+
+.menu li {
+    position: relative;
+}
+
+.menu li>a {
+    display: flex;
+    color: black;
+    text-decoration: none;
+    background-color: #ffffff;
+    height: 100%;
+    padding-left: 20px;
+    justify-content: start;
+    align-items: center;
+}
+
+.menu li>a:hover {
+    background-color: rgb(79, 134, 15);
+    /* Verde más claro para submenú hover */
+}
+
+.menu li {
+    padding-bottom: 0;
+}
+
+.menu li:hover {
+    position: relative;
+    z-index: 1;
+}
+
+.menu-container {
+    display: none;
+}
+
+.Copyrightⓒ2024 {
+    display: none;
+}
+
+footer {
+    display: none;
+}
+
+/* ESTILOS MÓVILES (Antes eran cafés, ahora son verdes) */
+@media (max-width: 650px) {
+
+    nav {
+        /*border: solid black 1px;*/
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        height: 4vh;
+    }
+
+    nav ul {
+        display: none;
+    }
+
+    .menu-container {
+        width: 54px;
+        position: relative;
+        display: inline-block;
+        margin-left: 5%;
+        /*border: solid violet 3px;*/
+        height: 100%;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .menu-button {
+        color: white;
+        cursor: pointer;
+        text-align: center;
+        border: none;
+        color: white;
+        background-color: #80cc28;
+        width: 50px;
+        font-size: 30px;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
+        /*border: solid blue 1px;*/
+    }
+
+    .menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        /* CAMBIO: De #6D5130 a Verde Oscuro */
+        background-color: #17542A;
+        display: none;
+        position: absolute;
+        left: 0;
+        width: 300px;
+        /*border: solid violet 1px;*/
+    }
+
+    .menu-container:hover .menu {
+        display: block;
+    }
+
+    .menu li {
+        position: relative;
+    }
+
+    .menu li>a {
+        display: flex;
+        color: black;
+        text-decoration: none;
+        background-color: #ffffff;
+        height: 100%;
+        padding-left: 20px;
+        justify-content: start;
+        align-items: center;
+    }
+
+    .menu .menu-botón>a {
+        /* CAMBIO: De #6D5130 a Verde Oscuro */
+        background-color: #17542A;
+    }
+
+    .menu li>a:hover {
+        /* CAMBIO: De #6D5130 a Verde Oscuro */
+        background-color: #17542A;
+    }
+
+    .submenu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        position: absolute;
+        top: 0;
+        left: 100%;
+        display: none;
+        /* CAMBIO: De #6D5130 a Verde Oscuro */
+        background-color: #17542A;
+        min-width: 150px;
+        z-index: 10;
+    }
+
+    .menu li:hover .submenu {
+        display: block;
+    }
+
+    .menu li {
+        padding-bottom: 0;
+    }
+
+    .menu li:hover {
+        position: relative;
+        z-index: 1;
+    }
+
+    menu.botón {
+        background-color: black;
+    }
+}
+
+@media (min-width: 200px) and (max-width: 480px) {
+    
+
+    nav {
+        /*border: solid black 1px;*/
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        height: 5vh;
+    }
+
+    nav ul {
+        display: none;
+    }
+
+    .menu-container {
+        width: 54px;
+        position: relative;
+        display: inline-block;
+        margin-left: 5%;
+        /*border: solid violet 3px;*/
+        height: 100% !important;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .menu-button {
+        color: white;
+        cursor: pointer;
+        text-align: center;
+        border: none;
+        color: white;
+        background-color: #80cc28;
+        width: 50px;
+        font-size: large;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
+        /*border: solid blue 1px;*/
+    }
+
+    .menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        /* CAMBIO: De #6D5130 a Verde Oscuro */
+        background-color: #17542A;
+        display: none;
+        position: absolute;
+        left: 0;
+        width: 300px;
+        /*border: solid violet 1px;*/
+    }
+
+    .menu-container:hover .menu {
+        display: block;
+    }
+
+    .menu li {
+        position: relative;
+    }
+
+    .menu li>a {
+        display: flex;
+        color: black;
+        text-decoration: none;
+        background-color: #ffffff;
+        height: 100%;
+        padding-left: 20px;
+        justify-content: start;
+        align-items: center;
+    }
+
+    .menu .menu-botón>a {
+        /* CAMBIO: De #6D5130 a Verde Oscuro */
+        background-color: #17542A;
+    }
+
+    .menu li>a:hover {
+        /* CAMBIO: De #6D5130 a Verde Oscuro */
+        background-color: #17542A;
+    }
+
+    .submenu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        position: absolute;
+        top: 0;
+        left: 100%;
+        display: none;
+        /* CAMBIO: De #6D5130 a Verde Oscuro */
+        background-color: #17542A;
+        min-width: 150px;
+        z-index: 10;
+    }
+
+    .menu li:hover .submenu {
+        display: block;
+    }
+
+    .menu li {
+        padding-bottom: 0;
+    }
+
+    .menu li:hover {
+        position: relative;
+        z-index: 1;
+    }
+
+    menu.botón {
+        background-color: black;
+    }
+}

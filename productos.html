@@ -7,156 +7,328 @@
     <title>Vegan Products/catálogo</title>
     <link href="https://fonts.googleapis.com/css2?family=Bigshot+One&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/header.css">
-    <link rel="stylesheet" href="css/footer.css">
-    <link rel="stylesheet" href="css/nav.css">
-    <link rel="stylesheet" href="css/catalogo.css">
-    <link rel="stylesheet" href="css/carrito.css">
-    <link rel="stylesheet" href="css/busqueda.css">
-    <link rel="stylesheet" href="css/info_producto.css">
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#50B296", // New Primary Green
+                        secondary: "#BCDDC8", // New Light Green/Mint
+                        accent: "#50B297", // Alternate Green
+                        "primary-dark": "#3A8E75", // Darker shade for hovers
+                        "background-light": "#F8FCFA", // Very light tint for bg
+                        "background-dark": "#1a202c",
+                        "surface-dark": "#2d3748",
+                    },
+                    fontFamily: {
+                        display: ["Poppins", "sans-serif"],
+                        body: ["Poppins", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.375rem",
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        body {
+            /* Se establece la fuente Poppins para todo el cuerpo para unificar el diseño */
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Las clases CSS originales de destino se mantienen, pero podrían no funcionar correctamente
+           con la nueva estructura HTML y Tailwind CSS. Se recomienda migrar todo a Tailwind.
+           Sin embargo, para cumplir con la solicitud, las mantendré si aún se usan en el cuerpo: */
+        /*
+        @import url("css/styles.css");
+        @import url("css/header.css");
+        @import url("css/footer.css");
+        @import url("css/nav.css");
+        @import url("css/catalogo.css");
+        @import url("css/carrito.css");
+        @import url("css/busqueda.css");
+        @import url("css/info_producto.css");
+        */
+    </style>
 </head>
 
-<body>
+<body class="bg-gray-50 dark:bg-background-dark min-h-screen">
     <div class="app-container">
-        <!-- Header -->
-        <header class="header">
-            <div class="logo">
-                <a href="index.html">
-                    <img src="imagenes/logo.png" alt="PetShop Logo">
-                </a>
-            </div>
+        <header class="font-display shadow-md relative z-30">
+            <div class="bg-white dark:bg-surface-dark px-4 py-4 transition-colors duration-300">
+                <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-4 lg:gap-8">
+                    <div class="w-full flex flex-col md:flex-row items-center justify-between gap-4 lg:contents">
+                        <div class="flex items-center flex-shrink-0 self-start md:self-center">
+                            <a class="flex items-end gap-3 group cursor-pointer" href="#">
 
-            <div class="search-bar-container">
-                <div class="search-bar">
-                    <input type="text" id="searchBar" placeholder="Buscar productos...">
-                    <img src="imagenes/buscar.png" alt="Ícono de búsqueda" class="search-image">
-                    <div id="searchModal" class="search-modal hidden">
-                        <ul id="resultsList"></ul>
+                                <div class="flex flex-col justify-center -ml-1 pb-1">
+                                    <img src="imagenes/logo.png" alt="Geek Natural Food Store Logo"
+                                        class="h-8 md:h-10 w-auto" />
+                                </div>
+                            </a>
+                        </div>
+                        <div class="w-full lg:flex-grow lg:max-w-xl mx-auto order-last md:order-none mt-2 md:mt-0">
+                            <div class="relative group">
+                                <input
+                                    class="w-full h-10 md:h-12 pl-4 md:pl-6 pr-12 md:pr-14 rounded-full text-sm md:text-base text-gray-700 bg-gray-50 border border-gray-200 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white placeholder-gray-400 font-medium transition-all"
+                                    placeholder="Buscar productos orgánicos..." type="text" />
+                                <button
+                                    class="absolute right-1 top-1 bottom-1 w-8 h-8 md:w-10 md:h-10 bg-primary hover:bg-primary-dark rounded-full text-white transition-colors flex items-center justify-center shadow-sm">
+                                    <span class="material-icons text-lg md:text-xl">search</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center gap-4 md:gap-6 flex-shrink-0 self-end md:self-center absolute top-4 right-4 md:static">
+                            <a class="flex items-center gap-2 group" href="inicio_sesion.html" id="login-link">
+                                <div
+                                    class="bg-secondary/30 dark:bg-white/10 p-2 rounded-full group-hover:bg-secondary/50 dark:group-hover:bg-white/20 transition-colors">
+                                    <span
+                                        class="material-icons text-xl md:text-2xl text-primary dark:text-primary">person_outline</span>
+                                </div>
+                                <div class="hidden xl:flex flex-col">
+                                    <span
+                                        class="text-xs text-gray-500 dark:text-gray-400 font-medium leading-none mb-1">Bienvenido</span>
+                                    <span
+                                        class="text-sm font-bold text-gray-800 dark:text-gray-200 leading-none group-hover:text-primary dark:group-hover:text-secondary transition-colors">Iniciar
+                                        sesión</span>
+                                </div>
+                            </a>
+                            <a href="#" class="flex items-center gap-2 group" id="logout-link" style="display: none;">
+                                <div
+                                    class="bg-secondary/30 dark:bg-white/10 p-2 rounded-full group-hover:bg-secondary/50 dark:group-hover:bg-white/20 transition-colors">
+                                    <span
+                                        class="material-icons text-xl md:text-2xl text-red-500 dark:text-red-400">logout</span>
+                                </div>
+                                <div class="hidden xl:flex flex-col">
+                                    <span
+                                        class="text-xs text-gray-500 dark:text-gray-400 font-medium leading-none mb-1">Usuario</span>
+                                    <span
+                                        class="text-sm font-bold text-gray-800 dark:text-gray-200 leading-none group-hover:text-red-500 dark:group-hover:text-red-400 transition-colors">Cerrar
+                                        sesión</span>
+                                </div>
+                            </a>
+                            <a class="relative group flex items-center gap-2 cart" href="#">
+                                <div
+                                    class="bg-secondary/30 dark:bg-white/10 p-2 rounded-full group-hover:bg-secondary/50 dark:group-hover:bg-white/20 transition-colors relative">
+                                    <span
+                                        class="material-icons text-xl md:text-2xl text-primary dark:text-primary">shopping_cart</span>
+                                    <span
+                                        class="cart-count absolute -top-1 -right-1 h-4 w-4 md:h-5 md:w-5 bg-primary text-white rounded-full flex items-center justify-center text-[10px] font-bold border-2 border-white dark:border-surface-dark">0</span>
+                                </div>
+                                <div class="hidden xl:flex flex-col">
+                                    <span
+                                        class="text-xs text-gray-500 dark:text-gray-400 font-medium leading-none mb-1">Mi
+                                        Carrito</span>
+                                    <span
+                                        class="text-sm font-bold text-gray-800 dark:text-gray-200 leading-none group-hover:text-primary dark:group-hover:text-secondary transition-colors">$0.00</span>
+                                </div>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="actions">
-                <a href="inicio_sesion.html" class="login" id="login-link">
-                    <img src="imagenes/inicio_sesion.png" alt="Iniciar Sesión">
-                    <span>Iniciar sesión</span>
-                </a>
-                <a href="#" class="login" id="logout-link" style="display: none;">
-                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEeklEQVR4nO1aSYgcZRT+J5m4xCVOknp/dxwnElun3usZFUfcsQ8uRB0Tu9//28OMGCM4R2+Ct0hEBQ9K0GhA9OTF9aInEwyCgiLiEg9OHDSJBkTcoyZRo/KqZ0J19d9jV3VV97Tkg4I+/Mv76r16ayt1Av9T5GzB04y3A+MT2tBOYDygGQ9pQ//MPb9opoPa0C5ZA5YmZY9aDBi0g6fmmDaBwTc107GQ0K09wR58RxvarO+48LSuENAW79OM38QWvskDjN9rS/d3jJDm4jgwfZEWAYeWDkIFb8uMwNpNa0/RjDsWEOJvMPSuNvQQWNqwuupf4Fk6fX7/qg3DZ3iWCsC4UTM9CIzvLWiOjM+nrh2YGNFg6AP3pfhjIHxldF3cc3V1+NyAlKHvmpD5MG9pKBUStctw1mHTR4HxkZVThTPbvWPArlsxp6WjjnsOeNXieW1rQjN+3nC4oU912R9RKUOX/RHRgoPM/lUTw2sSHVpYXzgZDL7vMKVX8uNjy1VGyI+PLQdDLzqcwOOJDgSDTzrezHPKqqUqa2xRS8DQsxEr2Bb7HI+LNzreyKsdITGPLWpJ4EQkvhh8e3XZz6vYJsX0WYTIXnGfqpegGe+NfBN/epYuVr0EsnRSkOzVE3msK8LYwIz7Eu2V7DUSkA4NWlqZupD/JYehzcD4KzB9C9Yvxz4AmF7vujasWhqk/CHT1harLe+Xj1kz/lFHJIOg15LrZfFU9d+pNv5ES/tzFbw5Gr1Vl+BVilwTPgEZ8dltB6AUoS1WE5GRgBchMtUxqdMkA4b2hDfkeORStQig45LRTF+HFyfONufdeIplsHZXkn9JkeYi8nN4YeI6o5bwuQullB9g3O8i8lN4kRQ7iYgo1Ze5NszxgD3bcDsY/KpOI/b8sxMSUTnGmxyJZ7raMHQEKnh9w+Xa4McRtperRQBgukcaG1ES2vq3NNmAL4UXe8a/s+NSt0tCoA1ujXiFp1SvkRCA9W+IEJlRXQIYmkpEIlT0Hwlvzpf9S1QXAJGksWUS85AOSb2fpu2qC4BQHIpNIjhA2pn1RH73LOUyk3gBOcDQPnHhwHhd0qJmb8QN71C9CKh5i/BHfwysf6XqOZRK/Zrpk4iJfTk0OTrQRan6Eu3yLF3jaPnvlC6L6hSmx5ZJLJsbV+yRZnqic4Dx4cYcB1/uCJnpsWVyVzoetFTqB4O7HQnbrizNbGhydEAzvdGYstOjiQ9dsfGisxqSyZpv3+dVilenyuC4SWPDLEayjLYnwBJHXGSCb4jpmdjNZQfkDG3oaecojmmmnWq1QTNNzExUfliESFLjS09ZbB8M/tak5ngr/Vm8uGVpGS08wJwNBqaW7oKyf8WaavEcsXl5ETIL1JYuq7VDabvThEwodhnalqlj8bh4lTb4UWbVH9NMroLXqs4FTbzbNV9M+kipDZamxfWqjkNys0rxVpn5SYIZW3imw2DwtaCtUyr1q8UA+VuHZKqa8QEw9IKYn7RrgPEHmcXLb0l9aiU1bvUsrc9yqHoCqsv4F8YM+N+BDeJuAAAAAElFTkSuQmCC"
-                        alt="logout-rounded">
-                    <span>Cerrar sesión</span>
-                </a>
-                <div class="cart">
-                    <img src="imagenes/carrito.png" alt="Carrito">
-                    <span class="cart-count">0</span>
+            <nav class="bg-primary dark:bg-gray-800 shadow-lg relative z-20">
+                <div class="max-w-7xl mx-auto px-4">
+                    <div class="flex items-center justify-between h-12 md:h-14">
+                        <div class="flex-shrink-0 h-full flex items-center py-2 mr-4">
+                            <button
+                                class="h-full bg-white/95 hover:bg-white text-primary font-bold tracking-wide text-xs md:text-sm px-3 md:px-6 rounded-md transition-all duration-300 flex items-center gap-2 group shadow-sm">
+                                <span class="material-icons text-lg md:text-xl">grid_view</span>
+                                <span class="hidden sm:inline">CATEGORÍAS</span>
+                                <span
+                                    class="material-icons transform group-hover:rotate-180 transition-transform duration-300 text-sm">expand_more</span>
+                            </button>
+                        </div>
+                        <div
+                            class="hidden lg:flex flex-grow h-full items-center justify-start pl-4 xl:pl-8 overflow-x-auto">
+                            <div class="flex items-center space-x-1 xl:space-x-2 whitespace-nowrap">
+                                <a class="text-white hover:text-white/90 hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-all relative group"
+                                    href="index.html">
+                                    Inicio
+                                    <span
+                                        class="absolute bottom-1.5 left-3 right-3 h-0.5 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                                </a>
+                                <a class="text-white hover:text-white/90 hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-all relative group"
+                                    href="productos.html?categoria=Edulcorantes">
+                                    Edulcorantes
+                                    <span
+                                        class="absolute bottom-1.5 left-3 right-3 h-0.5 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                                </a>
+                                <a class="text-white hover:text-white/90 hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-all relative group"
+                                    href="productos.html?categoria=Galletas">
+                                    Galletas
+                                    <span
+                                        class="absolute bottom-1.5 left-3 right-3 h-0.5 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                                </a>
+                                <a class="text-white hover:text-white/90 hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-all relative group"
+                                    href="productos.html?categoria=Pastas">
+                                    Pastas
+                                    <span
+                                        class="absolute bottom-1.5 left-3 right-3 h-0.5 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                                </a>
+                                <a class="text-white hover:text-white/90 hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-all relative group"
+                                    href="productos.html?categoria=Bebidas">
+                                    Bebidas
+                                    <span
+                                        class="absolute bottom-1.5 left-3 right-3 h-0.5 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                                </a>
+                                <a class="text-white hover:text-white/90 hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-all relative group"
+                                    href="#">
+                                    Ofertas
+                                    <span
+                                        class="absolute bottom-1.5 left-3 right-3 h-0.5 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="lg:hidden flex items-center">
+                            <button class="text-white hover:text-secondary focus:outline-none transition-colors p-2">
+                                <span class="material-icons text-2xl">menu</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </nav>
         </header>
-        <nav>
-            <div class="menu-container">
-                <div class="menu-button">≡</div>
-                <ul class="menu">
-                    <li>
-                        <a href="productos.html?categoria=Edulcorantes">Edulcorantes</a>
-                    </li>
-                    <li>
-                        <a href="productos.html?categoria=Galletas">Galletas</a>
-                    </li>
-                    <li>
-                        <a href="productos.html?categoria=Pastas">Pastas</a>
-                    </li>
-                    <li>
-                        <a href="productos.html?categoria=Bebidas">Bebidas</a>
-                    </li>
-                </ul>
-            </div>
-            <ul>
-                <li class="categorias">
-                    <div class="menu-container1">
-                        <div class="menu-button">CATEGORÍAS</div>
-                        <ul class="menu">
-                            <li>
-                                <a href="productos.html?categoria=Edulcorantes">Edulcorantes</a>
+
+        <main class="max-w-7xl mx-auto px-4 py-6 md:py-8 flex-grow w-full">
+            <section class="contenido">
+                <div class="breadcrumb">
+                    <a href="index.html">Inicio</a> /
+                    <span class="activo" id="breadcrumb-activo">Cargando...</span>
+                </div>
+
+                <h1 class="titulo-categoria" id="titulo-categoria">Cargando Categoría...</h1>
+
+                <div class="contenedor">
+                    <section class="catalogo" id="productos-listado">
+                        <p>Cargando productos...</p>
+                    </section>
+                </div>
+            </section>
+        </main>
+
+        <footer class="bg-gray-100 dark:bg-surface-dark border-t border-gray-200 dark:border-gray-700 mt-auto">
+            <div class="max-w-7xl mx-auto px-4 py-10 md:py-12">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                    <div class="col-span-1 md:col-span-1">
+                        <a class="flex items-end gap-2 group cursor-pointer mb-4" href="#">
+                            <div class="flex flex-col justify-center">
+                                <img src="imagenes/logo.png" alt="Geek Natural Food Store Logo"
+                                    class="h-10 md:h-12 w-auto" />
+                            </div>
+                        </a>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-6 leading-relaxed"> Tu tienda de confianza
+                            para
+                            productos orgánicos, naturales y saludables. Cuidamos de ti y del planeta. </p>
+                        <div class="flex gap-4">
+                            <a class="w-10 h-10 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white transition-all shadow-sm"
+                                href="#"> <svg aria-hidden="true" class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                                    <path clip-rule="evenodd"
+                                        d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"
+                                        fill-rule="evenodd"></path>
+                                </svg> </a>
+                            <a class="w-10 h-10 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white transition-all shadow-sm"
+                                href="#"> <svg aria-hidden="true" class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                                    <path
+                                        d="M17.34 5.46a1.2 1.2 0 100-2.4 1.2 1.2 0 000 2.4zM12 21.75c-5.385 0-9.75-4.365-9.75-9.75S6.615 2.25 12 2.25s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75zM12 4.5c-4.14 0-7.5 3.36-7.5 7.5s3.36 7.5 7.5 7.5 7.5-3.36 7.5-7.5-3.36-7.5-7.5-7.5zm.75 9.75h-1.5c-.414 0-.75-.336-.75-.75V10.5a.75.75 0 011.5 0v3h.75a.75.75 0 010 1.5z">
+                                    </path>
+                                </svg> </a>
+                            <a class="w-10 h-10 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white transition-all shadow-sm"
+                                href="#"> <svg aria-hidden="true" class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                                    <path
+                                        d="M18.275 3.12c1.77 0 3.2 1.43 3.2 3.2v11.36c0 1.77-1.43 3.2-3.2 3.2H5.725c-1.77 0-3.2-1.43-3.2-3.2V6.32c0-1.77 1.43-3.2 3.2-3.2h12.55zm-6.19 2.59c-2.73 0-4.94 2.21-4.94 4.94s2.21 4.94 4.94 4.94 4.94-2.21 4.94-4.94-2.21-4.94-4.94-4.94zm0 8.08c-1.73 0-3.14-1.41-3.14-3.14s1.41-3.14 3.14-3.14 3.14 1.41 3.14 3.14-1.41 3.14-3.14 3.14zM18.407 5.723a1.16 1.16 0 100 2.32 1.16 1.16 0 000-2.32zM18.275 19.407a11.616 11.616 0 006.29 1.84">
+                                    </path>
+                                </svg> </a>
+                        </div>
+                    </div>
+                    <div>
+                        <h4
+                            class="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-4 border-b-2 border-primary inline-block pb-1">
+                            Enlaces Rápidos</h4>
+                        <ul class="space-y-3 text-sm">
+                            <li><a class="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"
+                                    href="#"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Acerca de
+                                    Nosotros</a></li>
+                            <li><a class="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"
+                                    href="#"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Contacto</a>
                             </li>
-                            <li>
-                                <a href="productos.html?categoria=Galletas">Galletas</a>
-                            </li>
-                            <li>
-                                <a href="productos.html?categoria=Pastas">Pastas</a>
-                            </li>
-                            <li>
-                                <a href="productos.html?categoria=Bebidas">Bebidas</a>
+                            <li><a class="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"
+                                    href="politica_privacidad.html"><span
+                                        class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Políticas de
+                                    Privacidad</a></li>
+                            <li><a class="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"
+                                    href="terminos_condiciones.html"><span
+                                        class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Términos y
+                                    Condiciones</a></li>
+                            <li><a class="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"
+                                    href="preguntas_frecuentes.html"><span
+                                        class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Preguntas Frecuentes</a>
                             </li>
                         </ul>
                     </div>
-                </li>
-                <li class="fondo-menu menu1"><a href="index.html" class="active">Inicio</a></li>
-                <li class="menu1"><a href="productos.html?categoria=Edulcorantes">Edulcorantes</a></li>
-                <li class="menu1"><a href="productos.html?categoria=Galletas">Galletas</a></li>
-                <li class="menu1"><a href="productos.html?categoria=Pastas">Pastas</a></li>
-                <li class="menu1"><a href="productos.html?categoria=Bebidas">Bebidas</a></li>
-            </ul>
-        </nav>
-        <section class="contenido">
-            <div class="breadcrumb">
-                <a href="index.html">Inicio</a> /
-                <span class="activo" id="breadcrumb-activo">Cargando...</span>
-            </div>
-
-            <h1 class="titulo-categoria" id="titulo-categoria">Cargando Categoría...</h1>
-
-            <div class="contenedor">
-                <section class="catalogo" id="productos-listado">
-                    <p>Cargando productos...</p>
-                </section>
-            </div>
-        </section>
-        <!-- Footer -->
-        <footer class="parent">
-            <div class="div1">
-                <div class="info">
-                    <h3 class="footer-title">UBICACIÓN</h3>
-                    <div class="ubicaciones">
-                        <img src="imagenes/icons8-ubicación-24.png" alt="">
-                        <p>Av. Busch y Tercer Anillo </p>
+                    <div>
+                        <h4
+                            class="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-4 border-b-2 border-primary inline-block pb-1">
+                            Mi Cuenta</h4>
+                        <ul class="space-y-3 text-sm">
+                            <li><a class="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"
+                                    href="#"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Mis Pedidos</a>
+                            </li>
+                            <li><a class="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"
+                                    href="#"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Lista de
+                                    Deseos</a>
+                            </li>
+                            <li><a class="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"
+                                    href="#"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Seguir
+                                    Pedido</a>
+                            </li>
+                            <li><a class="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"
+                                    href="#"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Mi Carrito</a>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="ubicaciones">
-                        <img src="imagenes/icons8-ubicación-24.png" alt="">
-                        <p>Av. America esq. Av Pando </p>
+                    <div>
+                        <h4
+                            class="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-4 border-b-2 border-primary inline-block pb-1">
+                            Contacto</h4>
+                        <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-400">
+                            <li class="flex items-start gap-3">
+                                <span class="material-icons text-primary text-lg">location_on</span>
+                                <span>Av. Principal #123, Ciudad Natural, País Feliz</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="material-icons text-primary text-lg">call</span>
+                                <span>+1 (555) 123-4567</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="material-icons text-primary text-lg">email</span>
+                                <span>hola@geeknaturalstore.com</span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-            </div>
-            <div class="div2">
-                <div class="info">
-                    <h3 class="footer-title">CONTACTANOS</h3>
-                    <p>Atención Telefónica</p>
-                    <p>(591) 54488474</p>
+                <div
+                    class="border-t border-gray-200 dark:border-gray-700 pt-8 mt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <p class="text-xs text-gray-500 dark:text-gray-500 text-center md:text-left">
+                        © 2023 GEEK Natural Store. Todos los derechos reservados.
+                    </p>
+                    <div class="flex items-center gap-2">
+                        <div class="h-6 w-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                        <div class="h-6 w-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                        <div class="h-6 w-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                    </div>
                 </div>
-            </div>
-            <div class="div3">
-                <div class="info">
-                    <h3 class="footer-title ayuda-title">AYUDA</h3>
-                    <a href="preguntas_frecuentes.html">Preguntas frecuentes</a>
-                    <a href="terminos_condiciones.html">Términos y condiciones</a>
-                    <a href="politica_privacidad.html">Política de privacidad</a>
-                </div>
-            </div>
-            <div class="div4">
-                <p>SÍGUENOS EN:</p>
-                <div class="imagenes-redes-sociales">
-                    <a href="https://www.facebook.com/verdenaturalmarket" target="_blank" rel="noopener noreferrer">
-                        <img src="imagenes/icons8-facebook-48.png" alt="facebook">
-                    </a>
-                    <a href="https://www.instagram.com/verdenaturalmarket/" target="_blank" rel="noopener noreferrer">
-                        <img src="imagenes/icons8-instagram-48.png" alt="instagram">
-                    </a>
-                    <a href="https://www.tiktok.com/@verdenaturalmarket" target="_blank" rel="noopener noreferrer">
-                        <img src="imagenes/icons8-tiktok-48.png" alt="tiktok">
-                    </a>
-                </div>
-            </div>
-            <div class="div5">
-                <p>© Pet Shop - 2025</p>
             </div>
         </footer>
     </div>
@@ -205,6 +377,11 @@
             </form>
         </div>
     </div>
+    <script>
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script type="module" src="js/supabaseClient.js"></script>
     <script type="module" src="js/productos.js"></script>

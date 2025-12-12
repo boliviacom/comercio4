@@ -1,243 +1,311 @@
+// Asegúrate de inicializar tu cliente Supabase, aunque no se usa en la lógica directa del carrito
+// Por si acaso, si la clase Producto requiere alguna conexión, la importamos.
+import { supabase } from './supabaseClient.js';
+import { Producto } from './models/Producto.js';
+
 // =========================================================
-// LÓGICA DE APERTURA Y CIERRE DEL CARRITO
+// GESTIÓN DEL CARRITO (LOCAL STORAGE)
 // =========================================================
-document.querySelector(".cart img").addEventListener("click", () => {
-    document.querySelector(".cart-container").classList.toggle("active");
-});
 
-document.querySelector(".close-cart").addEventListener("click", () => {
-    document.querySelector(".cart-container").classList.remove("active");
-});
+/**
+ * Carga el carrito desde localStorage. Si no existe, devuelve un array vacío.
+ * @returns {Array<Object>} Lista de productos en el carrito.
+ */
+const getCarrito = () => {
+    const carritoJson = localStorage.getItem('carrito');
+    return carritoJson ? JSON.parse(carritoJson) : [];
+};
 
-let carrito = [];
+/**
+ * Guarda el carrito en localStorage.
+ * @param {Array<Object>} carrito - Lista de productos a guardar.
+ */
+const saveCarrito = (carrito) => {
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+    updateCartDisplay();
+};
 
-// 🚀 Cargar carrito desde `localStorage` al abrir cualquier página
-function cargarCarritoDesdeLocalStorage() {
-    let carritoGuardado = localStorage.getItem("carrito");
-    if (carritoGuardado) {
-        try {
-            carrito = JSON.parse(carritoGuardado);
-        } catch (error) {
-            console.error("Error al cargar el carrito:", error);
-            carrito = [];
+// =========================================================
+// FUNCIONES DE MANEJO DE PRODUCTOS EN EL CARRITO
+// =========================================================
+
+/**
+ * Agrega un producto al carrito o incrementa su cantidad si ya existe.
+ * @param {string} productoId - ID del producto a agregar.
+ * @param {number} cantidad - Cantidad a agregar (por defecto 1).
+ */
+async function addProductToCart(productoId, cantidad = 1) {
+    const id = parseInt(productoId);
+    if (isNaN(id) || id <= 0) {
+        console.error("ID de producto no válido:", productoId);
+        return;
+    }
+
+    // 1. Buscar los datos completos del producto en la base de datos (Supabase)
+    const { data: productData, error } = await supabase
+        .from('producto')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+    if (error || !productData) {
+        console.error('Error al obtener los datos del producto:', error || 'Producto no encontrado');
+        return;
+    }
+
+    // Crear una instancia de la clase Producto para usar sus propiedades y lógica
+    const producto = new Producto(productData);
+
+    // 2. Obtener el carrito actual
+    let carrito = getCarrito();
+
+    // 3. Verificar si el producto ya está en el carrito
+    const itemIndex = carrito.findIndex(item => item.id === id);
+
+    if (itemIndex > -1) {
+        // El producto ya existe, incrementamos la cantidad
+        carrito[itemIndex].cantidad += cantidad;
+    } else {
+        // El producto no existe, lo agregamos
+        carrito.push({
+            id: producto.id,
+            nombre: producto.nombre,
+            precio: producto.precio,
+            imagen_url: producto.imagen_url,
+            // Aquí puedes añadir cualquier otro dato esencial para la visualización del carrito
+            categoria_nombre: producto.id_categoria?.nombre || 'General',
+            cantidad: cantidad,
+        });
+    }
+
+    // 4. Guardar y actualizar la vista
+    saveCarrito(carrito);
+    console.log(`Producto ${producto.nombre} (x${cantidad}) añadido al carrito. Total items: ${carrito.length}`);
+    alert(`Se añadió ${producto.nombre} al carrito.`); // Notificación simple
+}
+
+// =========================================================
+// ACTUALIZACIÓN DE LA INTERFAZ DE USUARIO (MODAL CARRITO)
+// =========================================================
+
+/**
+ * Actualiza la vista del carrito (contador en el header y el modal/sidebar).
+ */
+const updateCartDisplay = () => {
+    const carrito = getCarrito();
+    const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+    const subtotal = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+
+    // 1. Actualizar el contador en el header
+    const cartCountSpan = document.querySelector('header .shopping_cart + span');
+    if (cartCountSpan) {
+        cartCountSpan.textContent = totalItems;
+    }
+
+    // 2. Actualizar el precio total en el header
+    const cartPriceSpan = document.querySelector('header .shopping_cart').closest('a').querySelector('.xl\\:flex:last-child .text-sm:last-child');
+    if (cartPriceSpan) {
+        cartPriceSpan.textContent = `$${subtotal.toFixed(2)}`;
+    }
+
+    // 3. Actualizar el contenido del modal (Esto es más complejo y requerirá una plantilla)
+    const listContainer = document.querySelector('#cart-modal .flow-root ul');
+    const subtotalModal = document.querySelector('#cart-modal .justify-between p:last-child');
+
+    if (listContainer) {
+        listContainer.innerHTML = carrito.map(item => `
+            <li class="flex py-6" data-id="${item.id}">
+                <div
+                    class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 dark:border-gray-600 bg-background-light dark:bg-gray-700 flex items-center justify-center">
+                    ${item.imagen_url ? `<img src="${item.imagen_url}" alt="${item.nombre}" class="object-cover w-full h-full"/>` : `<span class="material-symbols-outlined text-primary/30 text-5xl">package_2</span>`}
+                </div>
+                <div class="ml-4 flex flex-1 flex-col">
+                    <div>
+                        <div
+                            class="flex justify-between text-base font-medium text-gray-900 dark:text-white">
+                            <h3>
+                                <a href="detalle_producto.html?id=${item.id}">${item.nombre}</a>
+                            </h3>
+                            <p class="ml-4">Bs ${(item.precio * item.cantidad).toFixed(2)}</p>
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">${item.categoria_nombre || 'General'}</p>
+                    </div>
+                    <div class="flex flex-1 items-end justify-between text-sm">
+                        <div class="flex items-center border border-gray-300 dark:border-gray-600 rounded-md">
+                            <button class="cart-update-btn px-2 py-1 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-l-md" data-id="${item.id}" data-action="decrease">-</button>
+                            <span class="px-2 text-gray-900 dark:text-white font-medium">${item.cantidad}</span>
+                            <button class="cart-update-btn px-2 py-1 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-r-md" data-id="${item.id}" data-action="increase">+</button>
+                        </div>
+                        <div class="flex">
+                            <button class="cart-remove-btn font-medium text-red-500 hover:text-red-700 flex items-center gap-1 text-xs" data-id="${item.id}" type="button">
+                                <span class="material-icons text-sm">delete_outline</span>
+                                Eliminar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        `).join('');
+
+        // Si el carrito está vacío, muestra un mensaje
+        if (carrito.length === 0) {
+            listContainer.innerHTML = '<li class="text-center text-gray-500 py-10">Tu carrito está vacío.</li>';
+            subtotalModal.textContent = 'Bs 0.00';
+        } else {
+            subtotalModal.textContent = `Bs ${subtotal.toFixed(2)}`;
         }
-    } else {
-        carrito = [];
+
+        // Re-añadir listeners para eliminar/cambiar cantidad DENTRO del modal
+        addModalListeners();
     }
-    actualizarCarrito();
-}
+};
 
-// Guardar carrito en `localStorage`
-function guardarCarritoEnLocalStorage() {
-    localStorage.setItem("carrito", JSON.stringify(carrito));
-}
-
-// =========================================================
-// LÓGICA DE PRODUCTOS DE CATÁLOGO (USANDO .producto)
-// =========================================================
-
-// 🔹 Detectar clic en los botones "AGREGAR" de los productos de catálogo
-export function agregarListenersCatalogo() {
-    document.querySelectorAll(".agregar").forEach((boton) => {
-        boton.addEventListener("click", () => {
-            // Buscamos el contenedor padre con la clase '.producto'
-            let producto = boton.closest(".producto");
-
-            if (!producto) return;
-
-            // 🛑 CORRECCIÓN/OPTIMIZACIÓN: Leer el data-id directamente del botón (ya es string)
-            let id = boton.getAttribute("data-id");
-            let nombre = producto.querySelector("h3").textContent;
-            // El precio se lee del atributo data-precio del contenedor .producto
-            let precio = parseFloat(producto.getAttribute("data-precio"));
-
-            // Usamos el input de cantidad asociado al producto
-            let cantidadInput = producto.querySelector(".cantidad-input");
-            let cantidad = parseInt(cantidadInput.value);
-
-            let imagen = producto.querySelector("img").src;
-
-            // Llamamos a la función unificada de agregar
-            agregarProductoPorID(id, cantidad, nombre, precio, imagen);
-
-            // Reiniciar la cantidad en el input del catálogo a 1 después de agregar
-            cantidadInput.value = 1;
+/**
+ * Añade listeners a los botones de eliminar y actualizar cantidad dentro del modal del carrito.
+ */
+function addModalListeners() {
+    // Listener para eliminar producto
+    document.querySelectorAll('.cart-remove-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const id = parseInt(e.currentTarget.dataset.id);
+            removeProductFromCart(id);
         });
     });
 
-    // Añadir listeners para los botones de incrementar/decrementar del catálogo
-    document.querySelectorAll(".incrementar").forEach(boton => {
-        boton.addEventListener("click", () => {
-            const input = boton.closest(".cantidad").querySelector(".cantidad-input");
-            // Asegúrate de no exceder el stock (aunque esto requeriría consultar Supabase aquí)
-            input.value = parseInt(input.value) + 1;
+    // Listener para actualizar cantidad
+    document.querySelectorAll('.cart-update-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const id = parseInt(e.currentTarget.dataset.id);
+            const action = e.currentTarget.dataset.action;
+            updateProductQuantity(id, action);
         });
     });
+}
 
-    document.querySelectorAll(".decrementar").forEach(boton => {
-        boton.addEventListener("click", () => {
-            const input = boton.closest(".cantidad").querySelector(".cantidad-input");
-            let cantidad = parseInt(input.value);
-            if (cantidad > 1) {
-                input.value = cantidad - 1;
+/**
+ * Elimina un producto del carrito.
+ * @param {number} id - ID del producto.
+ */
+function removeProductFromCart(id) {
+    let carrito = getCarrito();
+    carrito = carrito.filter(item => item.id !== id);
+    saveCarrito(carrito);
+}
+
+/**
+ * Actualiza la cantidad de un producto en el carrito.
+ * @param {number} id - ID del producto.
+ * @param {'increase'|'decrease'} action - Acción a realizar.
+ */
+function updateProductQuantity(id, action) {
+    let carrito = getCarrito();
+    const itemIndex = carrito.findIndex(item => item.id === id);
+
+    if (itemIndex > -1) {
+        if (action === 'increase') {
+            carrito[itemIndex].cantidad++;
+        } else if (action === 'decrease') {
+            carrito[itemIndex].cantidad--;
+            // Si la cantidad llega a 0, eliminar el producto
+            if (carrito[itemIndex].cantidad <= 0) {
+                removeProductFromCart(id);
+                return; // Salir de la función para evitar el saveCarrito duplicado
             }
-        });
-    });
-}
-
-// 🛑 FUNCIÓN UNIFICADA DE AGREGAR PRODUCTO (EXPORTADA)
-// USADA POR catálogo (productos.js) y detalle de producto (detalleProducto.js)
-export async function agregarProductoPorID(id, cantidad, nombre = null, precio = null, imagen = null) {
-
-    // ✅ CORRECCIÓN CLAVE: Convertir el ID de entrada a string para asegurar la consistencia.
-    const idString = String(id);
-
-    // 🛑 CORRECCIÓN CLAVE: Buscamos el producto en el carrito por ID, asegurando que
-    // AMBOS IDs (el nuevo y los existentes) sean tratados como strings.
-    let existe = carrito.find(item => String(item.id) === idString);
-
-    if (existe) {
-        // El producto ya está, SUMAMOS la cantidad.
-        existe.cantidad += cantidad;
-    } else if (nombre && precio) {
-        // Es un producto nuevo, lo agregamos, usando el ID ya convertido a string.
-        carrito.push({ id: idString, nombre, precio, cantidad, imagen });
-    } else {
-        console.error("No se puede agregar el producto: faltan datos (nombre o precio).");
-        return false;
-    }
-
-    guardarCarritoEnLocalStorage();
-    actualizarCarrito();
-
-    // Muestra el carrito
-    document.querySelector(".cart-container").classList.add("active");
-
-    return true;
-}
-
-
-// =========================================================
-// LÓGICA DEL CARRITO (RENDERIZADO Y MANIPULACIÓN)
-// =========================================================
-
-function actualizarCarrito() {
-    let contenedor = document.querySelector(".cart-items");
-    contenedor.innerHTML = "";
-
-    let total = 0;
-    let totalProductos = 0;
-
-    carrito.forEach((producto) => {
-        let div = document.createElement("div");
-        div.classList.add("cart-item");
-
-        let nombreCorto = producto.nombre.length > 30 ? producto.nombre.substring(0, 30) + "..." : producto.nombre;
-        let subtotal = (producto.precio * producto.cantidad).toFixed(2).replace(".", ",");
-        totalProductos += producto.cantidad;
-
-        div.innerHTML = `
-            <img src="${producto.imagen}" alt="${producto.nombre}">
-            <span>${nombreCorto}</span>
-            <div class="cantidad">
-                <button class="decrementar-carrito" data-id="${producto.id}">-</button>
-                <span>${producto.cantidad}</span>
-                <button class="incrementar-carrito" data-id="${producto.id}">+</button>
-            </div>
-            <span class="subtotal">Bs. ${subtotal}</span>
-            <button class="eliminar" data-id="${producto.id}">
-                <img src="https://img.icons8.com/ios-filled/50/trash.png" alt="Eliminar">
-            </button>
-        `;
-        contenedor.appendChild(div);
-
-        total += producto.precio * producto.cantidad;
-    });
-
-    let cartCount = document.querySelector(".cart-count");
-    cartCount.textContent = totalProductos > 0 ? totalProductos : "";
-    cartCount.style.display = totalProductos > 0 ? "flex" : "none";
-
-    document.querySelector(".total-price").textContent = `Total: Bs. ${total.toFixed(2).replace(".", ",")}`;
-
-    guardarCarritoEnLocalStorage();
-
-    // 🛑 Listener para ELIMINAR
-    document.querySelectorAll(".eliminar").forEach((boton) => {
-        boton.addEventListener("click", () => {
-            const idEliminar = boton.getAttribute("data-id");
-            let item = boton.closest(".cart-item");
-
-            item.style.transition = "opacity 0.3s ease-out, transform 0.3s ease-out";
-            item.style.opacity = "0";
-            item.style.transform = "scale(0.8)";
-
-            setTimeout(() => {
-                // Aseguramos que el ID del carrito y el ID a eliminar sean strings para la comparación
-                carrito = carrito.filter(item => String(item.id) !== idEliminar);
-                actualizarCarrito();
-            }, 300);
-        });
-    });
-
-    // 🛑 Listener para INCREMENTAR
-    document.querySelectorAll(".incrementar-carrito").forEach((boton) => {
-        boton.addEventListener("click", () => {
-            const idIncrementar = boton.getAttribute("data-id");
-            // Aseguramos que el ID del carrito sea string para la búsqueda
-            let itemIndex = carrito.findIndex(item => String(item.id) === idIncrementar);
-            if (itemIndex > -1) {
-                carrito[itemIndex].cantidad++;
-                actualizarCarrito();
-            }
-        });
-    });
-
-    // 🛑 Listener para DECREMENTAR
-    document.querySelectorAll(".decrementar-carrito").forEach((boton) => {
-        boton.addEventListener("click", () => {
-            const idDecrementar = boton.getAttribute("data-id");
-            // Aseguramos que el ID del carrito sea string para la búsqueda
-            let itemIndex = carrito.findIndex(item => String(item.id) === idDecrementar);
-
-            if (itemIndex > -1 && carrito[itemIndex].cantidad > 1) {
-                carrito[itemIndex].cantidad--;
-                actualizarCarrito();
-            }
-        });
-    });
-}
-
-
-// 🛒 Vaciar carrito
-document.querySelector(".vaciar-carrito").addEventListener("click", () => {
-    carrito = [];
-    localStorage.removeItem("carrito");
-    actualizarCarrito();
-    alert("¡Carrito vacío! Puedes empezar una nueva compra.");
-});
-
-
-// 🔹 Cerrar carrito cuando se toca fuera de la ventana, pero NO si se hace clic en botones internos
-document.addEventListener("click", (event) => {
-    const cartContainer = document.querySelector(".cart-container");
-    const cartIcon = document.querySelector(".cart img");
-
-    if (cartContainer && cartIcon) { // Verificar si los elementos existen
-        // Comprobar si el clic no está en el contenedor del carrito, ni en el ícono
-        // ni en ninguno de los botones de acción dentro del carrito.
-        if (!cartContainer.contains(event.target) &&
-            !cartIcon.contains(event.target) &&
-            !event.target.classList.contains("incrementar-carrito") &&
-            !event.target.classList.contains("decrementar-carrito") &&
-            !event.target.classList.contains("eliminar") &&
-            !event.target.classList.contains("vaciar-carrito") &&
-            !event.target.classList.contains("finalizar-compra") &&
-            !event.target.closest(".eliminar")) {
-            cartContainer.classList.remove("active");
         }
     }
+    saveCarrito(carrito);
+}
+
+// =========================================================
+// LISTENERS PRINCIPALES DEL CATÁLOGO
+// =========================================================
+
+/**
+ * Añade los listeners de click a todos los botones 'Añadir al Carrito' 
+ * que se cargaron dinámicamente en el catálogo (index.html o productos.html).
+ */
+const agregarListenersCatalogo = () => {
+    const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+
+    console.log(`Intentando añadir listeners a ${addToCartButtons.length} botones de carrito.`);
+
+    addToCartButtons.forEach(button => {
+        // Remover cualquier listener previo para evitar duplicados
+        button.removeEventListener('click', handleAddToCartClick);
+
+        // Añadir el nuevo listener
+        button.addEventListener('click', handleAddToCartClick);
+    });
+
+    // También añadimos listeners a los botones de incrementar/decrementar en productos.js
+    // Solo si estamos en productos.html
+    const isProductPage = document.getElementById('productos-listado');
+    if (isProductPage) {
+        addProductPageQuantityListeners();
+    }
+};
+
+/**
+ * Maneja el evento click del botón 'Añadir al Carrito'.
+ */
+function handleAddToCartClick(e) {
+    e.preventDefault();
+    const productId = e.currentTarget.dataset.productId;
+    let quantity = 1;
+
+    // Intentar encontrar el input de cantidad asociado si existe (esto es más común en productos.html)
+    const quantityInput = e.currentTarget.closest('.producto')?.querySelector('.cantidad-input');
+
+    if (quantityInput) {
+        quantity = parseInt(quantityInput.value) || 1;
+    }
+
+    if (productId) {
+        addProductToCart(productId, quantity);
+    } else {
+        console.error("ID de producto no encontrado en el botón de carrito.");
+    }
+}
+
+
+/**
+ * Añade listeners a los botones de cantidad en la vista de catálogo (usada en productos.js).
+ */
+function addProductPageQuantityListeners() {
+    document.querySelectorAll('.incrementar').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const id = e.currentTarget.dataset.id;
+            const input = document.querySelector(`.cantidad-input[data-id="${id}"]`);
+            if (input) {
+                let current = parseInt(input.value);
+                input.value = (current + 1).toString();
+            }
+        });
+    });
+
+    document.querySelectorAll('.decrementar').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const id = e.currentTarget.dataset.id;
+            const input = document.querySelector(`.cantidad-input[data-id="${id}"]`);
+            if (input) {
+                let current = parseInt(input.value);
+                if (current > 1) {
+                    input.value = (current - 1).toString();
+                }
+            }
+        });
+    });
+}
+
+
+// =========================================================
+// INICIALIZACIÓN
+// =========================================================
+
+// Inicializar la vista del carrito al cargar la página
+document.addEventListener('DOMContentLoaded', () => {
+    updateCartDisplay();
 });
 
-// 🚀 Cargar el carrito cuando se abre cualquier página
-cargarCarritoDesdeLocalStorage();
+// Exportar la función clave para ser usada en productmanager.js y productos.js
+export { agregarListenersCatalogo };

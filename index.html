@@ -50,8 +50,7 @@
             <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-4 lg:gap-8">
                 <div class="w-full flex flex-col md:flex-row items-center justify-between gap-4 lg:contents">
                     <div class="flex items-center flex-shrink-0 self-start md:self-center">
-                        <a class="flex items-end gap-3 group cursor-pointer" href="#">
-
+                        <a class="flex items-end gap-3 group cursor-pointer" href="index.html">
                             <div class="flex flex-col justify-center -ml-1 pb-1">
                                 <img src="imagenes/logo.png" alt="Geek Natural Food Store Logo"
                                     class="h-8 md:h-10 w-auto" />
@@ -98,7 +97,8 @@
                                 <span class="text-xs text-gray-500 dark:text-gray-400 font-medium leading-none mb-1">Mi
                                     Carrito</span>
                                 <span
-                                    class="text-sm font-bold text-gray-800 dark:text-gray-200 leading-none group-hover:text-primary dark:group-hover:text-secondary transition-colors">$0.00</span>
+                                    class="text-sm font-bold text-gray-800 dark:text-gray-200 leading-none group-hover:text-primary dark:group-hover:text-secondary transition-colors">Bs
+                                    0.00</span>
                             </div>
                         </a>
                     </div>
@@ -108,64 +108,95 @@
         <nav class="bg-primary dark:bg-gray-800 shadow-lg relative z-20">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="flex items-center justify-between h-12 md:h-14">
-                    <div class="flex-shrink-0 h-full flex items-center py-2 mr-4">
-                        <button
+                    <div class="flex-shrink-0 h-full flex items-center py-2 mr-4 relative">
+                        <button id="categories-toggle"
                             class="h-full bg-white/95 hover:bg-white text-primary font-bold tracking-wide text-xs md:text-sm px-3 md:px-6 rounded-md transition-all duration-300 flex items-center gap-2 group shadow-sm">
                             <span class="material-icons text-lg md:text-xl">grid_view</span>
                             <span class="hidden sm:inline">CATEGORÍAS</span>
-                            <span
-                                class="material-icons transform group-hover:rotate-180 transition-transform duration-300 text-sm">expand_more</span>
+                            <span class="material-icons transition-transform duration-300 text-sm"
+                                id="categories-arrow">expand_more</span>
                         </button>
+                        <div id="categories-dropdown-menu"
+                            class="absolute top-full left-0 mt-2 w-64 bg-white dark:bg-gray-700 shadow-xl rounded-lg overflow-hidden transition-all duration-300 hidden z-50 transform origin-top scale-95 opacity-0">
+                            <div id="dropdown-links-container" class="py-2">
+                                <a class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200"
+                                    href="#">Cargando...</a>
+                            </div>
+                        </div>
                     </div>
+
                     <div
                         class="hidden lg:flex flex-grow h-full items-center justify-start pl-4 xl:pl-8 overflow-x-auto">
-                        <div class="flex items-center space-x-1 xl:space-x-2 whitespace-nowrap">
+                        <div class="flex items-center space-x-1 xl:space-x-2 whitespace-nowrap" id="main-nav-links">
                             <a class="text-white hover:text-white/90 hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-all relative group"
-                                href="#">
+                                href="index.html">
                                 Inicio
                                 <span
                                     class="absolute bottom-1.5 left-3 right-3 h-0.5 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                             </a>
                             <a class="text-white hover:text-white/90 hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-all relative group"
-                                href="#">
+                                href="productos.html?categoria=Edulcorantes">
                                 Edulcorantes
                                 <span
                                     class="absolute bottom-1.5 left-3 right-3 h-0.5 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                             </a>
                             <a class="text-white hover:text-white/90 hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-all relative group"
-                                href="#">
+                                href="productos.html?categoria=Galletas">
                                 Galletas
                                 <span
                                     class="absolute bottom-1.5 left-3 right-3 h-0.5 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                             </a>
                             <a class="text-white hover:text-white/90 hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-all relative group"
-                                href="#">
+                                href="productos.html?categoria=Pastas">
                                 Pastas
                                 <span
                                     class="absolute bottom-1.5 left-3 right-3 h-0.5 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                             </a>
                             <a class="text-white hover:text-white/90 hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-all relative group"
-                                href="#">
+                                href="productos.html?categoria=Bebidas">
                                 Bebidas
-                                <span
-                                    class="absolute bottom-1.5 left-3 right-3 h-0.5 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
-                            </a>
-                            <a class="text-white hover:text-white/90 hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-all relative group"
-                                href="#">
-                                Ofertas
                                 <span
                                     class="absolute bottom-1.5 left-3 right-3 h-0.5 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                             </a>
                         </div>
                     </div>
+
                     <div class="lg:hidden flex items-center">
-                        <button class="text-white hover:text-secondary focus:outline-none transition-colors p-2">
-                            <span class="material-icons text-2xl">menu</span>
+                        <button id="mobile-menu-open-button"
+                            class="text-white hover:text-secondary focus:outline-none transition-colors p-2"
+                            aria-expanded="false"> <span class="material-icons text-2xl">menu</span>
                         </button>
                     </div>
                 </div>
             </div>
         </nav>
+
+        <div id="mobile-menu-panel"
+            class="lg:hidden fixed inset-x-0 top-0 bg-white dark:bg-gray-800 shadow-xl z-40 transition-all duration-300 transform -translate-y-full opacity-0 max-h-screen overflow-y-scroll hidden">
+
+            <div id="mobile-panel-header"
+                class="flex items-center justify-between h-12 md:h-14 px-4 border-b border-gray-100 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800 z-50">
+                <a class="flex items-end gap-3 group cursor-pointer" href="index.html">
+                    <div class="flex flex-col justify-center -ml-1 pb-1">
+                        <img src="imagenes/logo.png" alt="Geek Natural Food Store Logo" class="h-8 md:h-10 w-auto" />
+                    </div>
+                </a>
+
+                <button id="mobile-menu-close-button"
+                    class="text-gray-800 dark:text-white hover:text-primary focus:outline-none transition-colors p-2"
+                    aria-expanded="false">
+                    <span class="material-icons text-2xl">close</span>
+                </button>
+            </div>
+            <div class="px-4 pt-2 pb-3 space-y-1" id="mobile-nav-links">
+            </div>
+            <div class="border-t border-gray-200 dark:border-gray-700 pt-3 pb-3 px-4">
+                <h4 class="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-2">Todas las
+                    Categorías</h4>
+                <div id="mobile-categories-links" class="space-y-1">
+                </div>
+            </div>
+        </div>
     </header>
     <main class="max-w-7xl mx-auto px-4 py-6 md:py-8 flex-grow w-full">
         <section class="mb-12 relative rounded-3xl overflow-hidden shadow-2xl">
@@ -229,7 +260,8 @@
                 </div>
             </div>
         </section>
-        <section class="mb-16">
+
+        <section class="mb-16" id="categories-section">
             <div class="flex justify-between items-end mb-8">
                 <div>
                     <h2 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-2">Categorías Populares
@@ -237,73 +269,33 @@
                     <p class="text-gray-500 dark:text-gray-400">Explora lo que nuestros clientes aman</p>
                 </div>
                 <a class="hidden md:flex items-center gap-1 text-primary font-semibold hover:text-primary-dark transition-colors"
-                    href="#">
+                    href="productos.html">
                     Ver todas <span class="material-icons text-sm">chevron_right</span>
                 </a>
             </div>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                <a class="group relative rounded-xl overflow-hidden aspect-[4/5] shadow-sm hover:shadow-xl transition-all duration-300"
-                    href="#">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
-                    <div class="absolute inset-0 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                        <span
-                            class="material-symbols-outlined text-gray-400 text-6xl group-hover:scale-110 transition-transform duration-500">grocery</span>
+
+            <div class="relative px-4 sm:px-6"> <button id="carousel-prev"
+                    class="hidden absolute top-1/2 left-0 transform -translate-x-1/2 -translate-y-1/2 z-20 p-2 lg:p-3 bg-white dark:bg-surface-dark rounded-full shadow-xl text-primary hover:bg-primary hover:text-white transition-all duration-300 focus:outline-none disabled:opacity-50 disabled:pointer-events-none">
+                    <span class="material-icons">chevron_left</span>
+                </button>
+
+                <div id="categories-carousel-container" class="overflow-hidden">
+                    <div id="categories-wrapper" class="flex transition-transform duration-500 ease-in-out">
+                        <p class="text-center text-gray-500 dark:text-gray-400 w-full p-4">Cargando categorías...</p>
                     </div>
-                    <div
-                        class="absolute bottom-0 left-0 p-4 z-20 w-full transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                        <h3 class="text-white font-bold text-lg md:text-xl mb-1">Despensa</h3>
-                        <p
-                            class="text-gray-200 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            Harinas, granos y más</p>
-                    </div>
-                </a>
-                <a class="group relative rounded-xl overflow-hidden aspect-[4/5] shadow-sm hover:shadow-xl transition-all duration-300"
-                    href="#">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
-                    <div class="absolute inset-0 bg-green-100 dark:bg-gray-700 flex items-center justify-center">
-                        <span
-                            class="material-symbols-outlined text-green-300 text-6xl group-hover:scale-110 transition-transform duration-500">eco</span>
-                    </div>
-                    <div
-                        class="absolute bottom-0 left-0 p-4 z-20 w-full transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                        <h3 class="text-white font-bold text-lg md:text-xl mb-1">Superfoods</h3>
-                        <p
-                            class="text-gray-200 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            Maca, espirulina, cacao</p>
-                    </div>
-                </a>
-                <a class="group relative rounded-xl overflow-hidden aspect-[4/5] shadow-sm hover:shadow-xl transition-all duration-300"
-                    href="#">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
-                    <div class="absolute inset-0 bg-orange-100 dark:bg-gray-700 flex items-center justify-center">
-                        <span
-                            class="material-symbols-outlined text-orange-300 text-6xl group-hover:scale-110 transition-transform duration-500">cookie</span>
-                    </div>
-                    <div
-                        class="absolute bottom-0 left-0 p-4 z-20 w-full transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                        <h3 class="text-white font-bold text-lg md:text-xl mb-1">Snacks</h3>
-                        <p
-                            class="text-gray-200 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            Sin culpa y deliciosos</p>
-                    </div>
-                </a>
-                <a class="group relative rounded-xl overflow-hidden aspect-[4/5] shadow-sm hover:shadow-xl transition-all duration-300"
-                    href="#">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
-                    <div class="absolute inset-0 bg-blue-100 dark:bg-gray-700 flex items-center justify-center">
-                        <span
-                            class="material-symbols-outlined text-blue-300 text-6xl group-hover:scale-110 transition-transform duration-500">local_drink</span>
-                    </div>
-                    <div
-                        class="absolute bottom-0 left-0 p-4 z-20 w-full transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                        <h3 class="text-white font-bold text-lg md:text-xl mb-1">Bebidas</h3>
-                        <p
-                            class="text-gray-200 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            Jugos, tés y leches</p>
-                    </div>
-                </a>
+                </div>
+
+                <button id="carousel-next"
+                    class="hidden absolute top-1/2 right-0 transform translate-x-1/2 -translate-y-1/2 z-20 p-2 lg:p-3 bg-white dark:bg-surface-dark rounded-full shadow-xl text-primary hover:bg-primary hover:text-white transition-all duration-300 focus:outline-none">
+                    <span class="material-icons">chevron_right</span>
+                </button>
+            </div>
+
+            <div id="categories-pagination" class="flex justify-center gap-2 mt-6">
             </div>
         </section>
+
+
         <section class="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-16">
             <div class="hidden lg:block lg:col-span-1">
                 <div
@@ -345,7 +337,7 @@
         <div class="max-w-7xl mx-auto px-4 py-10 md:py-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
                 <div class="col-span-1 md:col-span-1">
-                    <a class="flex items-end gap-2 group cursor-pointer mb-4" href="#">
+                    <a class="flex items-end gap-2 group cursor-pointer mb-4" href="index.html">
                         <div class="flex flex-col justify-center">
                             <img src="imagenes/logo.png" alt="Geek Natural Food Store Logo"
                                 class="h-10 md:h-12 w-auto" />
@@ -514,6 +506,9 @@
             document.documentElement.classList.add('dark');
         }
     </script>
+
+    <script type="module" src="js/uiManager.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
     <script type="module" src="js/supabaseClient.js"></script>

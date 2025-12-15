@@ -1,5 +1,4 @@
 // Asegúrate de inicializar tu cliente Supabase, aunque no se usa en la lógica directa del carrito
-// Por si acaso, si la clase Producto requiere alguna conexión, la importamos.
 import { supabase } from './supabaseClient.js';
 import { Producto } from './models/Producto.js';
 
@@ -17,11 +16,12 @@ const getCarrito = () => {
 };
 
 /**
- * Guarda el carrito en localStorage.
+ * Guarda el carrito en localStorage y actualiza la vista.
  * @param {Array<Object>} carrito - Lista de productos a guardar.
  */
 const saveCarrito = (carrito) => {
     localStorage.setItem('carrito', JSON.stringify(carrito));
+    // Después de guardar, siempre actualizamos la interfaz
     updateCartDisplay();
 };
 
@@ -53,7 +53,7 @@ async function addProductToCart(productoId, cantidad = 1) {
         return;
     }
 
-    // Crear una instancia de la clase Producto para usar sus propiedades y lógica
+    // Usar la clase Producto para manejar los datos
     const producto = new Producto(productData);
 
     // 2. Obtener el carrito actual
@@ -72,8 +72,8 @@ async function addProductToCart(productoId, cantidad = 1) {
             nombre: producto.nombre,
             precio: producto.precio,
             imagen_url: producto.imagen_url,
-            // Aquí puedes añadir cualquier otro dato esencial para la visualización del carrito
-            categoria_nombre: producto.id_categoria?.nombre || 'General',
+            // Guardamos el nombre de la categoría para el modal
+            categoria_nombre: productData.id_categoria?.nombre || 'General',
             cantidad: cantidad,
         });
     }
@@ -81,7 +81,43 @@ async function addProductToCart(productoId, cantidad = 1) {
     // 4. Guardar y actualizar la vista
     saveCarrito(carrito);
     console.log(`Producto ${producto.nombre} (x${cantidad}) añadido al carrito. Total items: ${carrito.length}`);
-    alert(`Se añadió ${producto.nombre} al carrito.`); // Notificación simple
+    // Se recomienda usar una notificación Toast en lugar de alert() en producción
+    alert(`Se añadió ${producto.nombre} al carrito.`);
+}
+
+/**
+ * Elimina un producto del carrito.
+ * @param {number} id - ID del producto.
+ */
+function removeProductFromCart(id) {
+    let carrito = getCarrito();
+    carrito = carrito.filter(item => item.id !== id);
+    saveCarrito(carrito);
+}
+
+/**
+ * Actualiza la cantidad de un producto en el carrito.
+ * @param {number} id - ID del producto.
+ * @param {'increase'|'decrease'} action - Acción a realizar.
+ */
+function updateProductQuantity(id, action) {
+    let carrito = getCarrito();
+    const itemIndex = carrito.findIndex(item => item.id === id);
+
+    if (itemIndex > -1) {
+        if (action === 'increase') {
+            carrito[itemIndex].cantidad++;
+        } else if (action === 'decrease') {
+            carrito[itemIndex].cantidad--;
+            // Si la cantidad llega a 0, eliminar el producto
+            if (carrito[itemIndex].cantidad <= 0) {
+                removeProductFromCart(id);
+                return;
+            }
+        }
+    }
+    // Llama a saveCarrito, que a su vez llama a updateCartDisplay() para refrescar todo.
+    saveCarrito(carrito);
 }
 
 // =========================================================
@@ -94,25 +130,28 @@ async function addProductToCart(productoId, cantidad = 1) {
 const updateCartDisplay = () => {
     const carrito = getCarrito();
     const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+    // Recálculo del subtotal
     const subtotal = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
 
-    // 1. Actualizar el contador en el header
+    // --- Selectores del Header ---
     const cartCountSpan = document.querySelector('header .shopping_cart + span');
     if (cartCountSpan) {
         cartCountSpan.textContent = totalItems;
     }
 
-    // 2. Actualizar el precio total en el header
-    const cartPriceSpan = document.querySelector('header .shopping_cart').closest('a').querySelector('.xl\\:flex:last-child .text-sm:last-child');
+    // Selector del precio total en el header
+    const headerCartLink = document.querySelector('header .shopping_cart').closest('a');
+    const cartPriceSpan = headerCartLink ? headerCartLink.querySelector('.xl\\:flex:last-child .text-sm:last-child') : null;
     if (cartPriceSpan) {
-        cartPriceSpan.textContent = `$${subtotal.toFixed(2)}`;
+        cartPriceSpan.textContent = `Bs. ${subtotal.toFixed(2)}`;
     }
 
-    // 3. Actualizar el contenido del modal (Esto es más complejo y requerirá una plantilla)
+    // --- Selectores del Modal ---
     const listContainer = document.querySelector('#cart-modal .flow-root ul');
-    const subtotalModal = document.querySelector('#cart-modal .justify-between p:last-child');
+    // Selector robusto para el subtotal del modal
+    const subtotalModal = document.querySelector('#cart-modal .border-t .justify-between p:last-child');
 
-    if (listContainer) {
+    if (listContainer && subtotalModal) {
         listContainer.innerHTML = carrito.map(item => `
             <li class="flex py-6" data-id="${item.id}">
                 <div
@@ -147,15 +186,16 @@ const updateCartDisplay = () => {
             </li>
         `).join('');
 
-        // Si el carrito está vacío, muestra un mensaje
+        // Si el carrito está vacío, muestra un mensaje y pone el subtotal a 0.00
         if (carrito.length === 0) {
             listContainer.innerHTML = '<li class="text-center text-gray-500 py-10">Tu carrito está vacío.</li>';
             subtotalModal.textContent = 'Bs 0.00';
         } else {
+            // Actualización del subtotal dentro del modal
             subtotalModal.textContent = `Bs ${subtotal.toFixed(2)}`;
         }
 
-        // Re-añadir listeners para eliminar/cambiar cantidad DENTRO del modal
+        // Re-adjuntar listeners para los nuevos botones (es clave después de innerHTML)
         addModalListeners();
     }
 };
@@ -164,57 +204,29 @@ const updateCartDisplay = () => {
  * Añade listeners a los botones de eliminar y actualizar cantidad dentro del modal del carrito.
  */
 function addModalListeners() {
-    // Listener para eliminar producto
-    document.querySelectorAll('.cart-remove-btn').forEach(button => {
-        button.addEventListener('click', (e) => {
+    // 1. Listener para eliminar producto
+    document.querySelectorAll('#cart-modal .cart-remove-btn').forEach(button => {
+        // Usamos remove/add para prevenir duplicados, aunque con innerHTML se reemplazan, es una buena práctica.
+        const handler = (e) => {
             const id = parseInt(e.currentTarget.dataset.id);
             removeProductFromCart(id);
-        });
+        };
+        button.removeEventListener('click', handler);
+        button.addEventListener('click', handler);
     });
 
-    // Listener para actualizar cantidad
-    document.querySelectorAll('.cart-update-btn').forEach(button => {
-        button.addEventListener('click', (e) => {
+    // 2. Listener para actualizar cantidad
+    document.querySelectorAll('#cart-modal .cart-update-btn').forEach(button => {
+        const handler = (e) => {
             const id = parseInt(e.currentTarget.dataset.id);
             const action = e.currentTarget.dataset.action;
             updateProductQuantity(id, action);
-        });
+        };
+        button.removeEventListener('click', handler);
+        button.addEventListener('click', handler);
     });
 }
 
-/**
- * Elimina un producto del carrito.
- * @param {number} id - ID del producto.
- */
-function removeProductFromCart(id) {
-    let carrito = getCarrito();
-    carrito = carrito.filter(item => item.id !== id);
-    saveCarrito(carrito);
-}
-
-/**
- * Actualiza la cantidad de un producto en el carrito.
- * @param {number} id - ID del producto.
- * @param {'increase'|'decrease'} action - Acción a realizar.
- */
-function updateProductQuantity(id, action) {
-    let carrito = getCarrito();
-    const itemIndex = carrito.findIndex(item => item.id === id);
-
-    if (itemIndex > -1) {
-        if (action === 'increase') {
-            carrito[itemIndex].cantidad++;
-        } else if (action === 'decrease') {
-            carrito[itemIndex].cantidad--;
-            // Si la cantidad llega a 0, eliminar el producto
-            if (carrito[itemIndex].cantidad <= 0) {
-                removeProductFromCart(id);
-                return; // Salir de la función para evitar el saveCarrito duplicado
-            }
-        }
-    }
-    saveCarrito(carrito);
-}
 
 // =========================================================
 // LISTENERS PRINCIPALES DEL CATÁLOGO
@@ -223,24 +235,20 @@ function updateProductQuantity(id, action) {
 /**
  * Añade los listeners de click a todos los botones 'Añadir al Carrito' 
  * que se cargaron dinámicamente en el catálogo (index.html o productos.html).
+ * Esta función es la que se exporta y usa en otros JS.
  */
 const agregarListenersCatalogo = () => {
     const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
 
-    console.log(`Intentando añadir listeners a ${addToCartButtons.length} botones de carrito.`);
-
     addToCartButtons.forEach(button => {
-        // Remover cualquier listener previo para evitar duplicados
+        // Remover cualquier listener previo para evitar duplicados, esencial para recargas dinámicas
         button.removeEventListener('click', handleAddToCartClick);
-
         // Añadir el nuevo listener
         button.addEventListener('click', handleAddToCartClick);
     });
 
-    // También añadimos listeners a los botones de incrementar/decrementar en productos.js
-    // Solo si estamos en productos.html
-    const isProductPage = document.getElementById('productos-listado');
-    if (isProductPage) {
+    // Solo si estamos en una página de catálogo/productos donde se usa el control de cantidad junto al botón
+    if (document.querySelector('.cantidad-input')) {
         addProductPageQuantityListeners();
     }
 };
@@ -253,8 +261,8 @@ function handleAddToCartClick(e) {
     const productId = e.currentTarget.dataset.productId;
     let quantity = 1;
 
-    // Intentar encontrar el input de cantidad asociado si existe (esto es más común en productos.html)
-    const quantityInput = e.currentTarget.closest('.producto')?.querySelector('.cantidad-input');
+    // Buscar el input de cantidad asociado
+    const quantityInput = e.currentTarget.closest('.producto, .flex-col, .product-card-detail')?.querySelector('.cantidad-input');
 
     if (quantityInput) {
         quantity = parseInt(quantityInput.value) || 1;
@@ -269,32 +277,40 @@ function handleAddToCartClick(e) {
 
 
 /**
- * Añade listeners a los botones de cantidad en la vista de catálogo (usada en productos.js).
+ * Añade listeners a los botones de cantidad en la vista de catálogo (solo cambia el input local).
  */
 function addProductPageQuantityListeners() {
     document.querySelectorAll('.incrementar').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const id = e.currentTarget.dataset.id;
-            const input = document.querySelector(`.cantidad-input[data-id="${id}"]`);
-            if (input) {
-                let current = parseInt(input.value);
-                input.value = (current + 1).toString();
-            }
-        });
+        button.removeEventListener('click', handleIncrementClick);
+        button.addEventListener('click', handleIncrementClick);
     });
 
     document.querySelectorAll('.decrementar').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const id = e.currentTarget.dataset.id;
-            const input = document.querySelector(`.cantidad-input[data-id="${id}"]`);
-            if (input) {
-                let current = parseInt(input.value);
-                if (current > 1) {
-                    input.value = (current - 1).toString();
-                }
-            }
-        });
+        button.removeEventListener('click', handleDecrementClick);
+        button.addEventListener('click', handleDecrementClick);
     });
+}
+
+function handleIncrementClick(e) {
+    const id = e.currentTarget.dataset.id;
+    // Buscamos el input por su clase y data-id
+    const input = document.querySelector(`.cantidad-input[data-id="${id}"]`);
+    if (input) {
+        let current = parseInt(input.value);
+        input.value = (current + 1).toString();
+    }
+}
+
+function handleDecrementClick(e) {
+    const id = e.currentTarget.dataset.id;
+    // Buscamos el input por su clase y data-id
+    const input = document.querySelector(`.cantidad-input[data-id="${id}"]`);
+    if (input) {
+        let current = parseInt(input.value);
+        if (current > 1) {
+            input.value = (current - 1).toString();
+        }
+    }
 }
 
 
@@ -308,4 +324,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Exportar la función clave para ser usada en productmanager.js y productos.js
-export { agregarListenersCatalogo };
+export { agregarListenersCatalogo, getCarrito, addProductToCart };

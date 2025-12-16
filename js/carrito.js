@@ -324,4 +324,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Exportar la función clave para ser usada en productmanager.js y productos.js
-export { agregarListenersCatalogo, getCarrito, addProductToCart };
+export { agregarListenersCatalogo, getCarrito, addProductToCart as agregarProductoPorID};

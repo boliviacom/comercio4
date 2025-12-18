@@ -468,7 +468,7 @@ function setupCategoriesCarousel(totalItems) {
         if (width >= 1280) return 5; // Tailwind 'xl' (w-1/5)
         if (width >= 1024) return 4; // Tailwind 'lg' (w-1/4)
         if (width >= 640) return 3; // Tailwind 'sm' (w-1/3)
-        return 2;                   // Default (w-1/2)
+        return 2;                   // Default (w-1/2)
     };
 
     /**
@@ -605,9 +605,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // 🛑 1. EJECUTAR SIEMPRE: Cargar la navegación global (menú de categorías) en TODAS las páginas.
     initGlobalNavigation();
 
-    // 🛑 2. EJECUTAR SOLO EN INDEX.HTML: Cargar el contenido específico de la página de inicio.
-    // Esta lógica utiliza window.location.pathname para verificar si es la página de inicio.
-    if (window.location.pathname === '/' || window.location.pathname.endsWith('/index.html')) {
+    // 🛑 2. CORRECCIÓN: Detección inteligente para INDEX.HTML
+    // Buscamos si el elemento 'categories-wrapper' existe. Si existe, es que estamos en el Index.
+    const isHomePage = document.getElementById('categories-wrapper');
+
+    if (isHomePage) {
         initHomePageContent();
     }
 });

@@ -33,56 +33,66 @@ const saveCarrito = (carrito) => {
  * Agrega un producto al carrito o incrementa su cantidad si ya existe.
  * @param {string} productoId - ID del producto a agregar.
  * @param {number} cantidad - Cantidad a agregar (por defecto 1).
+ * @returns {Promise<boolean>} Devuelve true si se agregó con éxito.
  */
 async function addProductToCart(productoId, cantidad = 1) {
     const id = parseInt(productoId);
     if (isNaN(id) || id <= 0) {
         console.error("ID de producto no válido:", productoId);
-        return;
+        return false;
     }
 
-    // 1. Buscar los datos completos del producto en la base de datos (Supabase)
-    const { data: productData, error } = await supabase
-        .from('producto')
-        .select('*')
-        .eq('id', id)
-        .single();
+    try {
+        // 1. Buscar los datos completos del producto en la base de datos (Supabase)
+        const { data: productData, error } = await supabase
+            .from('producto')
+            .select('*')
+            .eq('id', id)
+            .single();
 
-    if (error || !productData) {
-        console.error('Error al obtener los datos del producto:', error || 'Producto no encontrado');
-        return;
+        if (error || !productData) {
+            console.error('Error al obtener los datos del producto:', error || 'Producto no encontrado');
+            return false;
+        }
+
+        // Usar la clase Producto para manejar los datos
+        const producto = new Producto(productData);
+
+        // 2. Obtener el carrito actual
+        let carrito = getCarrito();
+
+        // 3. Verificar si el producto ya está en el carrito
+        const itemIndex = carrito.findIndex(item => item.id === id);
+
+        if (itemIndex > -1) {
+            // El producto ya existe, incrementamos la cantidad
+            carrito[itemIndex].cantidad += cantidad;
+        } else {
+            // El producto no existe, lo agregamos
+            carrito.push({
+                id: producto.id,
+                nombre: producto.nombre,
+                precio: producto.precio,
+                imagen_url: producto.imagen_url,
+                // Guardamos el nombre de la categoría para el modal
+                categoria_nombre: productData.id_categoria?.nombre || 'General',
+                cantidad: cantidad,
+            });
+        }
+
+        // 4. Guardar y actualizar la vista
+        saveCarrito(carrito);
+        console.log(`Producto ${producto.nombre} (x${cantidad}) añadido al carrito. Total items: ${carrito.length}`);
+
+        // Se recomienda usar una notificación Toast en lugar de alert() en producción
+        alert(`Se añadió ${producto.nombre} al carrito.`);
+
+        return true; // IMPORTANTE: Para que el contador en detalleProducto.js se reinicie
+
+    } catch (err) {
+        console.error("Error en addProductToCart:", err);
+        return false;
     }
-
-    // Usar la clase Producto para manejar los datos
-    const producto = new Producto(productData);
-
-    // 2. Obtener el carrito actual
-    let carrito = getCarrito();
-
-    // 3. Verificar si el producto ya está en el carrito
-    const itemIndex = carrito.findIndex(item => item.id === id);
-
-    if (itemIndex > -1) {
-        // El producto ya existe, incrementamos la cantidad
-        carrito[itemIndex].cantidad += cantidad;
-    } else {
-        // El producto no existe, lo agregamos
-        carrito.push({
-            id: producto.id,
-            nombre: producto.nombre,
-            precio: producto.precio,
-            imagen_url: producto.imagen_url,
-            // Guardamos el nombre de la categoría para el modal
-            categoria_nombre: productData.id_categoria?.nombre || 'General',
-            cantidad: cantidad,
-        });
-    }
-
-    // 4. Guardar y actualizar la vista
-    saveCarrito(carrito);
-    console.log(`Producto ${producto.nombre} (x${cantidad}) añadido al carrito. Total items: ${carrito.length}`);
-    // Se recomienda usar una notificación Toast en lugar de alert() en producción
-    alert(`Se añadió ${producto.nombre} al carrito.`);
 }
 
 /**
@@ -206,13 +216,11 @@ const updateCartDisplay = () => {
 function addModalListeners() {
     // 1. Listener para eliminar producto
     document.querySelectorAll('#cart-modal .cart-remove-btn').forEach(button => {
-        // Usamos remove/add para prevenir duplicados, aunque con innerHTML se reemplazan, es una buena práctica.
         const handler = (e) => {
             const id = parseInt(e.currentTarget.dataset.id);
             removeProductFromCart(id);
         };
-        button.removeEventListener('click', handler);
-        button.addEventListener('click', handler);
+        button.onclick = handler; // Uso de onclick directo para simplificar tras innerHTML
     });
 
     // 2. Listener para actualizar cantidad
@@ -222,8 +230,7 @@ function addModalListeners() {
             const action = e.currentTarget.dataset.action;
             updateProductQuantity(id, action);
         };
-        button.removeEventListener('click', handler);
-        button.addEventListener('click', handler);
+        button.onclick = handler;
     });
 }
 
@@ -235,19 +242,15 @@ function addModalListeners() {
 /**
  * Añade los listeners de click a todos los botones 'Añadir al Carrito' 
  * que se cargaron dinámicamente en el catálogo (index.html o productos.html).
- * Esta función es la que se exporta y usa en otros JS.
  */
 const agregarListenersCatalogo = () => {
     const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
 
     addToCartButtons.forEach(button => {
-        // Remover cualquier listener previo para evitar duplicados, esencial para recargas dinámicas
         button.removeEventListener('click', handleAddToCartClick);
-        // Añadir el nuevo listener
         button.addEventListener('click', handleAddToCartClick);
     });
 
-    // Solo si estamos en una página de catálogo/productos donde se usa el control de cantidad junto al botón
     if (document.querySelector('.cantidad-input')) {
         addProductPageQuantityListeners();
     }
@@ -261,7 +264,6 @@ function handleAddToCartClick(e) {
     const productId = e.currentTarget.dataset.productId;
     let quantity = 1;
 
-    // Buscar el input de cantidad asociado
     const quantityInput = e.currentTarget.closest('.producto, .flex-col, .product-card-detail')?.querySelector('.cantidad-input');
 
     if (quantityInput) {
@@ -270,14 +272,12 @@ function handleAddToCartClick(e) {
 
     if (productId) {
         addProductToCart(productId, quantity);
-    } else {
-        console.error("ID de producto no encontrado en el botón de carrito.");
     }
 }
 
 
 /**
- * Añade listeners a los botones de cantidad en la vista de catálogo (solo cambia el input local).
+ * Añade listeners a los botones de cantidad en la vista de catálogo.
  */
 function addProductPageQuantityListeners() {
     document.querySelectorAll('.incrementar').forEach(button => {
@@ -293,7 +293,6 @@ function addProductPageQuantityListeners() {
 
 function handleIncrementClick(e) {
     const id = e.currentTarget.dataset.id;
-    // Buscamos el input por su clase y data-id
     const input = document.querySelector(`.cantidad-input[data-id="${id}"]`);
     if (input) {
         let current = parseInt(input.value);
@@ -303,7 +302,6 @@ function handleIncrementClick(e) {
 
 function handleDecrementClick(e) {
     const id = e.currentTarget.dataset.id;
-    // Buscamos el input por su clase y data-id
     const input = document.querySelector(`.cantidad-input[data-id="${id}"]`);
     if (input) {
         let current = parseInt(input.value);
@@ -318,10 +316,9 @@ function handleDecrementClick(e) {
 // INICIALIZACIÓN
 // =========================================================
 
-// Inicializar la vista del carrito al cargar la página
 document.addEventListener('DOMContentLoaded', () => {
     updateCartDisplay();
 });
 
-// Exportar la función clave para ser usada en productmanager.js y productos.js
-export { agregarListenersCatalogo, getCarrito, addProductToCart as agregarProductoPorID};
+// Exportar la función clave
+export { agregarListenersCatalogo, getCarrito, addProductToCart as agregarProductoPorID };

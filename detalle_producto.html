@@ -237,38 +237,35 @@
         <nav aria-label="Breadcrumb" class="flex mb-8 text-xs md:text-sm text-gray-500 dark:text-gray-400">
             <ol class="inline-flex items-center space-x-1 md:space-x-2">
                 <li class="inline-flex items-center">
-                    <a href="index.html"
-                        class="inline-flex items-center hover:text-primary dark:hover:text-white transition-colors">
-                        Inicio
-                    </a>
+                    <a class="inline-flex items-center hover:text-primary dark:hover:text-white transition-colors"
+                        href="index.html">Inicio</a>
                 </li>
                 <li>
                     <div class="flex items-center">
                         <span class="material-icons text-gray-400 text-base">chevron_right</span>
                         <a id="breadcrumb-categoria-link"
                             class="ml-1 md:ml-2 hover:text-primary dark:hover:text-white transition-colors"
-                            href="productos.html">Catálogo</a>
+                            href="#">Catálogo</a>
                     </div>
                 </li>
                 <li aria-current="page">
                     <div class="flex items-center">
                         <span class="material-icons text-gray-400 text-base">chevron_right</span>
                         <span id="breadcrumb-producto-nombre"
-                            class="ml-1 md:ml-2 font-medium text-gray-900 dark:text-white line-clamp-1">Cargando...</span>
+                            class="ml-1 md:ml-2 font-medium text-gray-900 dark:text-white">Cargando...</span>
                     </div>
                 </li>
             </ol>
         </nav>
 
         <div id="detalle-producto-container"
-            class="bg-white dark:bg-surface-dark rounded-3xl border border-gray-100 dark:border-gray-700 p-8 md:p-12 mb-12">
-            <div class="flex items-center justify-center py-20">
+            class="bg-white dark:bg-surface-dark rounded-3xl border border-gray-100 dark:border-gray-700 p-8 md:p-12 mb-12 min-h-[500px]">
+            <div class="flex items-center justify-center h-full py-20">
                 <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
             </div>
         </div>
 
-        <div id="productos-relacionados-container" class="mt-8 mb-12">
-        </div>
+        <div id="productos-relacionados-container" class="mt-8 mb-12"></div>
     </main>
     <footer class="bg-gray-100 dark:bg-surface-dark border-t border-gray-200 dark:border-gray-700 mt-auto">
         <div class="max-w-7xl mx-auto px-4 py-10 md:py-12">
@@ -450,7 +447,7 @@
     <script type="module" src="js/productManager.js"></script>
     <script type="module" src="js/detalleProducto.js"></script>
     <script type="module" src="js/searchManager.js"></script>
-    <script src="js/carrito.js"></script>
+    <script type="module" src="js/carrito.js"></script>
 </body>
 
 </html>

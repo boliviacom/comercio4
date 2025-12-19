@@ -1,10 +1,13 @@
 import { supabase } from './supabaseClient.js';
 import { Producto } from './models/Producto.js';
-import { agregarProductoPorID } from './carrito.js'; 
+import { agregarProductoPorID } from './carrito.js';
 
 let recursosGaleria = [];
 let indiceActual = 0;
 
+/**
+ * INICIALIZACIÓN PRINCIPAL
+ */
 async function cargarDetalleProducto() {
     const urlParams = new URLSearchParams(window.location.search);
     const productoId = urlParams.get('id');
@@ -31,6 +34,7 @@ async function cargarDetalleProducto() {
             ...(productoData.galeria_producto || [])
         ];
 
+        asegurarEstilosYModal();
         actualizarBreadcrumb(nombreCat, producto.nombre);
         renderizarInterfaz(producto, container, nombreCat);
 
@@ -40,12 +44,148 @@ async function cargarDetalleProducto() {
 
         setupCarouselLogic();
         configurarInteracciones(producto);
+        agregarListenersModalZoom();
 
     } catch (error) {
-        console.error("Error:", error);
+        console.error("Error cargando producto:", error);
     }
 }
 
+/**
+ * ESTILOS Y MODAL (CORRECCIÓN DE CENTRADO DE BOTÓN)
+ */
+function asegurarEstilosYModal() {
+    if (!document.getElementById('zoom-styles')) {
+        const style = document.createElement('style');
+        style.id = 'zoom-styles';
+        style.innerHTML = `
+            @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+            .animate-fadeIn { animation: fadeIn 0.4s ease-in-out; }
+            .cursor-zoom-in { cursor: zoom-in; }
+            .modal-activo { display: flex !important; opacity: 1 !important; }
+            
+            #main-gallery-display { 
+                position: relative; 
+                width: 100%; 
+                height: 100%; 
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                overflow: hidden; 
+            }
+
+            .zoom-imagen { transition: transform 0.2s ease-out; }
+
+            #modal-zoom-container { 
+                transition: opacity 0.3s ease; 
+                display: none; 
+                background: rgba(0,0,0,0.95);
+                backdrop-filter: blur(8px);
+            }
+
+            /* CORRECCIÓN: Centrado absoluto del botón Play */
+            .video-container-wrapper {
+                position: relative;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: black;
+            }
+
+            .play-overlay { 
+                position: absolute; 
+                top: 50%; 
+                left: 50%; 
+                transform: translate(-50%, -50%); /* Centrado matemático exacto */
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                cursor: pointer; 
+                z-index: 10;
+            }
+
+            .play-icon { 
+                font-size: 80px !important; 
+                color: white; 
+                opacity: 0.9;
+                filter: drop-shadow(0 0 15px rgba(0,0,0,0.5)); 
+                transition: transform 0.2s ease, opacity 0.2s ease;
+            }
+
+            .play-overlay:hover .play-icon {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    if (!document.getElementById('modal-zoom-container')) {
+        const modalHTML = `
+            <div id="modal-zoom-container" class="fixed inset-0 z-[100] items-center justify-center opacity-0">
+                <button id="cerrar-modal" class="absolute top-6 right-6 text-white hover:text-primary transition-all z-[110]">
+                    <span class="material-icons text-5xl">close</span>
+                </button>
+                <div class="relative w-[90%] h-[85%] flex items-center justify-center overflow-hidden">
+                    <img id="modalImagen" src="" alt="Zoom" class="max-w-full max-h-full object-contain zoom-imagen cursor-move">
+                </div>
+            </div>`;
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+}
+
+/**
+ * LÓGICA DE DETECCIÓN DE VIDEO
+ */
+function obtenerInfoVideo(url) {
+    if (!url) return { tipo: 'desconocido', thumb: '' };
+    
+    const ytRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
+    const ytMatch = url.match(ytRegex);
+    if (ytMatch) return { tipo: 'youtube', id: ytMatch[1], thumb: `https://img.youtube.com/vi/${ytMatch[1]}/hqdefault.jpg` };
+
+    const vimeoRegex = /(?:vimeo\.com\/|player\.vimeo\.com\/video\/)([0-9]+)/i;
+    const vimeoMatch = url.match(vimeoRegex);
+    if (vimeoMatch) return { tipo: 'vimeo', id: vimeoMatch[1], thumb: `https://vumbnail.com/${vimeoMatch[1]}.jpg` };
+
+    return { tipo: 'local', thumb: url, esArchivo: true };
+}
+
+/**
+ * RENDERIZADO DE RECURSOS
+ */
+function renderizarRecurso(url, tipo, clases) {
+    if (tipo === 'video') {
+        const info = obtenerInfoVideo(url);
+        if (info.esArchivo) {
+            return `<video src="${url}" class="${clases}" controls playsinline preload="metadata"></video>`;
+        } else {
+            return `
+                <div class="video-container-wrapper group" onclick="cargarIframeExterno(this, '${info.tipo}', '${info.id}')">
+                    <img src="${info.thumb}" class="${clases} opacity-60 group-hover:opacity-80 transition-opacity">
+                    <div class="play-overlay">
+                        <span class="material-icons play-icon">play_circle_filled</span>
+                    </div>
+                </div>`;
+        }
+    }
+    return `<img src="${url}" class="${clases}">`;
+}
+
+window.cargarIframeExterno = function (contenedor, tipo, id) {
+    let iframeSrc = tipo === 'youtube'
+        ? `https://www.youtube.com/embed/${id}?autoplay=1`
+        : `https://player.vimeo.com/video/${id}?autoplay=1`;
+
+    // Reemplaza el contenido del wrapper por el iframe directamente
+    contenedor.innerHTML = `<iframe src="${iframeSrc}" class="w-full h-full border-0" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+};
+
+/**
+ * INTERFAZ
+ */
 function renderizarInterfaz(producto, container, nombreCat) {
     const agotado = producto.estaAgotado();
     const precioFmt = producto.getPrecioFormateado();
@@ -53,11 +193,10 @@ function renderizarInterfaz(producto, container, nombreCat) {
 
     container.innerHTML = `
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start px-4 md:px-0">
-            
             <div class="flex flex-col gap-4 md:gap-6 w-full max-w-2xl mx-auto lg:max-w-none">
                 <div class="relative w-full bg-[#FAFAFA] dark:bg-gray-800 rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden border border-gray-100 dark:border-gray-700 aspect-square flex items-center justify-center shadow-sm">
-                    <div id="main-gallery-display" class="w-full h-full flex items-center justify-center p-4 md:p-8">
-                        ${renderizarRecurso(primerRecurso.url, primerRecurso.tipo, 'w-full h-full object-contain')}
+                    <div id="main-gallery-display">
+                        ${renderizarRecurso(primerRecurso.url, primerRecurso.tipo, 'w-full h-full object-contain zoom-imagen ' + (primerRecurso.tipo === 'imagen' ? 'cursor-zoom-in' : ''))}
                     </div>
                 </div>
 
@@ -67,15 +206,18 @@ function renderizarInterfaz(producto, container, nombreCat) {
                             <span class="material-icons">chevron_left</span>
                         </button>
                         
-                        <div id="thumbnails-preview" class="flex gap-2 overflow-x-auto scrollbar-hide py-2 snap-x">
-                            ${recursosGaleria.map((rec, i) => `
-                                <div class="thumb-item w-14 h-14 md:w-20 md:h-20 rounded-xl border-2 transition-all flex-shrink-0 overflow-hidden cursor-pointer snap-center ${i === 0 ? 'border-primary' : 'border-transparent'}" data-index="${i}">
-                                    ${rec.tipo === 'video' 
-                                        ? `<video src="${rec.url}#t=0.1" class="w-full h-full object-cover"></video>` 
-                                        : `<img src="${rec.url}" class="w-full h-full object-cover">`
-                                    }
-                                </div>
-                            `).join('')}
+                        <div id="thumbnails-preview" class="flex gap-2 overflow-x-auto scrollbar-hide py-2 snap-x w-full">
+                            ${recursosGaleria.map((rec, i) => {
+                                const info = rec.tipo === 'video' ? obtenerInfoVideo(rec.url) : { thumb: rec.url };
+                                const thumbImg = (rec.tipo === 'video' && !info.esArchivo) ? info.thumb : rec.url;
+                                return `
+                                    <div class="thumb-item w-14 h-14 md:w-20 md:h-20 rounded-xl border-2 transition-all flex-shrink-0 overflow-hidden cursor-pointer snap-center ${i === 0 ? 'border-primary' : 'border-transparent'}" data-index="${i}">
+                                        ${rec.tipo === 'video' && info.esArchivo
+                                            ? `<video src="${rec.url}#t=0.5" class="w-full h-full object-cover"></video>`
+                                            : `<img src="${thumbImg}" class="w-full h-full object-cover ${rec.tipo === 'video' ? 'brightness-75' : ''}">`
+                                        }
+                                    </div>`;
+                            }).join('')}
                         </div>
 
                         <button id="next-media" class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-full bg-white dark:bg-gray-800 shadow hover:bg-primary hover:text-white transition-all active:scale-90">
@@ -88,9 +230,7 @@ function renderizarInterfaz(producto, container, nombreCat) {
             <div class="flex flex-col space-y-4 md:space-y-6">
                 <div class="text-center lg:text-left">
                     <span class="text-primary font-bold uppercase tracking-widest text-xs md:text-sm">${nombreCat}</span>
-                    <h1 class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 dark:text-white mt-2 leading-tight">
-                        ${producto.nombre}
-                    </h1>
+                    <h1 class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 dark:text-white mt-2 leading-tight">${producto.nombre}</h1>
                 </div>
 
                 <div class="bg-gray-50 dark:bg-gray-800/50 p-6 md:p-8 rounded-[2rem] border border-gray-100 dark:border-gray-700 shadow-sm">
@@ -111,34 +251,16 @@ function renderizarInterfaz(producto, container, nombreCat) {
                             AÑADIR AL CARRITO
                         </button>
                     </div>
-
-                    <div class="grid grid-cols-2 gap-4 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-                        <div class="flex items-center gap-2 md:gap-3">
-                            <span class="material-icons text-primary text-xl md:text-2xl">verified_user</span>
-                            <span class="text-[10px] md:text-xs font-bold uppercase">Calidad Garantizada</span>
-                        </div>
-                        <div class="flex items-center gap-2 md:gap-3">
-                            <span class="material-icons text-primary text-xl md:text-2xl">lock</span>
-                            <span class="text-[10px] md:text-xs font-bold uppercase">Pago Seguro</span>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="px-2 lg:px-0">
-                    <h3 class="text-lg font-bold mb-2 flex items-center gap-2">
-                        <span class="material-icons text-primary">notes</span> Descripción
-                    </h3>
-                    <p class="text-gray-600 dark:text-gray-400 italic leading-relaxed text-sm md:text-base">
-                        ${producto.descripcion || 'Sin descripción.'}
-                    </p>
+                    <h3 class="text-lg font-bold mb-2 flex items-center gap-2"><span class="material-icons text-primary">notes</span> Descripción</h3>
+                    <p class="text-gray-600 dark:text-gray-400 italic leading-relaxed text-sm md:text-base">${producto.descripcion || 'Sin descripción.'}</p>
                 </div>
             </div>
         </div>
     `;
 }
-
-// ... (Las funciones setupCarouselLogic, renderizarRecurso, configurarInteracciones, 
-//      actualizarBreadcrumb y cargarSugerencias se mantienen igual que en la respuesta anterior)
 
 function setupCarouselLogic() {
     const btnPrev = document.getElementById('prev-media');
@@ -149,25 +271,54 @@ function setupCarouselLogic() {
     const update = (idx) => {
         indiceActual = idx;
         const rec = recursosGaleria[indiceActual];
-        display.innerHTML = renderizarRecurso(rec.url, rec.tipo, 'w-full h-full object-contain animate-fadeIn');
-        thumbs.forEach((t, i) => t.classList.toggle('border-primary', i === idx));
-        
-        // Auto-scroll de la miniatura seleccionada
-        const selectedThumb = thumbs[idx];
-        if (selectedThumb) {
-            selectedThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-        }
+        display.innerHTML = renderizarRecurso(rec.url, rec.tipo, 'w-full h-full object-contain animate-fadeIn zoom-imagen ' + (rec.tipo === 'imagen' ? 'cursor-zoom-in' : ''));
+
+        thumbs.forEach((t, i) => {
+            t.classList.toggle('border-primary', i === idx);
+            t.classList.toggle('border-transparent', i !== idx);
+            if (i === idx) t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        });
+        agregarListenersModalZoom();
     };
 
-    if(btnNext) btnNext.onclick = () => update((indiceActual + 1) % recursosGaleria.length);
-    if(btnPrev) btnPrev.onclick = () => update((indiceActual - 1 + recursosGaleria.length) % recursosGaleria.length);
+    if (btnNext) btnNext.onclick = () => update((indiceActual + 1) % recursosGaleria.length);
+    if (btnPrev) btnPrev.onclick = () => update((indiceActual - 1 + recursosGaleria.length) % recursosGaleria.length);
     thumbs.forEach(t => t.onclick = () => update(parseInt(t.dataset.index)));
 }
 
-function renderizarRecurso(url, tipo, clases) {
-    return tipo === 'video' 
-        ? `<video src="${url}" class="${clases}" autoplay muted loop playsinline></video>` 
-        : `<img src="${url}" class="${clases}">`;
+function agregarListenersModalZoom() {
+    const imagenes = document.querySelectorAll(".zoom-imagen");
+    const modal = document.getElementById("modal-zoom-container");
+    const modalImagen = document.getElementById("modalImagen");
+    const cerrarBtn = document.getElementById("cerrar-modal");
+
+    if (!modal || !modalImagen || !cerrarBtn || imagenes.length === 0) return;
+    const esMovil = window.matchMedia("(max-width: 768px)").matches;
+
+    imagenes.forEach(img => {
+        if (img.tagName === "VIDEO" || img.closest('.video-container-wrapper')) return;
+
+        if (!esMovil) {
+            img.addEventListener("mousemove", (e) => {
+                const { left, top, width, height } = img.getBoundingClientRect();
+                const x = ((e.clientX - left) / width) * 100;
+                const y = ((e.clientY - top) / height) * 100;
+                img.style.transformOrigin = `${x}% ${y}%`;
+                img.style.transform = "scale(1.5)";
+            });
+            img.addEventListener("mouseleave", () => img.style.transform = "scale(1)");
+        }
+
+        img.onclick = () => {
+            modalImagen.src = img.src;
+            modal.classList.add('modal-activo');
+            modalImagen.style.transform = "scale(1)";
+        };
+    });
+
+    const cerrar = () => modal.classList.remove('modal-activo');
+    cerrarBtn.onclick = cerrar;
+    modal.onclick = (e) => { if (e.target === modal) cerrar(); };
 }
 
 function configurarInteracciones(producto) {
@@ -176,30 +327,30 @@ function configurarInteracciones(producto) {
     const displayCant = document.getElementById('cant-num');
     const btnAdd = document.getElementById('btn-add-cart');
 
-    btnMas.onclick = () => {
+    if (btnMas) btnMas.onclick = () => {
         let n = parseInt(displayCant.innerText);
         if (n < producto.stock) displayCant.innerText = (n + 1).toString();
     };
-
-    btnMenos.onclick = () => {
+    if (btnMenos) btnMenos.onclick = () => {
         let n = parseInt(displayCant.innerText);
         if (n > 1) displayCant.innerText = (n - 1).toString();
     };
-
-    btnAdd.onclick = async () => {
-        const cantidad = parseInt(displayCant.innerText);
-        const exito = await agregarProductoPorID(producto.id, cantidad);
-        if (exito) {
-            displayCant.innerText = "1";
-            const originalText = btnAdd.innerText;
-            btnAdd.innerText = "¡AÑADIDO!";
-            btnAdd.classList.add('bg-green-600');
-            setTimeout(() => {
-                btnAdd.innerText = originalText;
-                btnAdd.classList.remove('bg-green-600');
-            }, 2000);
-        }
-    };
+    if (btnAdd) {
+        btnAdd.onclick = async () => {
+            const cantidad = parseInt(displayCant.innerText);
+            const exito = await agregarProductoPorID(producto.id, cantidad);
+            if (exito) {
+                displayCant.innerText = "1";
+                const originalText = btnAdd.innerText;
+                btnAdd.innerText = "¡AÑADIDO!";
+                btnAdd.classList.add('bg-green-600');
+                setTimeout(() => {
+                    btnAdd.innerText = originalText;
+                    btnAdd.classList.remove('bg-green-600');
+                }, 2000);
+            }
+        };
+    }
 }
 
 function actualizarBreadcrumb(catNombre, prodNombre) {
@@ -223,8 +374,7 @@ async function cargarSugerencias(pid, cid, container) {
                     <img src="${p.imagen_url}" class="w-full aspect-square object-contain mb-2">
                     <h4 class="font-bold truncate text-xs md:text-sm">${p.nombre}</h4>
                     <p class="text-primary font-bold text-sm">Bs. ${p.precio.toFixed(2)}</p>
-                </a>
-            `).join('')}
+                </a>`).join('')}
         </div>`;
 }
 

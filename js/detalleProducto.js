@@ -52,7 +52,7 @@ async function cargarDetalleProducto() {
 }
 
 /**
- * ESTILOS Y MODAL (CORRECCIÓN DE CENTRADO DE BOTÓN)
+ * ESTILOS Y MODAL
  */
 function asegurarEstilosYModal() {
     if (!document.getElementById('zoom-styles')) {
@@ -83,7 +83,6 @@ function asegurarEstilosYModal() {
                 backdrop-filter: blur(8px);
             }
 
-            /* CORRECCIÓN: Centrado absoluto del botón Play */
             .video-container-wrapper {
                 position: relative;
                 width: 100%;
@@ -98,7 +97,7 @@ function asegurarEstilosYModal() {
                 position: absolute; 
                 top: 50%; 
                 left: 50%; 
-                transform: translate(-50%, -50%); /* Centrado matemático exacto */
+                transform: translate(-50%, -50%);
                 display: flex; 
                 align-items: center; 
                 justify-content: center; 
@@ -137,20 +136,39 @@ function asegurarEstilosYModal() {
 }
 
 /**
- * LÓGICA DE DETECCIÓN DE VIDEO
+ * LÓGICA DE DETECCIÓN DE VIDEO MULTIPLATAFORMA
  */
 function obtenerInfoVideo(url) {
     if (!url) return { tipo: 'desconocido', thumb: '' };
-    
+
+    // YouTube
     const ytRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
     const ytMatch = url.match(ytRegex);
     if (ytMatch) return { tipo: 'youtube', id: ytMatch[1], thumb: `https://img.youtube.com/vi/${ytMatch[1]}/hqdefault.jpg` };
 
+    // Vimeo
     const vimeoRegex = /(?:vimeo\.com\/|player\.vimeo\.com\/video\/)([0-9]+)/i;
     const vimeoMatch = url.match(vimeoRegex);
     if (vimeoMatch) return { tipo: 'vimeo', id: vimeoMatch[1], thumb: `https://vumbnail.com/${vimeoMatch[1]}.jpg` };
 
-    return { tipo: 'local', thumb: url, esArchivo: true };
+    // Facebook
+    if (url.includes('facebook.com')) {
+        return { tipo: 'facebook', url: url, thumb: 'https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg' };
+    }
+
+    // Instagram
+    if (url.includes('instagram.com')) {
+        return { tipo: 'instagram', url: url, thumb: 'https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg' };
+    }
+
+    // TikTok
+    if (url.includes('tiktok.com')) {
+        return { tipo: 'tiktok', url: url, thumb: 'https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg' };
+    }
+
+    // Archivo Local (.mp4, etc)
+    const esArchivo = url.match(/\.(mp4|webm|ogg|mov)$/i);
+    return { tipo: 'local', thumb: url, esArchivo: !!esArchivo };
 }
 
 /**
@@ -162,9 +180,10 @@ function renderizarRecurso(url, tipo, clases) {
         if (info.esArchivo) {
             return `<video src="${url}" class="${clases}" controls playsinline preload="metadata"></video>`;
         } else {
+            const dataVideo = info.id || info.url;
             return `
-                <div class="video-container-wrapper group" onclick="cargarIframeExterno(this, '${info.tipo}', '${info.id}')">
-                    <img src="${info.thumb}" class="${clases} opacity-60 group-hover:opacity-80 transition-opacity">
+                <div class="video-container-wrapper group" onclick="cargarIframeExterno(this, '${info.tipo}', '${dataVideo}')">
+                    <img src="${info.thumb}" class="${clases} opacity-60 group-hover:opacity-80 transition-opacity object-cover">
                     <div class="play-overlay">
                         <span class="material-icons play-icon">play_circle_filled</span>
                     </div>
@@ -174,17 +193,40 @@ function renderizarRecurso(url, tipo, clases) {
     return `<img src="${url}" class="${clases}">`;
 }
 
-window.cargarIframeExterno = function (contenedor, tipo, id) {
-    let iframeSrc = tipo === 'youtube'
-        ? `https://www.youtube.com/embed/${id}?autoplay=1`
-        : `https://player.vimeo.com/video/${id}?autoplay=1`;
+/**
+ * CARGADOR DE IFRAMES EXTERNOS
+ */
+window.cargarIframeExterno = function (contenedor, tipo, info) {
+    let html = '';
+    const encodedUrl = encodeURIComponent(info);
 
-    // Reemplaza el contenido del wrapper por el iframe directamente
-    contenedor.innerHTML = `<iframe src="${iframeSrc}" class="w-full h-full border-0" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+    switch (tipo) {
+        case 'youtube':
+            html = `<iframe src="https://www.youtube.com/embed/${info}?autoplay=1" class="w-full h-full border-0" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+            break;
+        case 'vimeo':
+            html = `<iframe src="https://player.vimeo.com/video/${info}?autoplay=1" class="w-full h-full border-0" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+            break;
+        case 'facebook':
+            html = `<iframe src="https://www.facebook.com/plugins/video.php?href=${encodedUrl}&show_text=0&t=0&autoplay=1" class="w-full h-full border-0" scrolling="no" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>`;
+            break;
+        case 'instagram':
+            let instaUrl = info.endsWith('/') ? info : info + '/';
+            html = `<iframe src="${instaUrl}embed" class="w-full h-full border-0" scrolling="no" allowtransparency="true"></iframe>`;
+            break;
+        case 'tiktok':
+            const videoId = info.split('/video/')[1]?.split('?')[0];
+            html = `<iframe src="https://www.tiktok.com/embed/v2/${videoId}" class="w-full h-full border-0" allowfullscreen></iframe>`;
+            break;
+        default:
+            html = `<p class="text-white">Plataforma no soportada</p>`;
+    }
+
+    contenedor.innerHTML = html;
 };
 
 /**
- * INTERFAZ
+ * RENDERIZADO INTERFAZ
  */
 function renderizarInterfaz(producto, container, nombreCat) {
     const agotado = producto.estaAgotado();
@@ -208,16 +250,16 @@ function renderizarInterfaz(producto, container, nombreCat) {
                         
                         <div id="thumbnails-preview" class="flex gap-2 overflow-x-auto scrollbar-hide py-2 snap-x w-full">
                             ${recursosGaleria.map((rec, i) => {
-                                const info = rec.tipo === 'video' ? obtenerInfoVideo(rec.url) : { thumb: rec.url };
-                                const thumbImg = (rec.tipo === 'video' && !info.esArchivo) ? info.thumb : rec.url;
-                                return `
+        const info = rec.tipo === 'video' ? obtenerInfoVideo(rec.url) : { thumb: rec.url };
+        const thumbImg = (rec.tipo === 'video' && !info.esArchivo) ? info.thumb : rec.url;
+        return `
                                     <div class="thumb-item w-14 h-14 md:w-20 md:h-20 rounded-xl border-2 transition-all flex-shrink-0 overflow-hidden cursor-pointer snap-center ${i === 0 ? 'border-primary' : 'border-transparent'}" data-index="${i}">
                                         ${rec.tipo === 'video' && info.esArchivo
-                                            ? `<video src="${rec.url}#t=0.5" class="w-full h-full object-cover"></video>`
-                                            : `<img src="${thumbImg}" class="w-full h-full object-cover ${rec.tipo === 'video' ? 'brightness-75' : ''}">`
-                                        }
+                ? `<video src="${rec.url}#t=0.5" class="w-full h-full object-cover"></video>`
+                : `<img src="${thumbImg}" class="w-full h-full object-cover ${rec.tipo === 'video' ? 'brightness-75' : ''}">`
+            }
                                     </div>`;
-                            }).join('')}
+    }).join('')}
                         </div>
 
                         <button id="next-media" class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-full bg-white dark:bg-gray-800 shadow hover:bg-primary hover:text-white transition-all active:scale-90">

@@ -1,19 +1,18 @@
 import { supabase } from './supabaseClient.js';
 
-// 1. Referencias exactas a tu HTML
+// 1. Referencias al DOM
 const searchInput = document.getElementById('search-input');
 const resultsModal = document.getElementById('search-results-modal');
 const clearBtn = document.getElementById('clear-search');
 const productsContainer = document.getElementById('suggested-products');
 const catsContainer = document.getElementById('suggested-categories');
-const brandsContainer = document.getElementById('suggested-brands');
-
-// REVISIÓN DE ID: Cambiamos 'search-button' por 'btn-search-main'
 const searchButton = document.getElementById('btn-search-main');
 
-let debounceTimer;
+// 2. Variables de control para velocidad y eficiencia
+const searchCache = new Map();
+let abortController = null;
 
-/** 🚀 Motor de búsqueda global */
+/** 🚀 Redirección a la página de resultados completa */
 function activarBusqueda() {
     const termino = searchInput.value.trim();
     if (termino.length > 0) {
@@ -21,31 +20,41 @@ function activarBusqueda() {
     }
 }
 
-// --- CONFIGURACIÓN DE EVENTOS ---
+// --- CONFIGURACIÓN DE EVENTOS EN TIEMPO REAL ---
 
 if (searchInput) {
-    // Sugerencias en tiempo real
-    searchInput.addEventListener('input', (e) => {
-        const query = e.target.value.trim();
+    searchInput.addEventListener('input', async (e) => {
+        const query = e.target.value.trim().toLowerCase();
+        
+        // Control visual del botón de limpiar
         if (clearBtn) clearBtn.classList.toggle('hidden', query.length === 0);
 
-        clearTimeout(debounceTimer);
-        if (query.length > 2) {
-            debounceTimer = setTimeout(() => performSearch(query), 300);
-        } else {
+        // Si hay menos de 2 letras, ocultamos el modal y no buscamos
+        if (query.length < 2) {
             if (resultsModal) resultsModal.classList.add('hidden');
+            return;
         }
+
+        // A. PRIORIDAD CACHÉ: Si ya existe el resultado, mostrarlo CERO milisegundos
+        if (searchCache.has(query)) {
+            renderResults(searchCache.get(query), query);
+            return;
+        }
+
+        // B. CANCELAR PETICIÓN PREVIA: Si el usuario sigue escribiendo, anulamos la petición anterior
+        if (abortController) abortController.abort();
+        abortController = new AbortController();
+
+        // C. BUSCAR INMEDIATAMENTE
+        await performSearch(query, abortController.signal);
     });
 
-    // Escuchar tecla ENTER
     searchInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            activarBusqueda();
-        }
+        if (e.key === 'Enter') activarBusqueda();
     });
 }
 
-// Escuchar clic en la lupa (con el ID correcto)
+// Botón de lupa
 if (searchButton) {
     searchButton.addEventListener('click', activarBusqueda);
 }
@@ -54,15 +63,15 @@ if (searchButton) {
 if (clearBtn) {
     clearBtn.addEventListener('click', () => {
         searchInput.value = '';
-        resultsModal.classList.add('hidden');
+        if (resultsModal) resultsModal.classList.add('hidden');
         clearBtn.classList.add('hidden');
         searchInput.focus();
     });
 }
 
-// --- LÓGICA DE BÚSQUEDA Y RENDERIZADO (Se mantiene igual) ---
+// --- MOTOR DE BÚSQUEDA ---
 
-async function performSearch(term) {
+async function performSearch(term, signal) {
     try {
         const { data, error } = await supabase
             .from('producto')
@@ -71,23 +80,35 @@ async function performSearch(term) {
                 nombre, 
                 precio,
                 imagen_url,
-                visible,
                 categoria:id_categoria (nombre)
             `)
             .ilike('nombre', `%${term}%`)
             .eq('visible', true)
-            .limit(6);
+            .limit(6)
+            .abortSignal(signal); // Vincula la petición a la señal de cancelación
 
-        if (error) throw error;
+        if (error) {
+            // Si el error es por cancelación nuestra, no hacer nada
+            if (error.name === 'AbortError') return;
+            throw error;
+        }
+
+        // Guardar en caché para que la próxima vez sea instantáneo
+        searchCache.set(term, data);
         renderResults(data, term);
+
     } catch (error) {
-        console.error("Error en el buscador:", error.message);
+        if (error.message !== 'Fetch is aborted') {
+            console.error("Error en búsqueda real-time:", error.message);
+        }
     }
 }
 
+/** 🎨 RENDERIZADO DE ALTO RENDIMIENTO */
 function renderResults(products, term) {
     if (!productsContainer || !catsContainer || !resultsModal) return;
 
+    // Limpiar rápido
     productsContainer.innerHTML = '';
     catsContainer.innerHTML = '';
 
@@ -96,28 +117,33 @@ function renderResults(products, term) {
         return;
     }
 
+    // Usamos fragmentos para minimizar el impacto en el navegador
+    const productFragment = document.createDocumentFragment();
+
     products.forEach(p => {
         const regex = new RegExp(`(${term})`, 'gi');
         const highlighted = p.nombre.replace(regex, '<span class="font-bold text-gray-900 dark:text-white">$1</span>');
 
         const item = document.createElement('a');
         item.href = `detalle_producto.html?id=${p.id}`;
-        item.className = "px-5 py-2.5 hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer text-sm flex items-center justify-between text-gray-700 dark:text-gray-200 group";
+        item.className = "px-5 py-2.5 hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer text-sm flex items-center justify-between text-gray-700 dark:text-gray-200 group transition-all duration-150";
 
         item.innerHTML = `
             <div class="flex items-center">
                 <span class="material-icons text-gray-400 text-lg mr-3">search</span>
                 <span>${highlighted}</span>
             </div>
-            <span class="text-xs text-primary font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+            <span class="text-xs text-primary font-bold opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all">
                 Ver producto
             </span>
         `;
-        productsContainer.appendChild(item);
+        productFragment.appendChild(item);
     });
 
-    const uniqueCategories = [...new Set(products.map(p => p.categoria?.nombre))].filter(Boolean);
+    productsContainer.appendChild(productFragment);
 
+    // Renderizado de categorías únicas encontradas
+    const uniqueCategories = [...new Set(products.map(p => p.categoria?.nombre))].filter(Boolean);
     uniqueCategories.forEach(catName => {
         const li = document.createElement('li');
         li.className = "mb-1";
@@ -130,10 +156,11 @@ function renderResults(products, term) {
         catsContainer.appendChild(li);
     });
 
+    // Mostrar el modal inmediatamente
     resultsModal.classList.remove('hidden');
 }
 
-// Cerrar al hacer clic fuera
+// Cerrar el modal al hacer clic en cualquier lugar fuera del contenedor
 document.addEventListener('click', (e) => {
     const container = document.getElementById('search-container');
     if (container && !container.contains(e.target) && resultsModal) {

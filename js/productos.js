@@ -29,6 +29,24 @@ const CONTENT_LIST_CLASSES = ['px-4', 'pb-4', 'flex-grow'];
 let productGridContainer, gridViewButton, listViewButton;
 
 // =========================================================
+// NUEVA FUNCIÓN: RENDERIZADO DE ESTRELLAS
+// =========================================================
+function renderStars(promedio) {
+    const rating = parseFloat(promedio) || 0;
+    const fullStars = Math.floor(rating);
+    const halfStar = rating % 1 >= 0.5 ? 1 : 0;
+    const emptyStars = Math.max(0, 5 - fullStars - halfStar);
+    
+    return `
+        <div class="flex text-yellow-400 items-center">
+            ${'<span class="material-icons text-sm">star</span>'.repeat(fullStars)}
+            ${'<span class="material-icons text-sm">star_half</span>'.repeat(halfStar)}
+            ${'<span class="material-icons text-sm text-gray-300 dark:text-gray-600">star_outline</span>'.repeat(emptyStars)}
+        </div>
+    `;
+}
+
+// =========================================================
 // LÓGICA DEL CAMBIADOR DE VISTA (GRID/LISTA)
 // =========================================================
 
@@ -56,7 +74,7 @@ function switchToGridView() {
         productEl.classList.remove(...PRODUCT_LIST_CLASSES);
         productEl.classList.add(...PRODUCT_GRID_CLASSES);
         productEl.classList.remove('p-4'); 
-        productEl.classList.add('p-0');    
+        productEl.classList.add('p-0');     
 
         if (imageWrapper) {
             imageWrapper.classList.remove(...IMAGE_LIST_CLASSES);
@@ -84,7 +102,7 @@ function switchToListView() {
         productEl.classList.remove(...PRODUCT_GRID_CLASSES);
         productEl.classList.add(...PRODUCT_LIST_CLASSES);
         productEl.classList.remove('p-0'); 
-        productEl.classList.add('p-4');    
+        productEl.classList.add('p-4');     
 
         if (imageWrapper) {
             imageWrapper.classList.remove(...IMAGE_GRID_CLASSES);
@@ -105,8 +123,14 @@ function initializeViewSwitcher() {
     gridViewButton = document.getElementById('grid-view-button');
     listViewButton = document.getElementById('list-view-button');
 
-    if (gridViewButton) gridViewButton.addEventListener('click', switchToGridView);
-    if (listViewButton) listViewButton.addEventListener('click', switchToListView);
+    if (gridViewButton && !gridViewButton.dataset.listener) {
+        gridViewButton.addEventListener('click', switchToGridView);
+        gridViewButton.dataset.listener = 'true';
+    }
+    if (listViewButton && !listViewButton.dataset.listener) {
+        listViewButton.addEventListener('click', switchToListView);
+        listViewButton.dataset.listener = 'true';
+    }
 
     const savedView = localStorage.getItem('productView') || 'grid';
 
@@ -123,7 +147,44 @@ function initializeViewSwitcher() {
 }
 
 // =========================================================
-// FUNCIÓN PARA GENERAR LOS CONTROLES DE PAGINACIÓN
+// LÓGICA DE ORDENAMIENTO
+// =========================================================
+
+function obtenerConfiguracionOrden(opcion) {
+    switch (opcion) {
+        case 'Precio: Menor a Mayor':
+            return { columna: 'precio', opciones: { ascending: true } };
+        case 'Precio: Mayor a Menor':
+            return { columna: 'precio', opciones: { ascending: false } };
+        case 'Lo más nuevo':
+            return { columna: 'producto_id', opciones: { ascending: false } };
+        default:
+            return { columna: 'producto_id', opciones: { ascending: true } };
+    }
+}
+
+function configurarSelectorOrden() {
+    const selectorOrden = document.querySelector('select.form-select');
+    if (!selectorOrden) return;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('orden')) {
+        selectorOrden.value = urlParams.get('orden');
+    }
+
+    if (!selectorOrden.dataset.listener) {
+        selectorOrden.addEventListener('change', () => {
+            const url = new URL(window.location.href);
+            url.searchParams.set('orden', selectorOrden.value);
+            url.searchParams.set('page', '1');
+            window.location.href = url.toString();
+        });
+        selectorOrden.dataset.listener = 'true';
+    }
+}
+
+// =========================================================
+// PAGINACIÓN
 // =========================================================
 
 function renderPagination(totalCount, currentPage, categoriaNombre) {
@@ -135,26 +196,22 @@ function renderPagination(totalCount, currentPage, categoriaNombre) {
         return;
     }
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const ordenActual = urlParams.get('orden');
+    const buscar = urlParams.get('buscar');
+
+    const buildLink = (page) => {
+        let params = new URLSearchParams();
+        if (categoriaNombre) params.set('categoria', categoriaNombre);
+        if (buscar) params.set('buscar', buscar);
+        if (ordenActual) params.set('orden', ordenActual);
+        params.set('page', page);
+        return `productos.html?${params.toString()}`;
+    };
+
     let paginationHTML = '';
     const maxPagesToShow = 5; 
     const halfMax = Math.floor(maxPagesToShow / 2);
-
-    const buildLink = (page) => {
-        let href = 'productos.html?';
-        const urlParams = new URLSearchParams(window.location.search);
-        
-        if (categoriaNombre) {
-            href += `categoria=${encodeURIComponent(categoriaNombre)}&`;
-        }
-        
-        const buscar = urlParams.get('buscar');
-        if (buscar) {
-            href += `buscar=${encodeURIComponent(buscar)}&`;
-        }
-        
-        href += `page=${page}`;
-        return href;
-    };
 
     const prevPage = currentPage > 1 ? currentPage - 1 : 1;
     const prevDisabled = currentPage === 1;
@@ -163,8 +220,7 @@ function renderPagination(totalCount, currentPage, categoriaNombre) {
     paginationHTML += `
         <a class="h-10 w-10 flex items-center justify-center rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-surface-dark text-gray-500 transition-colors ${prevClasses}"
             href="${prevDisabled ? '#' : buildLink(prevPage)}"
-            aria-disabled="${prevDisabled}"
-            data-page="${prevPage}">
+            aria-disabled="${prevDisabled}">
             <span class="material-icons text-base">chevron_left</span>
         </a>
     `;
@@ -180,7 +236,7 @@ function renderPagination(totalCount, currentPage, categoriaNombre) {
     if (startPage > 1) {
         paginationHTML += `
             <a class="h-10 w-10 flex items-center justify-center rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-surface-dark text-gray-700 dark:text-gray-200 font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                href="${buildLink(1)}" data-page="1">1</a>
+                href="${buildLink(1)}">1</a>
             ${startPage > 2 ? '<span class="h-10 w-10 flex items-center justify-center text-gray-400">...</span>' : ''}
         `;
     }
@@ -191,8 +247,7 @@ function renderPagination(totalCount, currentPage, categoriaNombre) {
 
         paginationHTML += `
             <a class="h-10 w-10 flex items-center justify-center rounded-lg transition-colors ${activeClass}"
-                href="${buildLink(i)}"
-                data-page="${i}">${i}</a>
+                href="${buildLink(i)}">${i}</a>
         `;
     }
 
@@ -200,7 +255,7 @@ function renderPagination(totalCount, currentPage, categoriaNombre) {
         paginationHTML += `
             ${endPage < totalPages - 1 ? '<span class="h-10 w-10 flex items-center justify-center text-gray-400">...</span>' : ''}
             <a class="h-10 w-10 flex items-center justify-center rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-surface-dark text-gray-700 dark:text-gray-200 font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                href="${buildLink(totalPages)}" data-page="${totalPages}">${totalPages}</a>
+                href="${buildLink(totalPages)}">${totalPages}</a>
         `;
     }
 
@@ -211,8 +266,7 @@ function renderPagination(totalCount, currentPage, categoriaNombre) {
     paginationHTML += `
         <a class="h-10 w-10 flex items-center justify-center rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-surface-dark text-gray-500 transition-colors ${nextClasses}"
             href="${nextDisabled ? '#' : buildLink(nextPage)}"
-            aria-disabled="${nextDisabled}"
-            data-page="${nextPage}">
+            aria-disabled="${nextDisabled}">
             <span class="material-icons text-base">chevron_right</span>
         </a>
     `;
@@ -221,10 +275,9 @@ function renderPagination(totalCount, currentPage, categoriaNombre) {
 }
 
 // =========================================================
-// OTRAS FUNCIONES AUXILIARES DE UI
+// FUNCIONES AUXILIARES DE UI
 // =========================================================
 
-/** CORRECCIÓN: Marca la categoría activa evitando que todas se activen en búsquedas */
 function marcarCategoriaActiva(categoriaNombre) {
     const enlacesMenu = document.querySelectorAll('nav .whitespace-nowrap a');
     const urlParams = new URLSearchParams(window.location.search);
@@ -273,18 +326,19 @@ function marcarFiltroSidebar(categoriaNombre) {
     }
 }
 
-
 // =========================================================
-// FUNCIÓN PRINCIPAL DE CARGA Y FILTRADO CON PAGINACIÓN
+// FUNCIÓN PRINCIPAL DE CARGA (ACTUALIZADA CON VISTA)
 // =========================================================
 
 async function cargarProductosPorCategoria() {
     const savedView = initializeViewSwitcher();
+    configurarSelectorOrden();
 
     const urlParams = new URLSearchParams(window.location.search);
     const categoriaNombreRaw = urlParams.get('categoria');
     const categoriaNombre = categoriaNombreRaw ? decodeURIComponent(categoriaNombreRaw) : null;
     const terminoBusqueda = urlParams.get('buscar');
+    const ordenUrl = urlParams.get('orden') || 'Más Relevantes';
 
     const currentPage = parseInt(urlParams.get('page')) || 1;
     const from = (currentPage - 1) * PRODUCTS_PER_PAGE;
@@ -302,9 +356,6 @@ async function cargarProductosPorCategoria() {
     marcarCategoriaActiva(categoriaNombre);
     marcarFiltroSidebar(categoriaNombre);
 
-    let productos = [];
-    let totalCount = 0;
-    
     let nombreDisplay = categoriaNombre || 'Catálogo Completo';
     if (terminoBusqueda) {
         nombreDisplay = `Resultados para: "${terminoBusqueda}"`;
@@ -312,46 +363,34 @@ async function cargarProductosPorCategoria() {
 
     if (tituloCategoria) tituloCategoria.textContent = nombreDisplay;
     if (breadcrumbActivo) breadcrumbActivo.textContent = nombreDisplay;
-    if (productosConteo) productosConteo.textContent = 'Buscando productos...';
 
     let categoriaId = null;
     if (categoriaNombre) {
-        let { data: categoria } = await supabase
-            .from('categoria')
-            .select('id')
-            .eq('nombre', categoriaNombre)
-            .maybeSingle();
+        let { data: categoria } = await supabase.from('categoria').select('id').eq('nombre', categoriaNombre).maybeSingle();
         if (categoria) categoriaId = categoria.id;
     }
 
-    let query = supabase
-        .from('producto')
-        .select('*', { count: 'exact' })
-        .eq('visible', true)
-        .order('id', { ascending: true });
+    // MEJORA: Consultar la VISTA en lugar de la tabla directa
+    let query = supabase.from('v_producto_estadisticas').select('*', { count: 'exact' }).eq('visible', true);
 
-    if (categoriaId !== null) {
-        query = query.eq('id_categoria', categoriaId);
-    }
+    if (categoriaId !== null) query = query.eq('id_categoria', categoriaId);
+    if (terminoBusqueda) query = query.ilike('nombre', `%${terminoBusqueda}%`);
 
-    if (terminoBusqueda) {
-        query = query.ilike('nombre', `%${terminoBusqueda}%`);
-    }
+    const configOrden = obtenerConfiguracionOrden(ordenUrl);
+    query = query.order(configOrden.columna, configOrden.opciones);
 
-    let { data: productosData, error: prodError, count } = await query.range(from, to);
-
-    totalCount = count || 0;
+    let { data: productos, error: prodError, count } = await query.range(from, to);
 
     if (prodError) {
-        productGridContainer.innerHTML = '<div class="col-span-full text-center text-xl text-red-500 py-10">Error al cargar los productos.</div>';
+        productGridContainer.innerHTML = '<div class="col-span-full text-center text-red-500 py-10">Error al cargar.</div>';
         return;
     }
 
-    productos = productosData || [];
-    const productosCargados = productos.length;
-    const startIndex = productosCargados > 0 ? from + 1 : 0;
-    const endIndex = from + productosCargados;
-    if (productosConteo) productosConteo.textContent = `Mostrando ${startIndex}-${endIndex} de ${totalCount} resultados`;
+    const totalCount = count || 0;
+    if (productosConteo) {
+        const startIndex = productos.length > 0 ? from + 1 : 0;
+        productosConteo.textContent = `Mostrando ${startIndex}-${from + productos.length} de ${totalCount} resultados`;
+    }
 
     productGridContainer.innerHTML = '';
 
@@ -361,10 +400,9 @@ async function cargarProductosPorCategoria() {
         return;
     }
 
-    const productosMapeados = productos.map(data => new Producto(data));
     const cardBaseClasses = ['group', 'flex', 'rounded-xl', 'border', 'hover:shadow-lg', 'transition-all', 'duration-300', 'bg-white', 'dark:bg-surface-dark'];
-
     let finalCardClasses, imageClasses, contentClasses, cardBasePadding;
+    
     if (savedView === 'list') {
         finalCardClasses = [...cardBaseClasses, ...PRODUCT_LIST_CLASSES].join(' ');
         imageClasses = IMAGE_LIST_CLASSES.join(' ');
@@ -377,8 +415,11 @@ async function cargarProductosPorCategoria() {
         cardBasePadding = 'p-0';
     }
 
-    productosMapeados.forEach((producto) => {
+    productos.forEach((data) => {
+        // Mapeamos ID de la vista (producto_id) al objeto Producto
+        const producto = new Producto({ ...data, id: data.producto_id });
         const estaAgotado = producto.estaAgotado();
+        
         const cardHTML = `
             <div class="product-card-item ${finalCardClasses} ${cardBasePadding}">
                 <div class="product-image-wrapper relative ${imageClasses}">
@@ -400,15 +441,19 @@ async function cargarProductosPorCategoria() {
                             <a href="detalle_producto.html?id=${producto.id}">${producto.nombre}</a>
                         </h3>
                     </div>
-                    <div class="flex items-center gap-1 mb-3">
-                        <span class="text-xs text-gray-400">(N/A)</span> 
+
+                    <div class="flex items-center gap-1.5 mb-3">
+                        ${renderStars(data.promedio_estrellas)}
+                        <span class="text-xs font-bold text-gray-600 dark:text-gray-300">${data.promedio_estrellas}</span>
+                        <span class="text-[10px] text-gray-400">(${data.total_calificaciones})</span> 
                     </div>
+
                     <div class="mt-auto flex items-center justify-between">
                         <div class="flex flex-col">
                             <span class="text-lg font-bold text-primary">Bs ${producto.getPrecioFormateado()}</span>
                         </div>
                         <button class="agregar add-to-cart-btn bg-secondary/20 hover:bg-primary hover:text-white text-primary rounded-full w-10 h-10 flex items-center justify-center transition-all duration-300 shadow-sm hover:shadow-md"
-                            data-product-id="${producto.id}" ${estaAgotado ? 'disabled' : ''} title="${estaAgotado ? 'Producto Agotado' : 'Agregar al Carrito'}">
+                            data-product-id="${producto.id}" ${estaAgotado ? 'disabled' : ''}>
                             <span class="material-icons text-xl">${estaAgotado ? 'remove_shopping_cart' : 'add_shopping_cart'}</span>
                         </button>
                     </div>
@@ -419,7 +464,6 @@ async function cargarProductosPorCategoria() {
     });
 
     renderPagination(totalCount, currentPage, categoriaNombre);
-
     if (savedView === 'list') switchToListView(); else switchToGridView();
     agregarListenersCatalogo();
 }

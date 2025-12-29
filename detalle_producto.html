@@ -238,16 +238,29 @@
             <ol class="inline-flex items-center space-x-1 md:space-x-2">
                 <li class="inline-flex items-center">
                     <a class="inline-flex items-center hover:text-primary dark:hover:text-white transition-colors"
-                        href="index.html"><span class="material-icons text-base mr-2">home</span>Inicio</a>
+                        href="index.html">
+                        <span class="material-icons text-base mr-2">home</span>Inicio
+                    </a>
                 </li>
+
+                <li id="breadcrumb-padre-item" class="hidden">
+                    <div class="flex items-center">
+                        <span class="material-icons text-gray-400 text-base">chevron_right</span>
+                        <a id="breadcrumb-categoria-padre-link"
+                            class="ml-1 md:ml-2 hover:text-primary dark:hover:text-white transition-colors"
+                            href="#">Padre</a>
+                    </div>
+                </li>
+
                 <li>
                     <div class="flex items-center">
                         <span class="material-icons text-gray-400 text-base">chevron_right</span>
                         <a id="breadcrumb-categoria-link"
                             class="ml-1 md:ml-2 hover:text-primary dark:hover:text-white transition-colors"
-                            href="#">Catálogo</a>
+                            href="productos.html">Catálogo</a>
                     </div>
                 </li>
+
                 <li aria-current="page">
                     <div class="flex items-center">
                         <span class="material-icons text-gray-400 text-base">chevron_right</span>
@@ -264,7 +277,26 @@
                 <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
             </div>
         </div>
+        <div class="bg-white dark:bg-surface-dark rounded-3xl border border-gray-100 dark:border-gray-700 p-8 md:p-12 mb-12"
+            id="reviews-section">
 
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-10">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Opiniones de
+                        Clientes</h2>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Comparte tu experiencia con este producto
+                    </p>
+                </div>
+                <button id="open-review-modal"
+                    class="bg-primary hover:bg-primary-dark text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 shadow-sm flex items-center gap-2">
+                    <span class="material-icons text-sm">rate_review</span>
+                    Escribir un comentario
+                </button>
+            </div>
+
+            <div id="comments-section-layout" class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+            </div>
+        </div>
         <div id="productos-relacionados-container" class="mt-8 mb-12"></div>
     </main>
     <footer class="bg-gray-100 dark:bg-surface-dark border-t border-gray-200 dark:border-gray-700 mt-auto">

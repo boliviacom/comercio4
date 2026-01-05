@@ -5,6 +5,11 @@ import { agregarProductoPorID } from './carrito.js';
 let recursosGaleria = [];
 let indiceActual = 0;
 
+// =========================================================
+// CONSTANTES DE CONFIGURACIÓN
+// =========================================================
+const NOMBRE_MARCA = "Geek"; 
+
 /**
  * INICIALIZACIÓN PRINCIPAL
  */
@@ -37,6 +42,10 @@ async function cargarDetalleProducto() {
 
         const producto = new Producto(productoData);
         
+        // ACTUALIZACIÓN DEL TÍTULO DEL DOCUMENTO (Pestaña del navegador)
+        // Formato: Marca - Nombre del Producto
+        document.title = `${NOMBRE_MARCA} - ${producto.nombre}`;
+
         const subcategoria = productoData.categoria;
         const categoriaPadre = subcategoria?.padre;
         const nombreSub = subcategoria?.nombre || 'General';
@@ -152,7 +161,6 @@ function renderizarRecurso(url, tipo, clases) {
     if (tipo === 'video') {
         const info = obtenerInfoVideo(url);
         if (info.esArchivo) {
-            // Se agrega #t=0.1 para que el navegador cargue el primer frame como miniatura
             return `<video src="${url}#t=0.1" class="${clases}" controls playsinline preload="metadata"></video>`;
         } else {
             const dataVideo = info.id || info.url;
@@ -198,8 +206,6 @@ function renderizarInterfaz(producto, container, nombreCat) {
                     <div id="thumbnails-preview" class="flex gap-2 overflow-x-auto scrollbar-hide py-2 snap-x w-full">
                         ${recursosGaleria.map((rec, i) => {
                             const info = rec.tipo === 'video' ? obtenerInfoVideo(rec.url) : { thumb: rec.url, esArchivo: false };
-                            
-                            // Corrección para miniaturas de video local
                             let thumbContent = '';
                             if (rec.tipo === 'video' && info.esArchivo) {
                                 thumbContent = `<video src="${rec.url}#t=0.1" class="w-full h-full object-cover" preload="metadata"></video>`;
@@ -207,7 +213,6 @@ function renderizarInterfaz(producto, container, nombreCat) {
                                 const thumbImg = (rec.tipo === 'video' && !info.esArchivo) ? info.thumb : rec.url;
                                 thumbContent = `<img src="${thumbImg}" class="w-full h-full object-cover">`;
                             }
-
                             return `
                                 <div class="thumb-item relative w-20 h-20 rounded-xl border-2 transition-all shrink-0 overflow-hidden cursor-pointer snap-center ${i === 0 ? 'border-primary' : 'border-transparent'}" data-index="${i}">
                                     ${thumbContent}
@@ -274,7 +279,6 @@ function agregarListenersModalZoom() {
     const modalImagen = document.getElementById("modalImagen");
 
     imagenes.forEach(img => {
-        // Solo aplicar zoom si es una imagen (las etiquetas video no tienen zoom dinámico aquí)
         if (img.tagName === 'IMG') {
             img.addEventListener("mousemove", (e) => {
                 const { left, top, width, height } = img.getBoundingClientRect();

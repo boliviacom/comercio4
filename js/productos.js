@@ -6,6 +6,7 @@ import { Producto } from './models/Producto.js';
 // CONSTANTES Y CONFIGURACIÓN DE VISTAS
 // =========================================================
 const PRODUCTS_PER_PAGE = 15;
+const NOMBRE_MARCA = "Geek"; 
 
 const GRID_VIEW_CLASSES = ['grid', 'grid-cols-1', 'sm:grid-cols-2', 'lg:grid-cols-3', 'gap-6'];
 const LIST_VIEW_CONTAINER_CLASSES = ['space-y-6'];
@@ -32,19 +33,16 @@ let productGridContainer, gridViewButton, listViewButton;
 // 1. LÓGICA DE TOGGLES (ACORDEONES) DEL SIDEBAR
 // =========================================================
 function inicializarTogglesSidebar() {
-    // Seleccionamos los encabezados h4 que tienen la clase cursor-pointer (títulos de filtros)
     const filterHeaders = document.querySelectorAll('aside h4.cursor-pointer');
     
     filterHeaders.forEach(header => {
         header.addEventListener('click', () => {
-            // El contenido a ocultar es el div que sigue inmediatamente al encabezado
             const content = header.nextElementSibling;
             const icon = header.querySelector('.material-icons');
             
             if (content) {
                 const isHidden = content.classList.toggle('hidden');
                 
-                // Rotación visual y cambio de icono
                 if (icon) {
                     icon.style.transform = isHidden ? 'rotate(-90deg)' : 'rotate(0deg)';
                     icon.textContent = isHidden ? 'expand_more' : 'expand_less';
@@ -92,24 +90,22 @@ function inicializarFiltroEstrellas() {
 
     if (!starIcons.length || !ratingInput) return;
 
-    // Función para pintar/despintar estrellas visualmente
     function actualizarEstrellasUI(rating) {
         const val = parseInt(rating) || 0;
         starIcons.forEach(s => {
             const sVal = parseInt(s.getAttribute('data-value'));
             if (sVal <= val) {
-                s.textContent = 'star'; // Estrella rellena
+                s.textContent = 'star';
                 s.classList.add('text-yellow-400');
                 s.classList.remove('text-gray-300');
             } else {
-                s.textContent = 'star_outline'; // Estrella vacía
+                s.textContent = 'star_outline';
                 s.classList.remove('text-yellow-400');
                 s.classList.add('text-gray-300');
             }
         });
     }
 
-    // A. ESCUCHA DE CLIC EN ESTRELLAS (Actualiza el Input)
     starIcons.forEach(star => {
         star.addEventListener('click', () => {
             const val = star.getAttribute('data-value');
@@ -118,35 +114,27 @@ function inicializarFiltroEstrellas() {
         });
     });
 
-    // B. ESCUCHA DE ESCRITURA EN INPUT (Actualiza las Estrellas)
     ratingInput.addEventListener('input', (e) => {
         let val = parseInt(e.target.value) || 0;
-        
-        // Validamos que no se pase de 5 ni sea menor a 0
         if (val > 5) { val = 5; e.target.value = 5; }
         if (val < 0) { val = 0; e.target.value = 0; }
-        
         actualizarEstrellasUI(val);
     });
 
-    // C. BOTÓN APLICAR (Actualiza la URL para filtrar)
     if (btnAplicar) {
         btnAplicar.addEventListener('click', () => {
             const val = ratingInput.value;
             const url = new URL(window.location.href);
-            
             if (val && val > 0) {
                 url.searchParams.set('rating', val);
             } else {
                 url.searchParams.delete('rating');
             }
-            
-            url.searchParams.set('page', '1'); // Reiniciar a página 1
+            url.searchParams.set('page', '1');
             window.location.href = url.toString();
         });
     }
 
-    // Sincronización inicial si el filtro ya viene en la URL
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('rating')) {
         const r = urlParams.get('rating');
@@ -619,7 +607,7 @@ async function cargarProductosPorCategoria() {
     inicializarListenersFiltros();
     inicializarFiltrosMoviles();
     inicializarFiltroEstrellas();
-    inicializarTogglesSidebar(); // Llamada añadida para activar los acordeones
+    inicializarTogglesSidebar();
 
     const urlParams = new URLSearchParams(window.location.search);
     const categoriaNombreRaw = urlParams.get('categoria');
@@ -651,14 +639,23 @@ async function cargarProductosPorCategoria() {
     let nombreDisplay = categoriaNombre || 'Catálogo Completo';
     if (terminoBusqueda) nombreDisplay = `Resultados para: "${terminoBusqueda}"`;
 
+    // DINÁMICO: Título del documento "Marca - Categoría"
+    document.title = `${NOMBRE_MARCA} - ${nombreDisplay}`;
+
     if (tituloCategoria) tituloCategoria.textContent = nombreDisplay;
     if (breadcrumbActivo) breadcrumbActivo.textContent = nombreDisplay;
 
-    if (minPrice) document.getElementById('min-price').value = minPrice;
+    if (minPrice) {
+        const minEl = document.getElementById('min-price');
+        if (minEl) minEl.value = minPrice;
+    }
     if (maxPrice) {
-        document.getElementById('max-price').value = maxPrice;
-        if (document.getElementById('price-range-input')) document.getElementById('price-range-input').value = maxPrice;
-        if (document.getElementById('price-max-display')) document.getElementById('price-max-display').textContent = `Bs ${maxPrice}`;
+        const maxEl = document.getElementById('max-price');
+        if (maxEl) maxEl.value = maxPrice;
+        const rangeEl = document.getElementById('price-range-input');
+        if (rangeEl) rangeEl.value = maxPrice;
+        const dispEl = document.getElementById('price-max-display');
+        if (dispEl) dispEl.textContent = `Bs ${maxPrice}`;
     }
 
     let idsParaFiltrar = [];

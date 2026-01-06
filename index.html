@@ -41,6 +41,17 @@
         body {
             font-family: 'Poppins', sans-serif;
         }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+        }
     </style>
 </head>
 
@@ -99,20 +110,25 @@
                     </div>
                     <div
                         class="flex items-center gap-4 md:gap-6 flex-shrink-0 self-end md:self-center absolute top-4 right-4 md:static">
-                        <a class="flex items-center gap-2 group" href="#">
-                            <div
-                                class="bg-secondary/30 dark:bg-white/10 p-2 rounded-full group-hover:bg-secondary/50 dark:group-hover:bg-white/20 transition-colors">
-                                <span
-                                    class="material-icons text-xl md:text-2xl text-primary dark:text-primary">person_outline</span>
-                            </div>
-                            <div class="hidden xl:flex flex-col">
-                                <span
-                                    class="text-xs text-gray-500 dark:text-gray-400 font-medium leading-none mb-1">Bienvenido</span>
-                                <span
-                                    class="text-sm font-bold text-gray-800 dark:text-gray-200 leading-none group-hover:text-primary dark:group-hover:text-secondary transition-colors">Iniciar
-                                    sesión</span>
-                            </div>
-                        </a>
+
+                        <div id="auth-button-container" class="flex items-center gap-2 group cursor-pointer">
+                            <label for="auth-modal" id="auth-trigger" class="flex items-center gap-2 cursor-pointer">
+                                <div
+                                    class="bg-secondary/30 dark:bg-white/10 p-2 rounded-full group-hover:bg-secondary/50 dark:group-hover:bg-white/20 transition-colors">
+                                    <span id="auth-icon"
+                                        class="material-icons text-xl md:text-2xl text-primary dark:text-primary">person_outline</span>
+                                </div>
+                                <div class="hidden xl:flex flex-col">
+                                    <span id="auth-welcome"
+                                        class="text-xs text-gray-500 dark:text-gray-400 font-medium leading-none mb-1">Bienvenido</span>
+                                    <span id="auth-text"
+                                        class="text-sm font-bold text-gray-800 dark:text-gray-200 leading-none group-hover:text-primary dark:group-hover:text-secondary transition-colors">
+                                        Iniciar sesión
+                                    </span>
+                                </div>
+                            </label>
+                        </div>
+
                         <a class="relative group flex items-center gap-2 cursor-pointer"
                             onclick="document.getElementById('cart-modal').style.display='block'">
                             <div
@@ -530,6 +546,210 @@
             </div>
         </div>
     </div>
+    <input class="peer hidden" id="auth-modal" type="checkbox" />
+
+    <div
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none peer-checked:opacity-100 peer-checked:pointer-events-auto transition-opacity duration-300 p-4">
+
+        <label class="absolute inset-0 cursor-pointer" for="auth-modal"></label>
+
+        <div
+            class="bg-white dark:bg-surface-dark w-full max-w-[600px] rounded-3xl shadow-2xl overflow-hidden relative z-10 flex flex-col max-h-[90vh] overflow-y-auto no-scrollbar">
+
+            <input checked="" class="peer/login hidden" id="tab-login" name="auth_mode" type="radio" />
+            <input class="peer/register hidden" id="tab-register" name="auth_mode" type="radio" />
+
+            <div class="relative h-24 bg-secondary/30 flex items-center justify-center flex-shrink-0">
+                <div class="absolute top-4 right-4 z-20">
+                    <label
+                        class="w-8 h-8 flex items-center justify-center bg-white/50 hover:bg-white rounded-full text-gray-500 hover:text-gray-800 transition-colors cursor-pointer"
+                        for="auth-modal">
+                        <span class="material-icons text-lg">close</span>
+                    </label>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="p-2 bg-white/40 rounded-2xl backdrop-blur-sm">
+                        <img src="imagenes/logo.png" alt="Geek Logo" class="h-10 w-auto object-contain" />
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="flex w-[200%] transition-transform duration-500 ease-in-out peer-checked/register:-translate-x-1/2 h-full">
+
+                <div class="w-1/2 p-6 md:p-8 flex flex-col">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-5">Iniciar Sesión</h3>
+                    <form class="space-y-4 flex-grow">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5"
+                                for="login-email">Correo electrónico</label>
+                            <input
+                                class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-primary transition-colors"
+                                id="login-email" placeholder="tu@email.com" type="email" />
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5"
+                                for="login-password">Contraseña</label>
+                            <div class="relative">
+                                <input
+                                    class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 rounded-xl px-4 py-2.5 pr-10 text-sm outline-none focus:border-primary transition-colors"
+                                    id="login-password" placeholder="••••••••" type="password" />
+                                <button
+                                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-primary transition-colors focus:outline-none"
+                                    type="button"
+                                    onclick="const p = document.getElementById('login-password'); const s = this.querySelector('span'); p.type = p.type === 'password' ? 'text' : 'password'; s.textContent = p.type === 'password' ? 'visibility' : 'visibility_off';">
+                                    <span class="material-icons text-xl">visibility</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input class="w-4 h-4 rounded text-primary border-gray-300 focus:ring-primary"
+                                    type="checkbox" />
+                                <span class="text-xs text-gray-600">Recordarme</span>
+                            </label>
+                            <a class="text-xs font-bold text-primary hover:underline" href="#">¿Olvidaste tu
+                                contraseña?</a>
+                        </div>
+                        <button id="btn-login-modal"
+                            class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-3 rounded-xl shadow-lg mt-2 transition-all transform hover:-translate-y-0.5"
+                            type="button">
+                            Iniciar Sesión
+                        </button>
+                    </form>
+
+                    <div class="mt-5 pt-4 border-t border-gray-100 text-center">
+                        <p class="text-sm text-gray-600">
+                            ¿No tienes una cuenta?
+                            <label class="font-bold text-primary hover:underline cursor-pointer ml-1"
+                                for="tab-register">Regístrate aquí</label>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="w-1/2 p-6 md:p-8 flex flex-col h-auto overflow-y-auto no-scrollbar">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Crear Cuenta</h3>
+                    <form class="space-y-3 flex-grow">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1"
+                                    for="reg-first-name">Primer Nombre</label>
+                                <input
+                                    class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-primary"
+                                    id="reg-first-name" placeholder="Ej: Juan" type="text" />
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1"
+                                    for="reg-second-name">Segundo Nombre</label>
+                                <input
+                                    class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-primary"
+                                    id="reg-second-name" placeholder="Opcional" type="text" />
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1"
+                                    for="reg-last-name-p">Ap. Paterno</label>
+                                <input
+                                    class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-primary"
+                                    id="reg-last-name-p" placeholder="Pérez" type="text" />
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1"
+                                    for="reg-last-name-m">Ap. Materno</label>
+                                <input
+                                    class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-primary"
+                                    id="reg-last-name-m" placeholder="García" type="text" />
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1"
+                                    for="reg-ci">C.I.</label>
+                                <input
+                                    class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-primary"
+                                    id="reg-ci" placeholder="1234567" type="text" />
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1"
+                                    for="reg-mobile">Celular</label>
+                                <input
+                                    class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-primary"
+                                    id="reg-mobile" placeholder="70012345" type="tel" />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1"
+                                for="reg-email">Correo electrónico</label>
+                            <input
+                                class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-primary"
+                                id="reg-email" placeholder="tu@email.com" type="email" />
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1"
+                                    for="reg-password">Contraseña</label>
+                                <div class="relative">
+                                    <input
+                                        class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 rounded-xl px-3 py-2 pr-9 text-sm outline-none focus:border-primary"
+                                        id="reg-password" placeholder="••••••••" type="password" />
+                                    <button
+                                        class="absolute inset-y-0 right-0 pr-2 flex items-center text-gray-400 hover:text-primary focus:outline-none"
+                                        type="button"
+                                        onclick="const p = document.getElementById('reg-password'); const s = this.querySelector('span'); p.type = p.type === 'password' ? 'text' : 'password'; s.textContent = p.type === 'password' ? 'visibility' : 'visibility_off';">
+                                        <span class="material-icons text-lg">visibility</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1"
+                                    for="reg-confirm">Confirmar</label>
+                                <div class="relative">
+                                    <input
+                                        class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 rounded-xl px-3 py-2 pr-9 text-sm outline-none focus:border-primary"
+                                        id="reg-confirm" placeholder="••••••••" type="password" />
+                                    <button
+                                        class="absolute inset-y-0 right-0 pr-2 flex items-center text-gray-400 hover:text-primary focus:outline-none"
+                                        type="button"
+                                        onclick="const p = document.getElementById('reg-confirm'); const s = this.querySelector('span'); p.type = p.type === 'password' ? 'text' : 'password'; s.textContent = p.type === 'password' ? 'visibility' : 'visibility_off';">
+                                        <span class="material-icons text-lg">visibility</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2 py-1">
+                            <input
+                                class="w-4 h-4 rounded text-primary border-gray-300 focus:ring-primary cursor-pointer"
+                                id="terms" type="checkbox" />
+                            <label class="text-[11px] text-gray-500 leading-none cursor-pointer" for="terms">
+                                Acepto los <a class="text-primary font-bold hover:underline" href="#">términos y
+                                    condiciones</a>.
+                            </label>
+                        </div>
+
+                        <button id="btn-register-modal"
+                            class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-3 rounded-xl shadow-lg mt-1 transition-transform transform hover:-translate-y-0.5"
+                            type="button">
+                            Crear Cuenta
+                        </button>
+                    </form>
+
+                    <div class="mt-4 pt-3 border-t border-gray-100 text-center">
+                        <p class="text-sm text-gray-600">
+                            ¿Ya tienes una cuenta?
+                            <label class="font-bold text-primary hover:underline cursor-pointer ml-1"
+                                for="tab-login">Inicia sesión</label>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             document.documentElement.classList.add('dark');
@@ -539,7 +759,8 @@
     <script type="module" src="js/uiManager.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
+    <script type="module" src="js/inicio_sesion.js"></script>
+    <script type="module" src="js/crear_cuenta.js"></script>
     <script type="module" src="js/supabaseClient.js"></script>
     <script type="module" src="js/carrito.js"></script>
     <script type="module" src="js/productManager.js"></script>

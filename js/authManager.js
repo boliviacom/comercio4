@@ -1,91 +1,125 @@
 // js/authManager.js
-
 import { supabase } from './supabaseClient.js';
 import { Usuario } from './models/Usuario.js';
 
 export class AuthManager {
     
     /**
-     * Registra un nuevo usuario en Supabase Auth y luego crea su perfil en la tabla 'usuario'.
-     * @param {Object} userData - Datos del usuario a registrar (incluye contrasena).
-     * @returns {Object} Resultado con success, error o mensaje de verificación.
+     * Registra un nuevo usuario. 
+     * Envía los metadatos necesarios para que el TRIGGER de la BD
+     * inserte automáticamente en la tabla 'public.usuario'.
      */
-    async crearUsuario(userData) {
-        const nuevoUsuario = new Usuario(userData);
-        
-        // 1. Registro en Supabase Auth
-        const { data: authData, error: authError } = await supabase.auth.signUp({
-            email: nuevoUsuario.correo_electronico,
-            password: nuevoUsuario.contrasena,
-        });
+    async registrarUsuario(userData) {
+        try {
+            // 1. Registro en Supabase Auth con Metadata
+            const { data: authData, error: authError } = await supabase.auth.signUp({
+                email: userData.correo_electronico,
+                password: userData.contrasena,
+                options: {
+                    // Estos datos alimentan el NEW.raw_user_meta_data de tu Trigger
+                    data: {
+                        primer_nombre: userData.primer_nombre,
+                        segundo_nombre: userData.segundo_nombre,
+                        apellido_paterno: userData.apellido_paterno,
+                        apellido_materno: userData.apellido_materno,
+                        correo_electronico: userData.correo_electronico,
+                        celular: userData.celular,
+                        ci: userData.ci,
+                        rol: userData.rol || 'cliente',
+                        contrasena: userData.contrasena // Requerido por tu trigger actual
+                    }
+                }
+            });
 
-        if (authError) {
-            return { success: false, error: authError.message };
-        }
-        
-        const user = authData.user || authData.session?.user;
-        
-        if (!user) {
-             return { success: true, message: "Registro completo. Por favor, revisa tu correo electrónico para verificar tu cuenta e iniciar sesión." };
-        }
-        
-        // 2. Creación del perfil en la tabla 'usuario'
-        // ✅ CORRECCIÓN: Pasamos 'true' para incluir la contraseña en el objeto
-        // que se insertará en la tabla 'usuario', satisfaciendo el requisito NOT NULL de tu BD.
-        const perfilData = nuevoUsuario.toSupabaseObject(true); 
-        perfilData.id = user.id; // Asignar el UUID de Supabase Auth
-        
-        const { error: profileError } = await supabase
-            .from('usuario')
-            .insert([perfilData]);
+            if (authError) throw authError;
 
-        if (profileError) {
-            console.error("Error al crear el perfil:", profileError);
-            return { success: false, error: "Error al guardar los detalles del perfil (el C.I. podría estar ya registrado o fallo en la BD)." };
-        }
+            // Nota: Si el usuario existe pero requiere confirmación de email, 
+            // el Trigger podría no ejecutarse hasta que el usuario confirme, 
+            // dependiendo de cómo esté configurado en Supabase.
+            
+            return { 
+                success: true, 
+                user: authData.user,
+                message: "Registro iniciado. Verifica tu correo si es necesario." 
+            };
 
-        return { success: true, usuario: nuevoUsuario };
+        } catch (error) {
+            console.error("Error en registrarUsuario:", error.message);
+            return { success: false, error: error.message };
+        }
     }
     
     /**
-     * Obtiene el usuario activo de Supabase Auth.
-     * Este método es CLAVE para la lógica de la UI del menú.
-     * @returns {Object|null} El objeto de usuario de Supabase o null.
+     * Inicia sesión con email y contraseña.
+     */
+    async iniciarSesion(email, password) {
+        try {
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
+            });
+
+            if (error) throw error;
+
+            // Guardamos localmente el ID para facilitar otras consultas
+            if (data.user) {
+                localStorage.setItem("usuarioId", data.user.id);
+            }
+
+            return { success: true, session: data.session };
+        } catch (error) {
+            console.error("Error en iniciarSesion:", error.message);
+            return { success: false, error: "Credenciales inválidas o cuenta no verificada." };
+        }
+    }
+
+    /**
+     * Cierra la sesión activa y limpia el almacenamiento local.
+     */
+    async cerrarSesion() {
+        try {
+            const { error } = await supabase.auth.signOut();
+            localStorage.removeItem("usuarioId");
+            localStorage.removeItem("usuarioEmail");
+            return { success: !error, error: error?.message };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    /**
+     * Obtiene el perfil completo del usuario desde la tabla pública.
+     * Útil para mostrar el "Hola, [Nombre]" en el header.
+     */
+    async getPerfilActual() {
+        try {
+            const { data: { user }, error: authError } = await supabase.auth.getUser();
+            
+            if (authError || !user) return null;
+            
+            const { data, error } = await supabase
+                .from('usuario')
+                .select('*')
+                .eq('id', user.id)
+                .single();
+
+            if (error) {
+                console.warn("No se encontró perfil en la tabla 'usuario':", error.message);
+                return null;
+            }
+
+            return data; // Retorna el objeto con primer_nombre, apellido, etc.
+        } catch (error) {
+            console.error("Error en getPerfilActual:", error);
+            return null;
+        }
+    }
+
+    /**
+     * Verifica rápidamente si hay una sesión activa.
      */
     async getActiveUser() {
         const { data: { user } } = await supabase.auth.getUser();
         return user;
-    }
-    
-    async iniciarSesion(email, password) {
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email: email,
-            password: password,
-        });
-        if (error) {
-            return { success: false, error: "Credenciales inválidas, cuenta no verificada o error de servidor." };
-        }
-        return { success: true, session: data.session };
-    }
-    
-    async cerrarSesion() {
-        const { error } = await supabase.auth.signOut();
-        return { success: !error, error: error?.message };
-    }
-    
-    async getPerfilActual() {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return null;
-        
-        const { data, error } = await supabase
-            .from('usuario')
-            .select('*')
-            .eq('id', user.id)
-            .single();
-
-        if (error || !data) {
-            return null;
-        }
-        return new Usuario(data);
     }
 }

@@ -1,0 +1,121 @@
+<main class="max-w-7xl mx-auto px-4 py-8 flex-grow w-full box-border max-md:overflow-hidden">
+    <nav aria-label="Breadcrumb" class="flex mb-8 text-sm text-gray-500 dark:text-gray-400">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li class="inline-flex items-center">
+                <a class="inline-flex items-center hover:text-primary dark:hover:text-white" href="index.html">
+                    <span class="material-icons text-base mr-2">home</span> Inicio
+                </a>
+            </li>
+            <li>
+                <div class="flex items-center">
+                    <span class="material-icons text-gray-400 text-base">chevron_right</span>
+                    <span id="breadcrumb-activo" class="ml-1 md:ml-2 font-medium text-gray-900 dark:text-white">Catálogo
+                        Completo</span>
+                </div>
+            </li>
+        </ol>
+    </nav>
+
+    <div class="flex flex-col lg:flex-row gap-8 relative items-start">
+        <aside id="filters-sidebar"
+            class="fixed inset-y-0 left-0 z-50 w-72 bg-white dark:bg-surface-dark transform -translate-x-full transition-transform duration-300 ease-in-out 
+                lg:relative lg:translate-x-0 lg:w-64 lg:z-0 lg:bg-transparent lg:dark:bg-transparent flex-shrink-0 lg:sticky lg:top-24">
+
+            <div
+                class="h-full overflow-y-auto lg:h-auto lg:overflow-visible bg-white dark:bg-surface-dark lg:rounded-xl lg:border lg:border-gray-100 lg:dark:border-gray-700 lg:shadow-sm p-5 overflow-hidden">
+
+                <div
+                    class="flex items-center justify-between lg:hidden mb-6 pb-4 border-b border-gray-100 dark:border-gray-700">
+                    <h3 class="font-bold text-lg text-gray-900 dark:text-white">Filtros</h3>
+                    <button id="close-filters-button" class="text-primary flex items-center justify-center">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+
+                <h3
+                    class="hidden lg:block font-bold text-lg text-gray-900 dark:text-white mb-5 pb-2 border-b border-gray-100 dark:border-gray-700">
+                    Filtros
+                </h3>
+
+                <div class="mb-6">
+                    <h4 class="font-semibold text-gray-800 dark:text-gray-200 mb-3 flex justify-between cursor-pointer">
+                        Categorías <span class="material-icons text-sm text-gray-400">expand_less</span>
+                    </h4>
+                    <div id="categorias-filter-container" class="space-y-2 max-h-64 overflow-y-auto custom-scrollbar">
+                        <p class="text-xs text-gray-400">Cargando categorías...</p>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h4 class="font-semibold text-gray-800 dark:text-gray-200 mb-3 flex justify-between cursor-pointer">
+                        Precio <span class="material-icons text-sm text-gray-400">expand_less</span>
+                    </h4>
+                    <div class="px-1">
+                        <div class="flex items-center justify-between text-xs text-gray-500 mb-2">
+                            <span>Bs 0</span>
+                            <span id="price-max-display">Bs 500+</span>
+                        </div>
+                        <input id="price-range-input"
+                            class="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary"
+                            max="500" min="0" step="10" type="range" value="500" />
+                        <div class="flex items-center gap-2 mt-4">
+                            <input id="min-price"
+                                class="w-full pl-2 pr-1 py-1 text-sm border border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
+                                placeholder="Min" type="number" />
+                            <span class="text-gray-400">-</span>
+                            <input id="max-price"
+                                class="w-full pl-2 pr-1 py-1 text-sm border border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
+                                placeholder="Max" type="number" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <section class="flex-grow min-w-0 w-full">
+            <div
+                class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 bg-white dark:bg-surface-dark p-4 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm">
+
+                <div class="flex flex-row-reverse md:flex-row items-center justify-between w-full md:w-auto gap-4">
+                    <button id="mobile-filters-button"
+                        class="lg:hidden flex items-center gap-2 bg-gray-50 dark:bg-gray-700 px-4 py-2 rounded-lg text-sm font-bold text-gray-700 dark:text-white border border-gray-200 dark:border-gray-600">
+                        <span class="material-icons text-primary">filter_list</span>
+                        FILTROS
+                    </button>
+                    <div>
+                        <h1 id="titulo-categoria"
+                            class="text-lg md:text-xl font-bold text-gray-900 dark:text-white leading-none">Todos
+                            los Productos</h1>
+                        <p id="productos-conteo" class="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-1">
+                            Cargando...</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 w-full md:w-auto">
+                    <select id="sort-select"
+                        class="form-select block w-full md:w-48 pl-3 pr-10 py-2 text-sm border-gray-300 focus:ring-primary rounded-md dark:bg-gray-700 dark:text-white">
+                        <option>Más Relevantes</option>
+                        <option>Precio: Menor a Mayor</option>
+                        <option>Precio: Mayor a Menor</option>
+                    </select>
+                    <div class="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1 gap-1 flex-shrink-0">
+                        <button id="grid-view-button"
+                            class="p-1.5 rounded bg-white dark:bg-gray-600 text-primary shadow-sm">
+                            <span class="material-icons text-xl block">grid_view</span>
+                        </button>
+                        <button id="list-view-button" class="p-1.5 rounded text-gray-500 dark:text-gray-400">
+                            <span class="material-icons text-xl block">view_list</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="product-grid-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            </div>
+
+            <div class="mt-12 flex justify-center">
+                <nav class="flex items-center gap-2" id="pagination-controls"></nav>
+            </div>
+        </section>
+    </div>
+</main>

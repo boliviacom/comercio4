@@ -1,20 +1,17 @@
 /**
  * productManager.js
- * Gestiona la carga y renderizado de productos y categorías desde Supabase.
+ * Gestiona la carga y renderizado de productos y categorías desde Supabase,
+ * filtrando por el stock de la sucursal seleccionada.
  */
 
 import { supabase } from './supabaseClient.js';
-
-// 🛑 IMPORTACIÓN CLAVE: Importar la función que añade los listeners desde 'carrito.js'
 import { agregarListenersCatalogo } from './carrito.js';
+import { initBranchSystem } from './branchManager.js'; // 🚩 Importamos el gestor de sucursales
 
 // =========================================================================
 // FUNCIONES DE APOYO (HELPERS) PARA CALIFICACIÓN DINÁMICA
 // =========================================================================
 
-/**
- * ⭐ Genera el HTML de las estrellas dinámicamente basado en el promedio de la vista.
- */
 const renderStars = (rating) => {
     const numericRating = parseFloat(rating) || 0;
     const fullStars = Math.floor(numericRating);
@@ -39,16 +36,9 @@ const renderStars = (rating) => {
 // PLANTILLAS HTML (TEMPLATES)
 // =========================================================================
 
-/**
- * 🎨 Plantilla de la tarjeta de producto principal (Catálogo y Nuevos Ingresos).
- */
 const productCardTemplate = (product) => {
-    // La vista v_producto_estadisticas usa 'producto_id'
     const productId = product.producto_id || product.id;
-    
-    // Mantenemos tu lógica, pero aseguramos que use el campo de la vista v_producto_estadisticas
     const categoryName = product.nombre_categoria || (product.id_categoria?.nombre || 'General');
-    
     const finalPrice = product.precio ? product.precio.toFixed(2) : '0.00';
     const linkHref = `detalle_producto.html?id=${productId}`;
     const showPrice = product.mostrar_precio;
@@ -118,9 +108,6 @@ const productCardTemplate = (product) => {
     `;
 };
 
-/**
- * 🥇 Plantilla de la tarjeta de producto pequeño para la barra lateral ('Los Más Vendidos').
- */
 const sidebarProductCardTemplate = (product) => {
     const productId = product.producto_id || product.id;
     const finalPrice = product.precio ? product.precio.toFixed(2) : '0.00';
@@ -153,9 +140,6 @@ const sidebarProductCardTemplate = (product) => {
     `;
 };
 
-/**
- * 🏷️ Plantilla de la tarjeta de categoría para el carrusel.
- */
 const categoryCardTemplate = (category) => {
     let icon = 'grocery';
     let iconClass = 'text-gray-400';
@@ -241,28 +225,45 @@ const categoryNavLinkTemplate = (category) => {
 };
 
 // =========================================================================
-// FUNCIONES DE CARGA DE DATOS
+// FUNCIONES DE CARGA DE DATOS (CON FILTRO DE SUCURSAL)
 // =========================================================================
 
 async function loadNewArrivals() {
     const container = document.querySelector('.lg\\:col-span-3 .grid:last-of-type');
     if (!container) return;
-    container.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400 lg:col-span-3">Cargando productos...</p>';
+
+    // 🚩 Obtenemos la sucursal del storage
+    const branchId = localStorage.getItem('selectedBranchId');
+    if (!branchId) return; // Si no hay sucursal, el branchManager se encargará de abrir el modal
+
+    container.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400 lg:col-span-3 py-10">Cargando productos...</p>';
 
     try {
+        // 🚩 Usamos un JOIN con producto_sucursal para filtrar por tienda y stock
         let { data: products, error } = await supabase
             .from('v_producto_estadisticas') 
-            .select('*')
+            .select(`
+                *,
+                producto_sucursal!inner(id_sucursal, stock_sucursal)
+            `)
             .eq('visible', true)
+            .eq('producto_sucursal.id_sucursal', branchId)
+            .gt('producto_sucursal.stock_sucursal', 0) // Solo mostrar si hay stock en esa tienda
             .order('producto_id', { ascending: true })
             .limit(10);
 
         if (error) throw error;
-        container.innerHTML = products.map(productCardTemplate).join('');
+        
+        if (products.length === 0) {
+            container.innerHTML = '<p class="text-center text-gray-500 lg:col-span-3 py-10">No hay productos disponibles en esta sucursal.</p>';
+        } else {
+            container.innerHTML = products.map(productCardTemplate).join('');
+            agregarListenersCatalogo();
+        }
 
     } catch (e) {
         console.error('Error loadNewArrivals:', e);
-        container.innerHTML = '<p class="text-center text-red-500 lg:col-span-3">Error al cargar productos.</p>';
+        container.innerHTML = '<p class="text-center text-red-500 lg:col-span-3 py-10">Error al cargar productos.</p>';
     }
 }
 
@@ -270,11 +271,19 @@ async function loadBestSellers() {
     const container = document.getElementById('best-sellers-container');
     if (!container) return;
 
+    const branchId = localStorage.getItem('selectedBranchId');
+    if (!branchId) return;
+
     try {
         let { data: products, error } = await supabase
             .from('v_productos_mas_vendidos') 
-            .select('*')
+            .select(`
+                *,
+                producto_sucursal!inner(id_sucursal, stock_sucursal)
+            `)
             .eq('visible', true)
+            .eq('producto_sucursal.id_sucursal', branchId)
+            .gt('producto_sucursal.stock_sucursal', 0)
             .limit(3);
 
         if (error) throw error;
@@ -293,9 +302,9 @@ async function loadPopularCategories() {
     try {
         let { data: categories, error } = await supabase
             .from('categoria')
-            .select('id, nombre, visible, id_padre') // Mantenemos tu select
+            .select('id, nombre, visible, id_padre')
             .eq('visible', true)
-            .is('id_padre', null) // 🚩 Solo agregamos este filtro para que en la Home solo salgan los padres
+            .is('id_padre', null) 
             .order('nombre', { ascending: true });
 
         if (error) throw error;
@@ -314,9 +323,9 @@ async function loadNavigationCategories() {
     try {
         let { data: categories, error } = await supabase
             .from('categoria')
-            .select('id, nombre, visible, id_padre') // Mantenemos tu select
+            .select('id, nombre, visible, id_padre')
             .eq('visible', true)
-            .is('id_padre', null) // 🚩 Solo agregamos este filtro para que en el Nav solo salgan los padres
+            .is('id_padre', null) 
             .order('nombre', { ascending: true });
 
         if (error) throw error;
@@ -333,7 +342,7 @@ async function loadNavigationCategories() {
 }
 
 // =========================================================================
-// LÓGICA DEL CARRUSEL (MANTENIENDO LÓGICA ORIGINAL SIN CAMBIOS)
+// LÓGICA DEL CARRUSEL
 // =========================================================================
 
 function setupCategoriesCarousel(totalItems) {
@@ -421,11 +430,17 @@ async function initHomePageContent() {
     await loadPopularCategories();
     await loadNewArrivals();
     await loadBestSellers();
-    agregarListenersCatalogo();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // 1. Cargamos navegación
     initGlobalNavigation();
+    
+    // 2. 🚩 Inicializamos el sistema de sucursales ANTES del contenido
+    // Esto abrirá el modal si no hay sucursal o cargará la sucursal del storage
+    await initBranchSystem(); 
+
+    // 3. Si estamos en la Home, cargar el contenido
     if (document.getElementById('categories-wrapper')) {
         initHomePageContent();
     }

@@ -9,6 +9,11 @@ import { agregarListenersCatalogo } from './carrito.js';
 import { initBranchSystem } from './branchManager.js'; // 🚩 Importamos el gestor de sucursales
 
 // =========================================================================
+// CONFIGURACIÓN DE CONTACTO (Añadido para el botón de consulta)
+// =========================================================================
+const WHATSAPP_NUMBER = "59170000000"; // 🚩 Cambia esto por tu número real
+
+// =========================================================================
 // FUNCIONES DE APOYO (HELPERS) PARA CALIFICACIÓN DINÁMICA
 // =========================================================================
 
@@ -38,9 +43,12 @@ const renderStars = (rating) => {
 
 const productCardTemplate = (product) => {
     const productId = product.producto_id || product.id;
+    const branchId = localStorage.getItem('selectedBranchId') || '1'; // 🚩 Captura sucursal actual
     const categoryName = product.nombre_categoria || (product.id_categoria?.nombre || 'General');
-    const finalPrice = product.precio ? product.precio.toFixed(2) : '0.00';
-    const linkHref = `detalle_producto.html?id=${productId}`;
+    const finalPrice = product.precio ? parseFloat(product.precio).toFixed(2) : '0.00';
+    
+    // 🚩 Incluimos la sucursal en el link de detalle
+    const linkHref = `detalle_producto.html?id=${productId}&sucursal=${branchId}`;
     const showPrice = product.mostrar_precio;
 
     const imageUrl = (product.imagen_url && typeof product.imagen_url === 'string' && product.imagen_url.trim() !== '')
@@ -101,7 +109,10 @@ const productCardTemplate = (product) => {
                                 class="add-to-cart-btn bg-secondary/20 hover:bg-primary hover:text-white text-primary rounded-full w-10 h-10 flex items-center justify-center transition-all duration-300">
                                 <span class="material-icons text-xl">add_shopping_cart</span>
                             </button>`
-            : `<span class="text-sm font-semibold text-gray-600">Consultar Precio</span>`}
+            : `<a href="https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hola! Quisiera consultar el precio de: ' + product.nombre + ' en la sucursal con ID: ' + branchId)}" target="_blank"
+                  class="w-full flex items-center justify-center gap-2 py-2 px-4 bg-gray-100 dark:bg-gray-700 hover:bg-green-500 hover:text-white text-gray-600 dark:text-gray-300 rounded-lg text-sm font-bold transition-all duration-300">
+                   <span class="material-icons text-sm">chat</span> Consultar
+               </a>`}
                 </div>
             </div>
         </div>
@@ -110,8 +121,9 @@ const productCardTemplate = (product) => {
 
 const sidebarProductCardTemplate = (product) => {
     const productId = product.producto_id || product.id;
-    const finalPrice = product.precio ? product.precio.toFixed(2) : '0.00';
-    const linkHref = `detalle_producto.html?id=${productId}`;
+    const branchId = localStorage.getItem('selectedBranchId') || '1';
+    const finalPrice = product.precio ? parseFloat(product.precio).toFixed(2) : '0.00';
+    const linkHref = `detalle_producto.html?id=${productId}&sucursal=${branchId}`;
     const showPrice = product.mostrar_precio;
 
     const imageUrl = (product.imagen_url && typeof product.imagen_url === 'string' && product.imagen_url.trim() !== '')
@@ -126,7 +138,7 @@ const sidebarProductCardTemplate = (product) => {
             : `<span class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform">package_2</span>`
         }
             </div>
-            <div>
+            <div class="flex-grow">
                 <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-200 group-hover:text-primary transition-colors line-clamp-2">
                     ${product.nombre}</h4>
                 <div class="flex items-center gap-1 mt-1">
@@ -134,13 +146,17 @@ const sidebarProductCardTemplate = (product) => {
                 </div>
                 ${showPrice
             ? `<span class="text-primary font-bold text-sm block mt-1">Bs ${finalPrice}</span>`
-            : `<span class="text-xs font-semibold text-gray-600 dark:text-gray-400 block mt-1">Consultar Precio</span>`}
+            : `<div onclick="event.preventDefault(); window.open('https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Consulta: ' + product.nombre + ' (Sede ID: ' + branchId + ')')}', '_blank')" 
+                    class="inline-flex items-center gap-1 mt-1 px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-green-500 hover:text-white rounded text-[10px] font-bold uppercase transition-all">
+                    <span class="material-icons text-[12px]">forum</span> Consultar
+               </div>`}
             </div>
         </a>
     `;
 };
 
 const categoryCardTemplate = (category) => {
+    const branchId = localStorage.getItem('selectedBranchId') || '1';
     let icon = 'grocery';
     let iconClass = 'text-gray-400';
     let bgClass = 'bg-gray-200 dark:bg-gray-700';
@@ -191,7 +207,8 @@ const categoryCardTemplate = (category) => {
             break;
     }
 
-    const linkHref = `productos.html?categoria=${encodeURIComponent(category.nombre)}`;
+    // 🚩 Inyectamos la sucursal en el link de la categoría
+    const linkHref = `productos.html?categoria=${encodeURIComponent(category.nombre)}&sucursal=${branchId}`;
 
     return `
         <a class="category-slide-item flex-shrink-0 w-1/2 sm:w-1/3 lg:w-1/4 xl:w-1/5 p-3"
@@ -215,7 +232,8 @@ const categoryCardTemplate = (category) => {
 };
 
 const categoryNavLinkTemplate = (category) => {
-    const linkHref = `productos.html?categoria=${encodeURIComponent(category.nombre)}`;
+    const branchId = localStorage.getItem('selectedBranchId') || '1';
+    const linkHref = `productos.html?categoria=${encodeURIComponent(category.nombre)}&sucursal=${branchId}`;
     return `
         <a class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
             href="${linkHref}">
@@ -232,29 +250,26 @@ async function loadNewArrivals() {
     const container = document.querySelector('.lg\\:col-span-3 .grid:last-of-type');
     if (!container) return;
 
-    // 🚩 Obtenemos la sucursal del storage
     const branchId = localStorage.getItem('selectedBranchId');
-    if (!branchId) return; // Si no hay sucursal, el branchManager se encargará de abrir el modal
+    if (!branchId) return;
 
     container.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400 lg:col-span-3 py-10">Cargando productos...</p>';
 
     try {
-        // 🚩 Usamos un JOIN con producto_sucursal para filtrar por tienda y stock
         let { data: products, error } = await supabase
-            .from('v_producto_estadisticas') 
-            .select(`
-                *,
-                producto_sucursal!inner(id_sucursal, stock_sucursal)
-            `)
+            .from('v_producto_sucursal_estadisticas') 
+            .select('*')
             .eq('visible', true)
-            .eq('producto_sucursal.id_sucursal', branchId)
-            .gt('producto_sucursal.stock_sucursal', 0) // Solo mostrar si hay stock en esa tienda
-            .order('producto_id', { ascending: true })
+            .eq('id_sucursal', branchId)
+            .gt('stock', 0) 
+            .order('producto_id', { ascending: false })
             .limit(10);
 
         if (error) throw error;
         
-        if (products.length === 0) {
+        console.log(`%c📦 Catálogo Sucursal: ${branchId}`, 'color: #3b82f6; font-weight: bold;');
+
+        if (!products || products.length === 0) {
             container.innerHTML = '<p class="text-center text-gray-500 lg:col-span-3 py-10">No hay productos disponibles en esta sucursal.</p>';
         } else {
             container.innerHTML = products.map(productCardTemplate).join('');
@@ -276,18 +291,21 @@ async function loadBestSellers() {
 
     try {
         let { data: products, error } = await supabase
-            .from('v_productos_mas_vendidos') 
-            .select(`
-                *,
-                producto_sucursal!inner(id_sucursal, stock_sucursal)
-            `)
+            .from('v_productos_sucursal_mas_vendidos') 
+            .select('*')
             .eq('visible', true)
-            .eq('producto_sucursal.id_sucursal', branchId)
-            .gt('producto_sucursal.stock_sucursal', 0)
+            .eq('id_sucursal', branchId)
+            .gt('stock', 0)
+            .order('total_vendido', { ascending: false })
             .limit(3);
 
         if (error) throw error;
-        container.innerHTML = products.map(sidebarProductCardTemplate).join('');
+
+        if (products && products.length > 0) {
+            container.innerHTML = products.map(sidebarProductCardTemplate).join('');
+        } else {
+            container.innerHTML = '<p class="text-xs text-gray-400">Sin datos de ventas en esta sede.</p>';
+        }
 
     } catch (e) {
         console.error('Error loadBestSellers:', e);
@@ -321,6 +339,7 @@ async function loadNavigationCategories() {
     if (!dropdownContainer && !mobileContainer) return;
 
     try {
+        const branchId = localStorage.getItem('selectedBranchId') || '1';
         let { data: categories, error } = await supabase
             .from('categoria')
             .select('id, nombre, visible, id_padre')
@@ -333,7 +352,7 @@ async function loadNavigationCategories() {
         if (dropdownContainer) dropdownContainer.innerHTML = linksHtml;
         if (mobileContainer) {
             mobileContainer.innerHTML = categories.map(c =>
-                `<a class="block text-gray-600 dark:text-gray-300 hover:text-primary transition-colors text-sm font-medium py-1.5" href="productos.html?categoria=${encodeURIComponent(c.nombre)}">${c.nombre}</a>`
+                `<a class="block text-gray-600 dark:text-gray-300 hover:text-primary transition-colors text-sm font-medium py-1.5" href="productos.html?categoria=${encodeURIComponent(c.nombre)}&sucursal=${branchId}">${c.nombre}</a>`
             ).join('');
         }
     } catch (e) {
@@ -342,7 +361,7 @@ async function loadNavigationCategories() {
 }
 
 // =========================================================================
-// LÓGICA DEL CARRUSEL
+// LÓGICA DEL CARRUSEL (SIN CAMBIOS)
 // =========================================================================
 
 function setupCategoriesCarousel(totalItems) {
@@ -433,17 +452,27 @@ async function initHomePageContent() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // 1. Cargamos navegación
     initGlobalNavigation();
     
-    // 2. 🚩 Inicializamos el sistema de sucursales ANTES del contenido
-    // Esto abrirá el modal si no hay sucursal o cargará la sucursal del storage
     await initBranchSystem(); 
 
-    // 3. Si estamos en la Home, cargar el contenido
     if (document.getElementById('categories-wrapper')) {
         initHomePageContent();
     }
+
+    // 🚩 ESCUCHAR EL CAMBIO DE SUCURSAL PARA REFRESCAR SIN RECARGAR
+    window.addEventListener('branchChanged', () => {
+        console.log('%c🔄 Cambio de sucursal detectado. Actualizando contenido...', 'color: #f59e0b; font-weight: bold;');
+        
+        // Actualizamos los menús de navegación para que los links apunten a la nueva sucursal
+        loadNavigationCategories();
+        
+        if (document.getElementById('categories-wrapper')) {
+            loadPopularCategories(); // Recarga categorías (por si cambian los links)
+            loadNewArrivals();
+            loadBestSellers();
+        }
+    });
 });
 
 export { loadNewArrivals, loadBestSellers, loadPopularCategories };

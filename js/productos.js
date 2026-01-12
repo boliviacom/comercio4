@@ -123,8 +123,8 @@ function inicializarFiltroEstrellas() {
 
     if (btnAplicar) {
         btnAplicar.addEventListener('click', () => {
-            const val = ratingInput.value;
             const url = new URL(window.location.href);
+            const val = ratingInput.value;
             if (val && val > 0) {
                 url.searchParams.set('rating', val);
             } else {
@@ -407,9 +407,11 @@ function inicializarListenersFiltros() {
     if (btnLimpiar) {
         btnLimpiar.addEventListener('click', () => {
             const url = new URL(window.location.href);
+            const sucursal = localStorage.getItem('selectedBranchId');
             const cat = url.searchParams.get('categoria');
             const search = url.searchParams.get('buscar');
             const newUrl = new URL(window.location.pathname, window.location.origin);
+            if (sucursal) newUrl.searchParams.set('sucursal', sucursal);
             if (cat) newUrl.searchParams.set('categoria', cat);
             if (search) newUrl.searchParams.set('buscar', search);
             window.location.href = newUrl.toString();
@@ -462,6 +464,7 @@ function renderPagination(totalCount, currentPage, categoriaNombre) {
     }
 
     const urlParams = new URLSearchParams(window.location.search);
+    const sucursalId = localStorage.getItem('selectedBranchId'); 
     const ordenActual = urlParams.get('orden');
     const buscar = urlParams.get('buscar');
     const minPrice = urlParams.get('minPrice');
@@ -471,6 +474,7 @@ function renderPagination(totalCount, currentPage, categoriaNombre) {
 
     const buildLink = (page) => {
         let params = new URLSearchParams();
+        if (sucursalId) params.set('sucursal', sucursalId);
         if (categoriaNombre) params.set('categoria', categoriaNombre);
         if (buscar) params.set('buscar', buscar);
         if (ordenActual) params.set('orden', ordenActual);
@@ -610,6 +614,14 @@ async function cargarProductosPorCategoria() {
     inicializarTogglesSidebar();
 
     const urlParams = new URLSearchParams(window.location.search);
+    
+    // PRIORIDAD: LocalStorage para sincronizar con branchManager
+    const sucursalId = localStorage.getItem('selectedBranchId') || urlParams.get('sucursal') || 1; 
+
+    console.group('🔍 DEBUG CATALOGO:');
+    console.log('ID Sucursal cargada:', sucursalId);
+    console.groupEnd();
+
     const categoriaNombreRaw = urlParams.get('categoria');
     const categoriaNombre = categoriaNombreRaw ? decodeURIComponent(categoriaNombreRaw) : null;
     const terminoBusqueda = urlParams.get('buscar');
@@ -631,7 +643,7 @@ async function cargarProductosPorCategoria() {
 
     if (!productGridContainer) return;
 
-    productGridContainer.innerHTML = '<div class="col-span-full text-center py-10 text-gray-500">Cargando productos...</div>';
+    productGridContainer.innerHTML = '<div class="col-span-full text-center py-10 text-gray-500">Cargando productos de la sucursal...</div>';
 
     marcarCategoriaActiva(categoriaNombre);
     marcarFiltroSidebar(categoriaNombre);
@@ -639,24 +651,10 @@ async function cargarProductosPorCategoria() {
     let nombreDisplay = categoriaNombre || 'Catálogo Completo';
     if (terminoBusqueda) nombreDisplay = `Resultados para: "${terminoBusqueda}"`;
 
-    // DINÁMICO: Título del documento "Marca - Categoría"
     document.title = `${NOMBRE_MARCA} - ${nombreDisplay}`;
 
     if (tituloCategoria) tituloCategoria.textContent = nombreDisplay;
     if (breadcrumbActivo) breadcrumbActivo.textContent = nombreDisplay;
-
-    if (minPrice) {
-        const minEl = document.getElementById('min-price');
-        if (minEl) minEl.value = minPrice;
-    }
-    if (maxPrice) {
-        const maxEl = document.getElementById('max-price');
-        if (maxEl) maxEl.value = maxPrice;
-        const rangeEl = document.getElementById('price-range-input');
-        if (rangeEl) rangeEl.value = maxPrice;
-        const dispEl = document.getElementById('price-max-display');
-        if (dispEl) dispEl.textContent = `Bs ${maxPrice}`;
-    }
 
     let idsParaFiltrar = [];
     if (categoriaNombre) {
@@ -673,7 +671,11 @@ async function cargarProductosPorCategoria() {
         }
     }
 
-    let query = supabase.from('v_producto_estadisticas').select('*', { count: 'exact' }).eq('visible', true);
+    let query = supabase
+        .from('v_producto_sucursal_estadisticas')
+        .select('*', { count: 'exact' })
+        .eq('id_sucursal', sucursalId) 
+        .eq('visible', true);
 
     if (idsParaFiltrar.length > 0) query = query.in('id_categoria', idsParaFiltrar);
     if (terminoBusqueda) query = query.ilike('nombre', `%${terminoBusqueda}%`);
@@ -687,7 +689,7 @@ async function cargarProductosPorCategoria() {
     let { data: productos, error: prodError, count } = await query.range(from, to);
 
     if (prodError) {
-        productGridContainer.innerHTML = '<div class="col-span-full text-center text-red-500 py-10">Error al cargar.</div>';
+        productGridContainer.innerHTML = '<div class="col-span-full text-center text-red-500 py-10">Error al conectar con la base de datos.</div>';
         return;
     }
 
@@ -700,11 +702,12 @@ async function cargarProductosPorCategoria() {
     productGridContainer.innerHTML = '';
 
     if (productos.length === 0) {
-        productGridContainer.innerHTML = `<div class="col-span-full text-center text-gray-500 py-10">No se encontraron productos.</div>`;
+        productGridContainer.innerHTML = `<div class="col-span-full text-center text-gray-500 py-20">No hay productos disponibles para esta sucursal en este momento.</div>`;
         renderPagination(0, 1, categoriaNombre);
         return;
     }
 
+    // --- CORRECCIÓN: Definición de clases base ---
     const cardBaseClasses = ['group', 'flex', 'rounded-xl', 'border', 'hover:shadow-lg', 'transition-all', 'duration-300', 'bg-white', 'dark:bg-surface-dark'];
     let finalCardClasses, imageClasses, contentClasses, cardBasePadding;
 
@@ -732,7 +735,7 @@ async function cargarProductosPorCategoria() {
                         <span class="material-icons">favorite_border</span>
                     </button>
                     <div class="bg-background-light dark:bg-gray-800 rounded-lg aspect-square flex items-center justify-center overflow-hidden relative group-hover:bg-secondary/10 transition-colors">
-                        <a href="detalle_producto.html?id=${producto.id}" class="w-full h-full flex items-center justify-center">
+                        <a href="detalle_producto.html?id=${producto.id}&sucursal=${sucursalId}" class="w-full h-full flex items-center justify-center">
                             <img src="${producto.imagen_url || 'imagenes/placeholder.jpg'}" alt="${producto.nombre}" 
                                 class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-500" />
                         </a>
@@ -742,7 +745,7 @@ async function cargarProductosPorCategoria() {
                     <div class="mb-2">
                         <span class="text-xs text-gray-400 font-medium">${nombreDisplay}</span> 
                         <h3 class="text-base font-bold text-gray-800 dark:text-gray-100 line-clamp-2 h-12 group-hover:text-primary transition-colors cursor-pointer">
-                            <a href="detalle_producto.html?id=${producto.id}">${producto.nombre}</a>
+                            <a href="detalle_producto.html?id=${producto.id}&sucursal=${sucursalId}">${producto.nombre}</a>
                         </h3>
                     </div>
                     <div class="flex items-center gap-1.5 mb-3">
@@ -769,4 +772,25 @@ async function cargarProductosPorCategoria() {
     agregarListenersCatalogo();
 }
 
-document.addEventListener('DOMContentLoaded', cargarProductosPorCategoria);
+// =========================================================
+// ESCUCHADORES DE EVENTOS GLOBALES (FUERA DE LA FUNCIÓN PRINCIPAL)
+// =========================================================
+
+// Escuchar cambios de sucursal desde el storage (otras pestañas)
+window.addEventListener('storage', (e) => {
+    if (e.key === 'selectedBranchId') {
+        console.log("Cambio de sucursal detectado en Storage, recargando catálogo...");
+        cargarProductosPorCategoria();
+    }
+});
+
+// Escuchar evento personalizado desde branchManager.js (Misma pestaña)
+window.addEventListener('branchChanged', () => {
+    console.log("Evento branchChanged detectado, sincronizando catálogo...");
+    cargarProductosPorCategoria();
+});
+
+// Iniciamos la carga cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', () => {
+    cargarProductosPorCategoria();
+});

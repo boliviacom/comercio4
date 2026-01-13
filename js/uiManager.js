@@ -1,35 +1,38 @@
 /**
  * uiManager.js
- * * Contiene la lógica de JavaScript para la interactividad de la UI,
+ * Contiene la lógica de JavaScript para la interactividad de la UI,
  * incluyendo el menú desplegable de categorías (escritorio) y el
  * menú hamburguesa (móvil).
  */
 
 function setupUIToggles() {
-    // 1. Category Dropdown Toggle
+    // ---------------------------------------------------------
+    // 1. Category Dropdown Toggle (Vista Escritorio)
+    // ---------------------------------------------------------
     const categoryToggle = document.getElementById('categories-toggle');
     const categoryDropdown = document.getElementById('categories-dropdown-menu');
     const categoryArrow = document.getElementById('categories-arrow');
 
     if (categoryToggle && categoryDropdown) {
         const toggleDropdown = () => {
-            // El estado 'isHidden' es true si la clase 'hidden' existe.
             const isHidden = categoryDropdown.classList.toggle('hidden');
             
-            // Toggle classes for smooth transition
+            // Animaciones de escala y opacidad
             categoryDropdown.classList.toggle('scale-100', !isHidden);
             categoryDropdown.classList.toggle('scale-95', isHidden);
             categoryDropdown.classList.toggle('opacity-100', !isHidden);
             categoryDropdown.classList.toggle('opacity-0', isHidden);
-            categoryArrow.classList.toggle('rotate-180', !isHidden);
+            
+            if (categoryArrow) {
+                categoryArrow.classList.toggle('rotate-180', !isHidden);
+            }
 
             if (!isHidden) {
-                // Abrir: Añadir listener para cerrar al hacer clic afuera
+                // Si se abre, añadir listener para cerrar al hacer clic fuera
                 setTimeout(() => { 
                     document.addEventListener('click', closeDropdownOnOutsideClick);
                 }, 50);
             } else {
-                // Cerrar: Remover listener
                 document.removeEventListener('click', closeDropdownOnOutsideClick);
             }
         };
@@ -38,7 +41,7 @@ function setupUIToggles() {
             if (!categoryToggle.contains(event.target) && !categoryDropdown.contains(event.target)) {
                 categoryDropdown.classList.add('hidden', 'scale-95', 'opacity-0');
                 categoryDropdown.classList.remove('scale-100', 'opacity-100');
-                categoryArrow.classList.remove('rotate-180');
+                if (categoryArrow) categoryArrow.classList.remove('rotate-180');
                 document.removeEventListener('click', closeDropdownOnOutsideClick);
             }
         };
@@ -49,53 +52,66 @@ function setupUIToggles() {
         });
     }
 
-    // 2. Mobile Menu Toggle (Panel que se abre desde arriba)
-    // Usando los IDs actualizados en el HTML
+    // ---------------------------------------------------------
+    // 2. Mobile Menu Toggle (Panel Hamburguesa)
+    // ---------------------------------------------------------
     const mobileMenuOpenButton = document.getElementById('mobile-menu-open-button');
     const mobileMenuCloseButton = document.getElementById('mobile-menu-close-button');
     const mobileMenuPanel = document.getElementById('mobile-menu-panel');
+    
+    // Referencia al contenedor del buscador principal en el header
+    // IMPORTANTE: Asegúrate de añadir la clase 'main-search-container' en tu index.html
+    const mainSearchContainer = document.querySelector('.main-search-container');
 
     if (mobileMenuOpenButton && mobileMenuCloseButton && mobileMenuPanel) {
         
-        // Función principal para abrir
+        // Función para ABRIR el menú móvil
         const openMobileMenu = () => {
-            // 1. Mostrar Panel (eliminar hidden)
+            // 1. Mostrar Panel (quitar el display none)
             mobileMenuPanel.classList.remove('hidden');
             
-            // 2. Cambiar Íconos y Estado de Accesibilidad
-            // El botón de apertura se vuelve 'close' (la 'X')
-            mobileMenuOpenButton.querySelector('.material-icons').textContent = 'close';
-            // El botón de cerrar dentro del panel ya tiene 'close' en HTML, lo aseguramos
-            mobileMenuCloseButton.querySelector('.material-icons').textContent = 'close';
+            // 2. OCULTAR buscador principal para evitar que se sobreponga
+            if (mainSearchContainer) {
+                mainSearchContainer.classList.add('opacity-0', 'pointer-events-none', 'invisible');
+            }
+
+            // 3. Cambiar icono del botón principal
+            const icon = mobileMenuOpenButton.querySelector('.material-icons');
+            if (icon) icon.textContent = 'close';
             
             mobileMenuOpenButton.setAttribute('aria-expanded', 'true');
 
-            // 3. Iniciar transición
+            // 4. Iniciar transición (delay mínimo para que el navegador detecte el cambio de 'hidden')
             setTimeout(() => {
                 mobileMenuPanel.classList.remove('-translate-y-full', 'opacity-0');
                 mobileMenuPanel.classList.add('translate-y-0', 'opacity-100');
             }, 10); 
         };
 
-        // Función principal para cerrar
+        // Función para CERRAR el menú móvil
         const closeMobileMenu = () => {
-            // 1. Iniciar transición de ocultamiento
+            // 1. Iniciar transición de salida
             mobileMenuPanel.classList.remove('translate-y-0', 'opacity-100');
             mobileMenuPanel.classList.add('-translate-y-full', 'opacity-0');
             
-            // 2. Cambiar Íconos y Estado de Accesibilidad
-            // El botón de apertura vuelve a ser 'menu' (la hamburguesa)
-            mobileMenuOpenButton.querySelector('.material-icons').textContent = 'menu';
+            // 2. MOSTRAR el buscador principal de nuevo
+            if (mainSearchContainer) {
+                mainSearchContainer.classList.remove('opacity-0', 'pointer-events-none', 'invisible');
+            }
+
+            // 3. Restaurar icono de hamburguesa
+            const icon = mobileMenuOpenButton.querySelector('.material-icons');
+            if (icon) icon.textContent = 'menu';
+            
             mobileMenuOpenButton.setAttribute('aria-expanded', 'false');
 
-            // 3. Ocultar físicamente el panel después de que termine la transición CSS (300ms)
+            // 4. Ocultar físicamente después de la animación (300ms)
             setTimeout(() => {
                 mobileMenuPanel.classList.add('hidden');
             }, 300); 
         };
 
-        // Escuchadores de eventos
-        // 1. Botón de la barra de navegación (abre/cierra)
+        // Eventos de clic
         mobileMenuOpenButton.addEventListener('click', () => {
             const isCurrentlyOpen = mobileMenuOpenButton.getAttribute('aria-expanded') === 'true';
             if (isCurrentlyOpen) {
@@ -105,25 +121,24 @@ function setupUIToggles() {
             }
         });
         
-        // 2. Botón dentro del panel (siempre cierra)
         mobileMenuCloseButton.addEventListener('click', closeMobileMenu);
 
-
-        // 3. Copiar enlaces de navegación principal a mobile menu
+        // ---------------------------------------------------------
+        // 3. Sincronización de enlaces de navegación al móvil
+        // ---------------------------------------------------------
         const mainNavLinks = document.getElementById('main-nav-links');
         const mobileNavContainer = document.getElementById('mobile-nav-links');
 
         if (mainNavLinks && mobileNavContainer) {
             mobileNavContainer.innerHTML = Array.from(mainNavLinks.children).map(link => {
                 let clonedLink = link.cloneNode(true);
-                // Remover clases de escritorio
-                clonedLink.classList.remove('text-white', 'hover:text-white/90', 'hover:bg-white/10', 'px-3', 'py-2', 'rounded-md', 'text-sm', 'font-medium', 'relative');
-                // Añadir clases de móvil
-                clonedLink.classList.add('block', 'px-4', 'py-3', 'text-base', 'font-medium', 'text-gray-800', 'dark:text-gray-200', 'hover:bg-gray-100', 'dark:hover:bg-gray-700', 'rounded-lg');
+                
+                // Limpiar clases de escritorio y poner las de móvil
+                clonedLink.className = 'block px-4 py-3 text-base font-medium text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors';
 
-                // Eliminar el span de la línea de hover
-                const hoverLine = clonedLink.querySelector('span:last-child');
-                if (hoverLine && hoverLine.classList.contains('absolute')) {
+                // Quitar efectos visuales específicos de escritorio (como el span de subrayado)
+                const hoverLine = clonedLink.querySelector('span.absolute');
+                if (hoverLine) {
                     hoverLine.remove();
                 }
 
@@ -133,5 +148,5 @@ function setupUIToggles() {
     }
 }
 
-// Inicializar la gestión de la UI al cargar el documento
+// Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', setupUIToggles);

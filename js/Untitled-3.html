@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Miel de Abeja Pura Orgánica - Geek Natural Food Store</title>
+    <title>Geek - Natural Food Store</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&amp;display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap"
         rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <link
@@ -42,86 +42,197 @@
             font-family: 'Poppins', sans-serif;
         }
 
-        input[type=number]::-webkit-inner-spin-button,
-        input[type=number]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
+        .modal-scroll::-webkit-scrollbar {
+            width: 6px;
         }
 
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
+        .modal-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
         }
 
-        .scrollbar-hide {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+        .modal-scroll::-webkit-scrollbar-thumb {
+            background: #BCDDC8;
+            border-radius: 4px;
         }
 
-        .zoom-container {
-            position: relative;
-            overflow: hidden;
-            cursor: zoom-in;
-        }
-
-        .zoom-container:hover .zoom-icon {
-            opacity: 1;
-        }
-
-        .zoom-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 50;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #zoom-toggle:checked~.zoom-overlay {
-            display: flex;
-        }
-
-        .gallery-image {
-            transition: transform 0.3s ease;
-        }
-
-        .gallery-thumb:hover {
-            border-color: #50B296;
-            opacity: 1;
+        .modal-scroll::-webkit-scrollbar-thumb:hover {
+            background: #50B296;
         }
     </style>
 </head>
 
-<body
-    class="bg-[#F3F6F5] dark:bg-background-dark min-h-screen flex flex-col font-body text-gray-800 dark:text-gray-200">
-    <header class="font-display relative z-30 sticky top-0">
+<body class="bg-gray-50 dark:bg-background-dark min-h-screen flex flex-col font-body">
+    <div
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm transition-opacity duration-300">
         <div
-            class="bg-white dark:bg-surface-dark px-4 py-3 transition-colors duration-300 border-b border-gray-100 dark:border-gray-700">
+            class="relative w-full max-w-2xl bg-white dark:bg-surface-dark rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in zoom-in duration-300">
+            <div class="bg-primary px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="bg-white/20 p-2 rounded-lg">
+                        <span class="material-icons text-white">storefront</span>
+                    </div>
+                    <h2 class="text-xl font-bold text-white">Selecciona tu Sucursal</h2>
+                </div>
+                <button class="text-white/80 hover:text-white hover:bg-white/10 rounded-full p-1 transition-colors">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <div class="p-6 md:p-8 overflow-y-auto modal-scroll bg-background-light dark:bg-gray-800">
+                <p class="text-gray-600 dark:text-gray-300 mb-6 text-sm md:text-base">
+                    Para asegurarnos de mostrarte el stock y precios correctos, por favor selecciona la tienda más
+                    cercana a tu ubicación.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                    <label class="cursor-pointer group relative">
+                        <input checked="" class="peer sr-only" name="branch" type="radio" />
+                        <div
+                            class="h-full bg-white dark:bg-surface-dark border-2 border-primary rounded-xl p-4 transition-all shadow-md peer-checked:bg-secondary/10 dark:peer-checked:bg-primary/10">
+                            <div class="absolute top-4 right-4 text-primary opacity-100 transition-opacity">
+                                <span class="material-icons">check_circle</span>
+                            </div>
+                            <div class="flex items-start gap-3 mb-3">
+                                <div class="bg-secondary/30 text-primary-dark p-2 rounded-lg">
+                                    <span class="material-icons text-lg">location_city</span>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-800 dark:text-white">Sucursal Central</h3>
+                                    <span
+                                        class="text-xs font-medium text-green-600 bg-green-100 px-2 py-0.5 rounded-full">Abierto</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-2 flex items-center gap-1">
+                                <span class="material-icons text-xs">place</span>
+                                Av. Principal 123, Centro
+                            </p>
+                            <p class="text-xs text-gray-400 dark:text-gray-500">Horario: 8:00 AM - 9:00 PM</p>
+                        </div>
+                    </label>
+                    <label class="cursor-pointer group relative">
+                        <input class="peer sr-only" name="branch" type="radio" />
+                        <div
+                            class="h-full bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-600 rounded-xl p-4 hover:border-primary/50 hover:shadow-lg transition-all peer-checked:border-primary peer-checked:bg-secondary/10 dark:peer-checked:bg-primary/10">
+                            <div
+                                class="absolute top-4 right-4 text-primary opacity-0 peer-checked:opacity-100 transition-opacity">
+                                <span class="material-icons">check_circle</span>
+                            </div>
+                            <div class="flex items-start gap-3 mb-3">
+                                <div
+                                    class="bg-gray-100 dark:bg-gray-700 text-gray-500 p-2 rounded-lg group-hover:bg-secondary/30 group-hover:text-primary-dark transition-colors">
+                                    <span class="material-icons text-lg">store</span>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-800 dark:text-white">Plaza Norte</h3>
+                                    <span
+                                        class="text-xs font-medium text-green-600 bg-green-100 px-2 py-0.5 rounded-full">Abierto</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-2 flex items-center gap-1">
+                                <span class="material-icons text-xs">place</span>
+                                CC. Los Pinos, Local 45
+                            </p>
+                            <p class="text-xs text-gray-400 dark:text-gray-500">Horario: 9:00 AM - 10:00 PM</p>
+                        </div>
+                    </label>
+                    <label class="cursor-pointer group relative">
+                        <input class="peer sr-only" name="branch" type="radio" />
+                        <div
+                            class="h-full bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-600 rounded-xl p-4 hover:border-primary/50 hover:shadow-lg transition-all peer-checked:border-primary peer-checked:bg-secondary/10 dark:peer-checked:bg-primary/10">
+                            <div
+                                class="absolute top-4 right-4 text-primary opacity-0 peer-checked:opacity-100 transition-opacity">
+                                <span class="material-icons">check_circle</span>
+                            </div>
+                            <div class="flex items-start gap-3 mb-3">
+                                <div
+                                    class="bg-gray-100 dark:bg-gray-700 text-gray-500 p-2 rounded-lg group-hover:bg-secondary/30 group-hover:text-primary-dark transition-colors">
+                                    <span class="material-icons text-lg">store</span>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-800 dark:text-white">Sucursal Sur</h3>
+                                    <span
+                                        class="text-xs font-medium text-orange-600 bg-orange-100 px-2 py-0.5 rounded-full">Cierra
+                                        pronto</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-2 flex items-center gap-1">
+                                <span class="material-icons text-xs">place</span>
+                                Av. del Sol 789, Surco
+                            </p>
+                            <p class="text-xs text-gray-400 dark:text-gray-500">Horario: 8:00 AM - 8:00 PM</p>
+                        </div>
+                    </label>
+                    <label class="cursor-pointer group relative">
+                        <input class="peer sr-only" name="branch" type="radio" />
+                        <div
+                            class="h-full bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-600 rounded-xl p-4 hover:border-primary/50 hover:shadow-lg transition-all peer-checked:border-primary peer-checked:bg-secondary/10 dark:peer-checked:bg-primary/10">
+                            <div
+                                class="absolute top-4 right-4 text-primary opacity-0 peer-checked:opacity-100 transition-opacity">
+                                <span class="material-icons">check_circle</span>
+                            </div>
+                            <div class="flex items-start gap-3 mb-3">
+                                <div
+                                    class="bg-gray-100 dark:bg-gray-700 text-gray-500 p-2 rounded-lg group-hover:bg-secondary/30 group-hover:text-primary-dark transition-colors">
+                                    <span class="material-icons text-lg">local_shipping</span>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-800 dark:text-white">Delivery Express</h3>
+                                    <span
+                                        class="text-xs font-medium text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">24
+                                        Horas</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-2 flex items-center gap-1">
+                                <span class="material-icons text-xs">place</span>
+                                Solo Envíos a Domicilio
+                            </p>
+                            <p class="text-xs text-gray-400 dark:text-gray-500">Cobertura: Toda la ciudad</p>
+                        </div>
+                    </label>
+                </div>
+                <div
+                    class="flex items-center gap-2 text-primary hover:text-primary-dark cursor-pointer text-sm font-medium w-fit mx-auto md:mx-0">
+                    <span class="material-icons text-lg">my_location</span>
+                    Usar mi ubicación actual
+                </div>
+            </div>
+            <div
+                class="bg-gray-50 dark:bg-surface-dark/50 px-6 py-4 border-t border-gray-100 dark:border-gray-700 flex flex-col-reverse sm:flex-row items-center justify-end gap-3 sm:gap-4">
+                <button
+                    class="w-full sm:w-auto px-6 py-2.5 rounded-full text-gray-500 font-medium hover:text-gray-800 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 transition-colors text-sm">
+                    Continuar sin seleccionar
+                </button>
+                <button
+                    class="w-full sm:w-auto px-8 py-2.5 rounded-full bg-primary hover:bg-primary-dark text-white font-bold shadow-lg shadow-primary/30 transition-all transform active:scale-95 flex items-center justify-center gap-2">
+                    <span>Confirmar</span>
+                    <span class="material-icons text-sm">arrow_forward</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <header class="font-display shadow-md relative z-30">
+        <div class="bg-white dark:bg-surface-dark px-4 py-4 transition-colors duration-300">
             <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-4 lg:gap-8">
                 <div class="w-full flex flex-col md:flex-row items-center justify-between gap-4 lg:contents">
                     <div class="flex items-center flex-shrink-0 self-start md:self-center">
                         <a class="flex items-end gap-3 group cursor-pointer" href="#">
                             <div
-                                class="relative h-10 w-10 md:h-12 md:w-12 flex-shrink-0 transform group-hover:scale-105 transition-transform duration-300">
+                                class="relative h-12 w-12 md:h-14 md:w-14 flex-shrink-0 transform group-hover:scale-105 transition-transform duration-300">
                                 <div
-                                    class="absolute top-0 left-0 h-7 w-3.5 md:h-8 md:w-4 bg-secondary rounded-tl-lg rounded-bl-lg opacity-80">
+                                    class="absolute top-0 left-0 h-8 w-4 md:h-9 md:w-5 bg-secondary rounded-tl-lg rounded-bl-lg opacity-80">
                                 </div>
                                 <div
-                                    class="absolute top-1 left-2.5 md:left-3 h-8 w-4 md:h-10 md:w-5 bg-primary rounded-t-lg rounded-br-lg z-10">
+                                    class="absolute top-1 left-3 md:left-3.5 h-10 w-5 md:h-11 md:w-6 bg-primary rounded-t-lg rounded-br-lg z-10">
                                 </div>
                                 <div
-                                    class="absolute bottom-0 left-4 md:left-5 h-2.5 w-2.5 md:h-3 md:w-3 bg-gray-800 rounded-full z-20">
+                                    class="absolute bottom-0 left-5 md:left-6 h-3 w-3 md:h-3.5 md:w-3.5 bg-gray-800 rounded-full z-20">
                                 </div>
                             </div>
                             <div class="flex flex-col justify-center -ml-1 pb-1">
                                 <h1
-                                    class="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-none">
+                                    class="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-none">
                                     GEEK</h1>
                                 <span
-                                    class="text-[9px] md:text-[10px] font-semibold text-primary dark:text-gray-300 tracking-widest uppercase">Natural
+                                    class="text-[10px] md:text-xs font-semibold text-primary dark:text-gray-300 tracking-widest uppercase">Natural
                                     Store</span>
                             </div>
                         </a>
@@ -129,527 +240,636 @@
                     <div class="w-full lg:flex-grow lg:max-w-xl mx-auto order-last md:order-none mt-2 md:mt-0">
                         <div class="relative group">
                             <input
-                                class="w-full h-10 pl-4 pr-12 rounded-full text-sm text-gray-700 bg-gray-50 border border-gray-200 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white placeholder-gray-400 font-medium transition-all"
-                                placeholder="Buscar productos..." type="text" />
+                                class="w-full h-10 md:h-12 pl-4 md:pl-6 pr-12 md:pr-14 rounded-full text-sm md:text-base text-gray-700 bg-gray-50 border border-gray-200 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white placeholder-gray-400 font-medium transition-all"
+                                placeholder="Buscar productos orgánicos..." type="text" />
                             <button
-                                class="absolute right-1 top-1 bottom-1 w-8 h-8 bg-primary hover:bg-primary-dark rounded-full text-white transition-colors flex items-center justify-center">
-                                <span class="material-icons text-lg">search</span>
+                                class="absolute right-1 top-1 bottom-1 w-8 h-8 md:w-10 md:h-10 bg-primary hover:bg-primary-dark rounded-full text-white transition-colors flex items-center justify-center shadow-sm">
+                                <span class="material-icons text-lg md:text-xl">search</span>
                             </button>
                         </div>
                     </div>
                     <div
-                        class="flex items-center gap-4 md:gap-6 flex-shrink-0 self-end md:self-center absolute top-3 right-4 md:static">
-                        <label class="flex items-center gap-2 group cursor-pointer" for="auth-modal">
+                        class="flex items-center gap-4 md:gap-6 flex-shrink-0 self-end md:self-center absolute top-4 right-4 md:static">
+                        <a class="flex items-center gap-2 group" href="#">
                             <div
-                                class="bg-gray-50 dark:bg-white/10 p-2 rounded-full group-hover:bg-secondary/30 dark:group-hover:bg-white/20 transition-colors border border-gray-100 dark:border-gray-600">
+                                class="bg-secondary/30 dark:bg-white/10 p-2 rounded-full group-hover:bg-secondary/50 dark:group-hover:bg-white/20 transition-colors">
                                 <span
-                                    class="material-icons text-xl text-gray-600 dark:text-gray-300 group-hover:text-primary transition-colors">person</span>
+                                    class="material-icons text-xl md:text-2xl text-primary dark:text-primary">person_outline</span>
                             </div>
-                        </label>
+                            <div class="hidden xl:flex flex-col">
+                                <span
+                                    class="text-xs text-gray-500 dark:text-gray-400 font-medium leading-none mb-1">Bienvenido</span>
+                                <span
+                                    class="text-sm font-bold text-gray-800 dark:text-gray-200 leading-none group-hover:text-primary dark:group-hover:text-secondary transition-colors">Iniciar
+                                    sesión</span>
+                            </div>
+                        </a>
                         <a class="relative group flex items-center gap-2" href="#">
                             <div
-                                class="bg-gray-50 dark:bg-white/10 p-2 rounded-full group-hover:bg-secondary/30 dark:group-hover:bg-white/20 transition-colors border border-gray-100 dark:border-gray-600 relative">
+                                class="bg-secondary/30 dark:bg-white/10 p-2 rounded-full group-hover:bg-secondary/50 dark:group-hover:bg-white/20 transition-colors relative">
                                 <span
-                                    class="material-icons text-xl text-gray-600 dark:text-gray-300 group-hover:text-primary transition-colors">shopping_bag</span>
+                                    class="material-icons text-xl md:text-2xl text-primary dark:text-primary">shopping_cart</span>
                                 <span
-                                    class="absolute -top-1 -right-1 h-4 w-4 bg-primary text-white rounded-full flex items-center justify-center text-[10px] font-bold border-2 border-white dark:border-surface-dark">2</span>
+                                    class="absolute -top-1 -right-1 h-4 w-4 md:h-5 md:w-5 bg-primary text-white rounded-full flex items-center justify-center text-[10px] font-bold border-2 border-white dark:border-surface-dark">0</span>
+                            </div>
+                            <div class="hidden xl:flex flex-col">
+                                <span class="text-xs text-gray-500 dark:text-gray-400 font-medium leading-none mb-1">Mi
+                                    Carrito</span>
+                                <span
+                                    class="text-sm font-bold text-gray-800 dark:text-gray-200 leading-none group-hover:text-primary dark:group-hover:text-secondary transition-colors">$0.00</span>
                             </div>
                         </a>
                     </div>
                 </div>
             </div>
         </div>
-        <nav class="bg-primary dark:bg-gray-800 relative z-20">
+        <nav class="bg-primary dark:bg-gray-800 shadow-lg relative z-20">
             <div class="max-w-7xl mx-auto px-4">
-                <div class="flex items-center justify-between h-12">
-                    <div class="flex-shrink-0 h-full flex items-center py-2 mr-6">
+                <div class="flex items-center justify-between h-12 md:h-14">
+                    <div class="flex-shrink-0 h-full flex items-center py-2 mr-4">
                         <button
-                            class="h-full text-white font-bold tracking-wide text-xs md:text-sm flex items-center gap-2 group opacity-90 hover:opacity-100 transition-opacity">
-                            <span class="material-icons text-xl">grid_view</span>
+                            class="h-full bg-white/95 hover:bg-white text-primary font-bold tracking-wide text-xs md:text-sm px-3 md:px-6 rounded-md transition-all duration-300 flex items-center gap-2 group shadow-sm">
+                            <span class="material-icons text-lg md:text-xl">grid_view</span>
                             <span class="hidden sm:inline">CATEGORÍAS</span>
+                            <span
+                                class="material-icons transform group-hover:rotate-180 transition-transform duration-300 text-sm">expand_more</span>
                         </button>
                     </div>
-                    <div class="hidden lg:flex flex-grow h-full items-center justify-start overflow-x-auto">
-                        <div class="flex items-center space-x-6 whitespace-nowrap">
-                            <a class="text-white/90 hover:text-white text-sm font-medium transition-all relative group py-2"
+                    <div
+                        class="hidden lg:flex flex-grow h-full items-center justify-start pl-4 xl:pl-8 overflow-x-auto">
+                        <div class="flex items-center space-x-1 xl:space-x-2 whitespace-nowrap">
+                            <a class="text-white hover:text-white/90 hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-all relative group"
                                 href="#">
                                 Inicio
                                 <span
-                                    class="absolute bottom-0 left-0 right-0 h-0.5 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                                    class="absolute bottom-1.5 left-3 right-3 h-0.5 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                             </a>
-                            <a class="text-white text-sm font-bold transition-all relative group py-2" href="#">
-                                Catálogo
-                                <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-secondary"></span>
+                            <a class="text-white hover:text-white/90 hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-all relative group"
+                                href="#">
+                                Edulcorantes
+                                <span
+                                    class="absolute bottom-1.5 left-3 right-3 h-0.5 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                             </a>
-                            <a class="text-white/90 hover:text-white text-sm font-medium transition-all relative group py-2"
+                            <a class="text-white hover:text-white/90 hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-all relative group"
+                                href="#">
+                                Galletas
+                                <span
+                                    class="absolute bottom-1.5 left-3 right-3 h-0.5 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                            </a>
+                            <a class="text-white hover:text-white/90 hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-all relative group"
+                                href="#">
+                                Pastas
+                                <span
+                                    class="absolute bottom-1.5 left-3 right-3 h-0.5 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                            </a>
+                            <a class="text-white hover:text-white/90 hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-all relative group"
+                                href="#">
+                                Bebidas
+                                <span
+                                    class="absolute bottom-1.5 left-3 right-3 h-0.5 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                            </a>
+                            <a class="text-white hover:text-white/90 hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-all relative group"
                                 href="#">
                                 Ofertas
                                 <span
-                                    class="absolute bottom-0 left-0 right-0 h-0.5 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-                            </a>
-                            <a class="text-white/90 hover:text-white text-sm font-medium transition-all relative group py-2"
-                                href="#">
-                                Blog
-                                <span
-                                    class="absolute bottom-0 left-0 right-0 h-0.5 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                                    class="absolute bottom-1.5 left-3 right-3 h-0.5 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                             </a>
                         </div>
+                    </div>
+                    <div class="lg:hidden flex items-center">
+                        <button class="text-white hover:text-secondary focus:outline-none transition-colors p-2">
+                            <span class="material-icons text-2xl">menu</span>
+                        </button>
                     </div>
                 </div>
             </div>
         </nav>
     </header>
-    <main class="max-w-7xl mx-auto px-4 py-8 flex-grow w-full">
-        <nav aria-label="Breadcrumb" class="flex mb-8 text-xs md:text-sm text-gray-500 dark:text-gray-400">
-            <ol class="inline-flex items-center space-x-1 md:space-x-2">
-                <li class="inline-flex items-center">
-                    <a class="inline-flex items-center hover:text-primary dark:hover:text-white transition-colors"
-                        href="#">
-                        Inicio
-                    </a>
-                </li>
-                <li>
-                    <div class="flex items-center">
-                        <span class="material-icons text-gray-400 text-base">chevron_right</span>
-                        <a class="ml-1 md:ml-2 hover:text-primary dark:hover:text-white transition-colors"
-                            href="#">Catálogo</a>
-                    </div>
-                </li>
-                <li>
-                    <div class="flex items-center">
-                        <span class="material-icons text-gray-400 text-base">chevron_right</span>
-                        <a class="ml-1 md:ml-2 hover:text-primary dark:hover:text-white transition-colors"
-                            href="#">Endulzantes</a>
-                    </div>
-                </li>
-                <li aria-current="page">
-                    <div class="flex items-center">
-                        <span class="material-icons text-gray-400 text-base">chevron_right</span>
-                        <span class="ml-1 md:ml-2 font-medium text-gray-900 dark:text-white">Miel Orgánica</span>
-                    </div>
-                </li>
-            </ol>
-        </nav>
-        <div
-            class="bg-white dark:bg-surface-dark rounded-3xl border border-gray-100 dark:border-gray-700 p-8 md:p-12 mb-12">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-20 items-start">
-                <div class="flex flex-col gap-4">
-                    <div
-                        class="relative w-full bg-[#FAFAFA] dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-600 group zoom-container aspect-square flex items-center justify-center">
-                        <input class="hidden" id="zoom-toggle" type="checkbox" />
-                        <label class="absolute inset-0 z-20 cursor-zoom-in" for="zoom-toggle"></label>
-                        <div
-                            class="absolute inset-0 bg-radial-gradient from-white/40 to-transparent dark:from-white/5 opacity-50 pointer-events-none">
-                        </div>
+    <main class="max-w-7xl mx-auto px-4 py-6 md:py-8 flex-grow w-full">
+        <section class="mb-12 relative rounded-3xl overflow-hidden shadow-2xl">
+            <div
+                class="bg-gradient-to-r from-primary-dark via-primary to-accent h-[400px] md:h-[500px] flex items-center relative">
+                <div class="absolute inset-0 bg-black/10 z-0"></div>
+                <div
+                    class="absolute right-0 top-0 w-96 h-96 bg-white/10 rounded-full blur-3xl transform translate-x-1/3 -translate-y-1/3 z-0">
+                </div>
+                <div class="absolute left-10 bottom-0 w-64 h-64 bg-secondary/30 rounded-full blur-3xl z-0"></div>
+                <div
+                    class="container mx-auto px-6 md:px-12 relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center h-full">
+                    <div class="text-white space-y-6">
                         <span
-                            class="absolute top-6 left-6 bg-secondary/20 dark:bg-black/50 backdrop-blur-md text-primary-dark dark:text-primary font-bold text-xs tracking-wider px-4 py-2 rounded-full border border-secondary/30 dark:border-gray-700 uppercase z-10">
-                            100% Orgánico
+                            class="inline-block px-4 py-1 rounded-full bg-secondary/30 backdrop-blur-sm border border-secondary/40 text-sm font-semibold tracking-wider text-green-50 uppercase mb-2">
+                            100% Orgánico &amp; Natural
                         </span>
-                        <span
-                            class="material-symbols-outlined text-primary/20 text-[200px] md:text-[300px] gallery-image z-0">emoji_nature</span>
-                        <div
-                            class="absolute bottom-6 right-6 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 zoom-icon pointer-events-none">
-                            <div
-                                class="bg-white/80 dark:bg-gray-900/80 backdrop-blur p-3 rounded-full text-gray-500 shadow-sm">
-                                <span class="material-icons text-2xl">zoom_in</span>
-                            </div>
-                        </div>
-                        <div class="zoom-overlay">
-                            <label class="absolute top-4 right-4 text-white cursor-pointer z-50 p-2" for="zoom-toggle">
-                                <span class="material-icons text-4xl">close</span>
-                            </label>
-                            <div class="w-full h-full flex items-center justify-center p-8">
-                                <div
-                                    class="bg-white dark:bg-gray-800 p-8 rounded-3xl max-w-4xl max-h-full overflow-auto relative">
-                                    <span
-                                        class="material-symbols-outlined text-primary text-[400px]">emoji_nature</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
-                        <div
-                            class="w-24 h-24 flex-shrink-0 bg-[#FAFAFA] dark:bg-gray-800 rounded-xl border-2 border-primary cursor-pointer flex items-center justify-center gallery-thumb transition-all overflow-hidden relative">
-                            <span class="material-symbols-outlined text-primary text-5xl">emoji_nature</span>
-                        </div>
-                        <div
-                            class="w-24 h-24 flex-shrink-0 bg-[#FAFAFA] dark:bg-gray-800 rounded-xl border-2 border-transparent hover:border-secondary cursor-pointer flex items-center justify-center gallery-thumb transition-all overflow-hidden opacity-70 hover:opacity-100 group">
-                            <span
-                                class="material-symbols-outlined text-primary/60 group-hover:text-primary text-5xl">hive</span>
-                        </div>
-                        <div
-                            class="w-24 h-24 flex-shrink-0 bg-[#FAFAFA] dark:bg-gray-800 rounded-xl border-2 border-transparent hover:border-secondary cursor-pointer flex items-center justify-center gallery-thumb transition-all overflow-hidden opacity-70 hover:opacity-100 group">
-                            <span
-                                class="material-symbols-outlined text-primary/60 group-hover:text-primary text-5xl">jam_drive</span>
-                        </div>
-                        <div
-                            class="w-24 h-24 flex-shrink-0 bg-[#FAFAFA] dark:bg-gray-800 rounded-xl border-2 border-transparent hover:border-secondary cursor-pointer flex items-center justify-center gallery-thumb transition-all overflow-hidden opacity-70 hover:opacity-100 group">
-                            <span
-                                class="material-symbols-outlined text-primary/60 group-hover:text-primary text-5xl">nutrition</span>
-                        </div>
-                        <div
-                            class="w-24 h-24 flex-shrink-0 bg-[#FAFAFA] dark:bg-gray-800 rounded-xl border-2 border-transparent hover:border-secondary cursor-pointer flex items-center justify-center gallery-thumb transition-all overflow-hidden opacity-70 hover:opacity-100 group relative">
-                            <span
-                                class="material-symbols-outlined text-primary/60 group-hover:text-primary text-5xl">workspace_premium</span>
-                            <div
-                                class="absolute inset-0 flex items-center justify-center bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <span class="material-icons text-white text-2xl drop-shadow-md">zoom_in</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex flex-col h-full justify-center lg:sticky lg:top-24">
-                    <div class="mb-4">
-                        <span class="text-primary font-bold text-sm tracking-[0.2em] uppercase mb-3 block">Geek Natural
-                            Selection</span>
-                        <h1
-                            class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white leading-tight mb-4 font-display">
-                            Miel de Abeja <br />Pura Orgánica</h1>
-                    </div>
-                    <div class="flex items-center gap-3 mb-8">
-                        <div class="flex text-yellow-400 text-lg">
-                            <span class="material-icons">star</span>
-                            <span class="material-icons">star</span>
-                            <span class="material-icons">star</span>
-                            <span class="material-icons">star</span>
-                            <span class="material-icons">star_half</span>
-                        </div>
-                        <span
-                            class="text-sm font-medium text-gray-500 dark:text-gray-400 underline decoration-gray-300 decoration-1 underline-offset-4 cursor-pointer hover:text-primary transition-colors">4.8
-                            (124 Reseñas)</span>
-                    </div>
-                    <div class="mb-8 border-l-4 border-secondary pl-6 py-1">
-                        <p class="text-lg text-gray-600 dark:text-gray-300 leading-relaxed font-light">
-                            Experimenta la pureza de la naturaleza con nuestra miel 100% cruda. Cosechada de forma
-                            sostenible en bosques nativos, sin procesos industriales que alteren sus enzimas vivas. Un
-                            superalimento dorado para tu bienestar diario.
+                        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight drop-shadow-sm">
+                            Tu Salud Comienza <br />
+                            <span class="text-secondary">Con Lo Natural</span>
+                        </h1>
+                        <p class="text-lg md:text-xl text-green-50 max-w-lg font-light leading-relaxed">
+                            Descubre nuestra selección premium de alimentos orgánicos, sin procesar y llenos de vida
+                            para ti y tu familia.
                         </p>
-                    </div>
-                    <div class="flex items-end gap-4 mb-8">
-                        <span class="text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight">$9.99</span>
-                        <div class="flex flex-col mb-1.5">
-                            <span class="text-xl text-gray-400 line-through decoration-gray-400">$12.50</span>
-                            <span
-                                class="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded uppercase tracking-wide w-max mt-1">Ahorra
-                                20%</span>
+                        <div class="flex flex-wrap gap-4 pt-4">
+                            <button
+                                class="bg-white text-primary-dark font-bold py-3 px-8 rounded-full shadow-lg hover:bg-secondary hover:text-primary-dark transition-all duration-300 transform hover:-translate-y-1 flex items-center gap-2">
+                                Comprar Ahora
+                                <span class="material-icons text-sm">arrow_forward</span>
+                            </button>
+                            <button
+                                class="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-full hover:bg-white/10 transition-all duration-300">
+                                Ver Catálogo
+                            </button>
                         </div>
                     </div>
-                    <div class="w-full h-px bg-gray-100 dark:bg-gray-700/50 mb-8"></div>
-                    <div class="flex flex-col sm:flex-row gap-4 mb-10">
+                    <div class="hidden md:flex justify-end items-center h-full relative">
                         <div
-                            class="flex items-center border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 w-36 h-14 hover:border-primary transition-colors group">
-                            <button
-                                class="w-12 h-full flex items-center justify-center text-gray-400 hover:text-primary transition-colors focus:outline-none active:scale-90 transform duration-100">
-                                <span class="material-icons">remove</span>
-                            </button>
-                            <input
-                                class="w-full text-center border-0 bg-transparent p-0 text-gray-900 dark:text-white font-bold focus:ring-0 text-xl group-hover:text-primary transition-colors"
-                                min="1" type="number" value="1" />
-                            <button
-                                class="w-12 h-full flex items-center justify-center text-gray-400 hover:text-primary transition-colors focus:outline-none active:scale-90 transform duration-100">
-                                <span class="material-icons">add</span>
-                            </button>
-                        </div>
-                        <button
-                            class="flex-grow bg-primary hover:bg-primary-dark text-white font-bold text-lg h-14 px-8 rounded-xl hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-3">
-                            <span class="material-icons">shopping_cart</span>
-                            Añadir al Carrito
-                        </button>
-                    </div>
-                    <div class="grid grid-cols-2 gap-6 pt-2">
-                        <div class="flex items-center gap-4">
+                            class="relative w-80 h-80 lg:w-96 lg:h-96 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30 shadow-2xl animate-pulse">
                             <div
-                                class="w-12 h-12 rounded-full bg-secondary/20 flex items-center justify-center flex-shrink-0 text-primary-dark">
-                                <span class="material-icons text-2xl">verified_user</span>
+                                class="absolute inset-4 bg-white/10 rounded-full border border-white/20 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-white text-[180px] drop-shadow-2xl">
+                                    nutrition
+                                </span>
                             </div>
-                            <div>
-                                <span class="block text-sm font-bold text-gray-900 dark:text-white">Calidad
-                                    Garantizada</span>
-                                <span class="text-xs text-gray-500 dark:text-gray-400">Si no te gusta, lo
-                                    devolvemos</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4">
                             <div
-                                class="w-12 h-12 rounded-full bg-secondary/20 flex items-center justify-center flex-shrink-0 text-primary-dark">
-                                <span class="material-icons text-2xl">lock</span>
+                                class="absolute -top-4 -right-4 bg-white text-primary font-bold p-4 rounded-xl shadow-lg transform rotate-6">
+                                <div class="flex items-center gap-2">
+                                    <span class="material-icons text-yellow-500">star</span>
+                                    <span>Top Quality</span>
+                                </div>
                             </div>
-                            <div>
-                                <span class="block text-sm font-bold text-gray-900 dark:text-white">Pago Seguro</span>
-                                <span class="text-xs text-gray-500 dark:text-gray-400">Transacción 100%
-                                    encriptada</span>
+                            <div
+                                class="absolute bottom-10 -left-10 bg-accent text-white p-3 rounded-xl shadow-lg transform -rotate-6 flex items-center gap-2">
+                                <span class="material-icons">eco</span>
+                                <span class="font-semibold">Eco Friendly</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="bg-white dark:bg-surface-dark rounded-3xl border border-gray-100 dark:border-gray-700 p-8 md:p-12 mb-12"
-            id="reviews-section">
-            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-10">
+        </section>
+        <section class="mb-16">
+            <div class="flex justify-between items-end mb-8">
                 <div>
-                    <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Opiniones de
-                        Clientes</h2>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Comparte tu experiencia con este producto
-                    </p>
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-2">Categorías Populares
+                    </h2>
+                    <p class="text-gray-500 dark:text-gray-400">Explora lo que nuestros clientes aman</p>
                 </div>
-                <button
-                    class="bg-primary hover:bg-primary-dark text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 flex items-center gap-2">
-                    <span class="material-icons text-sm">rate_review</span>
-                    Escribir un comentario
-                </button>
-            </div>
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-                <div class="lg:col-span-4 xl:col-span-3 space-y-6">
-                    <div class="bg-[#F8FCFA] dark:bg-gray-800 rounded-2xl p-6 text-center border border-secondary/30">
-                        <div class="text-6xl font-extrabold text-gray-900 dark:text-white mb-2 leading-none">4.8</div>
-                        <div class="flex justify-center text-yellow-400 text-xl mb-3">
-                            <span class="material-icons">star</span>
-                            <span class="material-icons">star</span>
-                            <span class="material-icons">star</span>
-                            <span class="material-icons">star</span>
-                            <span class="material-icons">star_half</span>
-                        </div>
-                        <p class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide text-xs">
-                            Basado en 124 reseñas</p>
-                    </div>
-                    <div class="space-y-3 px-1">
-                        <div class="flex items-center gap-3 text-xs">
-                            <span class="font-bold w-3 text-gray-700 dark:text-gray-300">5</span>
-                            <span class="material-icons text-yellow-400 text-[14px] -ml-1">star</span>
-                            <div class="flex-grow h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
-                                <div class="h-full bg-primary w-[80%] rounded-full"></div>
-                            </div>
-                            <span class="text-gray-400 font-medium w-8 text-right">80%</span>
-                        </div>
-                        <div class="flex items-center gap-3 text-xs">
-                            <span class="font-bold w-3 text-gray-700 dark:text-gray-300">4</span>
-                            <span class="material-icons text-yellow-400 text-[14px] -ml-1">star</span>
-                            <div class="flex-grow h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
-                                <div class="h-full bg-primary w-[15%] rounded-full"></div>
-                            </div>
-                            <span class="text-gray-400 font-medium w-8 text-right">15%</span>
-                        </div>
-                        <div class="flex items-center gap-3 text-xs">
-                            <span class="font-bold w-3 text-gray-700 dark:text-gray-300">3</span>
-                            <span class="material-icons text-yellow-400 text-[14px] -ml-1">star</span>
-                            <div class="flex-grow h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
-                                <div class="h-full bg-primary w-[3%] rounded-full"></div>
-                            </div>
-                            <span class="text-gray-400 font-medium w-8 text-right">3%</span>
-                        </div>
-                        <div class="flex items-center gap-3 text-xs">
-                            <span class="font-bold w-3 text-gray-700 dark:text-gray-300">2</span>
-                            <span class="material-icons text-yellow-400 text-[14px] -ml-1">star</span>
-                            <div class="flex-grow h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
-                                <div class="h-full bg-primary w-[1%] rounded-full"></div>
-                            </div>
-                            <span class="text-gray-400 font-medium w-8 text-right">1%</span>
-                        </div>
-                        <div class="flex items-center gap-3 text-xs">
-                            <span class="font-bold w-3 text-gray-700 dark:text-gray-300">1</span>
-                            <span class="material-icons text-yellow-400 text-[14px] -ml-1">star</span>
-                            <div class="flex-grow h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
-                                <div class="h-full bg-primary w-[1%] rounded-full"></div>
-                            </div>
-                            <span class="text-gray-400 font-medium w-8 text-right">1%</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="lg:col-span-8 xl:col-span-9">
-                    <div class="flex flex-col gap-6">
-                        <div
-                            class="bg-[#F8FCFA] dark:bg-gray-800/50 p-6 rounded-2xl border border-gray-100 dark:border-gray-700">
-                            <div class="flex justify-between items-start mb-3">
-                                <div class="flex items-center gap-3">
-                                    <div
-                                        class="w-10 h-10 rounded-full bg-secondary text-primary-dark font-bold text-sm flex items-center justify-center border-2 border-white dark:border-gray-700 shadow-sm">
-                                        MP
-                                    </div>
-                                    <div>
-                                        <h4 class="font-bold text-gray-900 dark:text-white text-sm">Maria Perez</h4>
-                                        <div class="flex text-yellow-400 text-xs mt-0.5">
-                                            <span class="material-icons text-sm">star</span>
-                                            <span class="material-icons text-sm">star</span>
-                                            <span class="material-icons text-sm">star</span>
-                                            <span class="material-icons text-sm">star</span>
-                                            <span class="material-icons text-sm">star</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <span
-                                    class="text-xs font-medium text-gray-400 bg-white dark:bg-gray-700 px-2 py-1 rounded-md border border-gray-100 dark:border-gray-600">Hace
-                                    2 días</span>
-                            </div>
-                            <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed pl-[52px]">
-                                Excelente calidad, se nota que es pura desde el primer momento. El sabor es intenso pero
-                                muy agradable. Definitivamente volveré a comprar este producto.
-                            </p>
-                        </div>
-                        <div
-                            class="bg-white dark:bg-surface-dark p-6 rounded-2xl border border-gray-100 dark:border-gray-700 hover:bg-[#F8FCFA] dark:hover:bg-gray-800/50 transition-colors">
-                            <div class="flex justify-between items-start mb-3">
-                                <div class="flex items-center gap-3">
-                                    <div
-                                        class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-300 font-bold text-sm flex items-center justify-center border-2 border-white dark:border-gray-600">
-                                        JR
-                                    </div>
-                                    <div>
-                                        <h4 class="font-bold text-gray-900 dark:text-white text-sm">Juan Rodriguez</h4>
-                                        <div class="flex text-yellow-400 text-xs mt-0.5">
-                                            <span class="material-icons text-sm">star</span>
-                                            <span class="material-icons text-sm">star</span>
-                                            <span class="material-icons text-sm">star</span>
-                                            <span class="material-icons text-sm">star</span>
-                                            <span
-                                                class="material-icons text-gray-300 dark:text-gray-600 text-sm">star</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <span
-                                    class="text-xs font-medium text-gray-400 bg-white dark:bg-gray-700 px-2 py-1 rounded-md border border-gray-100 dark:border-gray-600">Hace
-                                    1 semana</span>
-                            </div>
-                            <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed pl-[52px]">
-                                El producto llegó muy rápido y bien protegido. La miel es deliciosa, aunque el frasco es
-                                un poco más pequeño de lo que esperaba por la foto. Aún así, vale la pena por la calidad
-                                orgánica.
-                            </p>
-                        </div>
-                        <div
-                            class="bg-white dark:bg-surface-dark p-6 rounded-2xl border border-gray-100 dark:border-gray-700 hover:bg-[#F8FCFA] dark:hover:bg-gray-800/50 transition-colors">
-                            <div class="flex justify-between items-start mb-3">
-                                <div class="flex items-center gap-3">
-                                    <div
-                                        class="w-10 h-10 rounded-full bg-accent/20 text-accent font-bold text-sm flex items-center justify-center border-2 border-white dark:border-gray-600">
-                                        LC
-                                    </div>
-                                    <div>
-                                        <h4 class="font-bold text-gray-900 dark:text-white text-sm">Lucía Castillo</h4>
-                                        <div class="flex text-yellow-400 text-xs mt-0.5">
-                                            <span class="material-icons text-sm">star</span>
-                                            <span class="material-icons text-sm">star</span>
-                                            <span class="material-icons text-sm">star</span>
-                                            <span class="material-icons text-sm">star</span>
-                                            <span class="material-icons text-sm">star</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <span
-                                    class="text-xs font-medium text-gray-400 bg-white dark:bg-gray-700 px-2 py-1 rounded-md border border-gray-100 dark:border-gray-600">Hace
-                                    2 semanas</span>
-                            </div>
-                            <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed pl-[52px]">
-                                Me encanta usarla para endulzar mis tés y postres saludables. Es un endulzante natural
-                                maravilloso y me siento bien dándole esto a mi familia en lugar de azúcar refinada.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="mt-8 pt-4 text-center border-t border-gray-100 dark:border-gray-700">
-                        <button
-                            class="text-primary hover:text-primary-dark font-bold text-sm hover:underline transition-all flex items-center justify-center gap-1 mx-auto group">
-                            Cargar más comentarios
-                            <span
-                                class="material-icons text-lg group-hover:translate-y-0.5 transition-transform">expand_more</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="mt-8 mb-12">
-            <div class="flex items-center justify-between mb-8">
-                <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Productos Recomendados
-                </h2>
-                <a class="text-primary hover:text-primary-dark text-sm font-bold flex items-center gap-1 group"
+                <a class="hidden md:flex items-center gap-1 text-primary font-semibold hover:text-primary-dark transition-colors"
                     href="#">
-                    Ver todo
-                    <span
-                        class="material-icons text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    Ver todas <span class="material-icons text-sm">chevron_right</span>
                 </a>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div
-                    class="bg-white dark:bg-surface-dark border border-gray-100 dark:border-gray-700 rounded-2xl p-4 hover:border-primary transition-colors cursor-pointer group">
-                    <div
-                        class="bg-gray-50 dark:bg-gray-800 rounded-xl aspect-square flex items-center justify-center mb-4 relative overflow-hidden">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                <a class="group relative rounded-xl overflow-hidden aspect-[4/5] shadow-sm hover:shadow-xl transition-all duration-300"
+                    href="#">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
+                    <div class="absolute inset-0 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
                         <span
-                            class="material-symbols-outlined text-6xl text-primary/30 group-hover:scale-110 transition-transform duration-500">spa</span>
-                        <div
-                            class="absolute top-2 right-2 bg-secondary/30 text-primary-dark text-[10px] font-bold px-2 py-1 rounded">
-                            NUEVO</div>
+                            class="material-symbols-outlined text-gray-400 text-6xl group-hover:scale-110 transition-transform duration-500">grocery</span>
                     </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-1 truncate">Aceite de Coco Virgen</h3>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Prensado en frío</p>
-                    <div class="flex items-center justify-between">
-                        <span class="font-bold text-primary text-lg">$14.50</span>
+                    <div
+                        class="absolute bottom-0 left-0 p-4 z-20 w-full transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                        <h3 class="text-white font-bold text-lg md:text-xl mb-1">Despensa</h3>
+                        <p
+                            class="text-gray-200 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            Harinas, granos y más</p>
+                    </div>
+                </a>
+                <a class="group relative rounded-xl overflow-hidden aspect-[4/5] shadow-sm hover:shadow-xl transition-all duration-300"
+                    href="#">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
+                    <div class="absolute inset-0 bg-green-100 dark:bg-gray-700 flex items-center justify-center">
+                        <span
+                            class="material-symbols-outlined text-green-300 text-6xl group-hover:scale-110 transition-transform duration-500">eco</span>
+                    </div>
+                    <div
+                        class="absolute bottom-0 left-0 p-4 z-20 w-full transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                        <h3 class="text-white font-bold text-lg md:text-xl mb-1">Superfoods</h3>
+                        <p
+                            class="text-gray-200 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            Maca, espirulina, cacao</p>
+                    </div>
+                </a>
+                <a class="group relative rounded-xl overflow-hidden aspect-[4/5] shadow-sm hover:shadow-xl transition-all duration-300"
+                    href="#">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
+                    <div class="absolute inset-0 bg-orange-100 dark:bg-gray-700 flex items-center justify-center">
+                        <span
+                            class="material-symbols-outlined text-orange-300 text-6xl group-hover:scale-110 transition-transform duration-500">cookie</span>
+                    </div>
+                    <div
+                        class="absolute bottom-0 left-0 p-4 z-20 w-full transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                        <h3 class="text-white font-bold text-lg md:text-xl mb-1">Snacks</h3>
+                        <p
+                            class="text-gray-200 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            Sin culpa y deliciosos</p>
+                    </div>
+                </a>
+                <a class="group relative rounded-xl overflow-hidden aspect-[4/5] shadow-sm hover:shadow-xl transition-all duration-300"
+                    href="#">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
+                    <div class="absolute inset-0 bg-blue-100 dark:bg-gray-700 flex items-center justify-center">
+                        <span
+                            class="material-symbols-outlined text-blue-300 text-6xl group-hover:scale-110 transition-transform duration-500">local_drink</span>
+                    </div>
+                    <div
+                        class="absolute bottom-0 left-0 p-4 z-20 w-full transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                        <h3 class="text-white font-bold text-lg md:text-xl mb-1">Bebidas</h3>
+                        <p
+                            class="text-gray-200 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            Jugos, tés y leches</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+        <section class="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-16">
+            <div class="hidden lg:block lg:col-span-1">
+                <div
+                    class="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-5 sticky top-24">
+                    <h3 class="font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+                        <span class="material-icons text-yellow-500">star</span>
+                        Los Más Vendidos
+                    </h3>
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4 group cursor-pointer">
+                            <div
+                                class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center text-primary/40 flex-shrink-0">
+                                <span
+                                    class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform">package_2</span>
+                            </div>
+                            <div>
+                                <h4
+                                    class="text-sm font-semibold text-gray-800 dark:text-gray-200 group-hover:text-primary transition-colors line-clamp-2">
+                                    Harina de Almendras 500g</h4>
+                                <div class="flex items-center gap-1 mt-1">
+                                    <span class="text-xs text-yellow-400 flex">
+                                        <span class="material-icons text-[10px]">star</span>
+                                        <span class="material-icons text-[10px]">star</span>
+                                        <span class="material-icons text-[10px]">star</span>
+                                        <span class="material-icons text-[10px]">star</span>
+                                        <span class="material-icons text-[10px]">star</span>
+                                    </span>
+                                </div>
+                                <span class="text-primary font-bold text-sm block mt-1">$12.50</span>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 group cursor-pointer">
+                            <div
+                                class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center text-primary/40 flex-shrink-0">
+                                <span
+                                    class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform">oil_barrel</span>
+                            </div>
+                            <div>
+                                <h4
+                                    class="text-sm font-semibold text-gray-800 dark:text-gray-200 group-hover:text-primary transition-colors line-clamp-2">
+                                    Aceite de Coco Extra Virgen</h4>
+                                <div class="flex items-center gap-1 mt-1">
+                                    <span class="text-xs text-yellow-400 flex">
+                                        <span class="material-icons text-[10px]">star</span>
+                                        <span class="material-icons text-[10px]">star</span>
+                                        <span class="material-icons text-[10px]">star</span>
+                                        <span class="material-icons text-[10px]">star_half</span>
+                                    </span>
+                                </div>
+                                <span class="text-primary font-bold text-sm block mt-1">$18.00</span>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 group cursor-pointer">
+                            <div
+                                class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center text-primary/40 flex-shrink-0">
+                                <span
+                                    class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform">emoji_nature</span>
+                            </div>
+                            <div>
+                                <h4
+                                    class="text-sm font-semibold text-gray-800 dark:text-gray-200 group-hover:text-primary transition-colors line-clamp-2">
+                                    Miel de Abeja Pura</h4>
+                                <div class="flex items-center gap-1 mt-1">
+                                    <span class="text-xs text-yellow-400 flex">
+                                        <span class="material-icons text-[10px]">star</span>
+                                        <span class="material-icons text-[10px]">star</span>
+                                        <span class="material-icons text-[10px]">star</span>
+                                        <span class="material-icons text-[10px]">star</span>
+                                        <span class="material-icons text-[10px]">star</span>
+                                    </span>
+                                </div>
+                                <span class="text-primary font-bold text-sm block mt-1">$9.99</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button
+                        class="w-full mt-6 py-2 text-sm text-primary border border-primary rounded-lg hover:bg-primary hover:text-white transition-colors font-medium">
+                        Ver Top Ventas
+                    </button>
+                </div>
+            </div>
+            <div class="col-span-1 lg:col-span-3">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Nuevos Ingresos</h2>
+                    <div class="flex gap-2">
                         <button
-                            class="w-8 h-8 rounded-full bg-secondary/30 text-primary-dark flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
-                            <span class="material-icons text-sm">add</span>
+                            class="w-8 h-8 rounded-full border border-gray-300 dark:border-gray-600 flex items-center justify-center text-gray-500 hover:bg-primary hover:text-white hover:border-primary transition-all">
+                            <span class="material-icons text-sm">chevron_left</span>
+                        </button>
+                        <button
+                            class="w-8 h-8 rounded-full border border-gray-300 dark:border-gray-600 flex items-center justify-center text-gray-500 hover:bg-primary hover:text-white hover:border-primary transition-all">
+                            <span class="material-icons text-sm">chevron_right</span>
                         </button>
                     </div>
                 </div>
-                <div
-                    class="bg-white dark:bg-surface-dark border border-gray-100 dark:border-gray-700 rounded-2xl p-4 hover:border-primary transition-colors cursor-pointer group">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div
-                        class="bg-gray-50 dark:bg-gray-800 rounded-xl aspect-square flex items-center justify-center mb-4 relative overflow-hidden">
-                        <span
-                            class="material-symbols-outlined text-6xl text-primary/30 group-hover:scale-110 transition-transform duration-500">grain</span>
+                        class="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-all duration-300 group flex flex-col">
+                        <div class="relative p-4 flex-shrink-0">
+                            <span
+                                class="absolute top-4 left-4 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded-full z-10">-15%</span>
+                            <button
+                                class="absolute top-4 right-4 text-gray-300 hover:text-red-500 transition-colors z-10">
+                                <span class="material-icons">favorite_border</span>
+                            </button>
+                            <div
+                                class="bg-background-light dark:bg-gray-800 rounded-lg aspect-square flex items-center justify-center overflow-hidden relative">
+                                <span
+                                    class="material-symbols-outlined text-primary/30 text-8xl group-hover:scale-105 transition-transform duration-500">egg_alt</span>
+                            </div>
+                        </div>
+                        <div class="px-4 pb-4 flex flex-col flex-grow">
+                            <div class="mb-2">
+                                <span class="text-xs text-gray-400 font-medium">Lácteos &amp; Huevos</span>
+                                <h3
+                                    class="text-base font-bold text-gray-800 dark:text-gray-100 line-clamp-2 h-12 group-hover:text-primary transition-colors cursor-pointer">
+                                    Huevos de Gallina Feliz 12u
+                                </h3>
+                            </div>
+                            <div class="flex items-center gap-1 mb-3">
+                                <span class="text-yellow-400 text-xs flex">
+                                    <span class="material-icons text-sm">star</span>
+                                    <span class="material-icons text-sm">star</span>
+                                    <span class="material-icons text-sm">star</span>
+                                    <span class="material-icons text-sm">star</span>
+                                    <span class="material-icons text-sm text-gray-300">star</span>
+                                </span>
+                                <span class="text-xs text-gray-400">(24)</span>
+                            </div>
+                            <div class="mt-auto flex items-center justify-between">
+                                <div class="flex flex-col">
+                                    <span class="text-xs text-gray-400 line-through">$6.50</span>
+                                    <span class="text-lg font-bold text-primary">$5.52</span>
+                                </div>
+                                <button
+                                    class="bg-secondary/20 hover:bg-primary hover:text-white text-primary rounded-full w-10 h-10 flex items-center justify-center transition-all duration-300">
+                                    <span class="material-icons text-xl">add_shopping_cart</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-1 truncate">Semillas de Chía</h3>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Ricas en Omega-3</p>
-                    <div class="flex items-center justify-between">
-                        <span class="font-bold text-primary text-lg">$8.20</span>
-                        <button
-                            class="w-8 h-8 rounded-full bg-secondary/30 text-primary-dark flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
-                            <span class="material-icons text-sm">add</span>
-                        </button>
-                    </div>
-                </div>
-                <div
-                    class="bg-white dark:bg-surface-dark border border-gray-100 dark:border-gray-700 rounded-2xl p-4 hover:border-primary transition-colors cursor-pointer group">
                     <div
-                        class="bg-gray-50 dark:bg-gray-800 rounded-xl aspect-square flex items-center justify-center mb-4 relative overflow-hidden">
-                        <span
-                            class="material-symbols-outlined text-6xl text-primary/30 group-hover:scale-110 transition-transform duration-500">eco</span>
-                        <div
-                            class="absolute top-2 right-2 bg-red-50 text-red-500 text-[10px] font-bold px-2 py-1 rounded">
-                            -15%</div>
+                        class="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-all duration-300 group flex flex-col">
+                        <div class="relative p-4 flex-shrink-0">
+                            <span
+                                class="absolute top-4 left-4 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded-full z-10">NUEVO</span>
+                            <button
+                                class="absolute top-4 right-4 text-gray-300 hover:text-red-500 transition-colors z-10">
+                                <span class="material-icons">favorite_border</span>
+                            </button>
+                            <div
+                                class="bg-background-light dark:bg-gray-800 rounded-lg aspect-square flex items-center justify-center overflow-hidden relative">
+                                <span
+                                    class="material-symbols-outlined text-primary/30 text-8xl group-hover:scale-105 transition-transform duration-500">medication_liquid</span>
+                            </div>
+                        </div>
+                        <div class="px-4 pb-4 flex flex-col flex-grow">
+                            <div class="mb-2">
+                                <span class="text-xs text-gray-400 font-medium">Bebidas</span>
+                                <h3
+                                    class="text-base font-bold text-gray-800 dark:text-gray-100 line-clamp-2 h-12 group-hover:text-primary transition-colors cursor-pointer">
+                                    Leche de Almendras S/A 1L
+                                </h3>
+                            </div>
+                            <div class="flex items-center gap-1 mb-3">
+                                <span class="text-yellow-400 text-xs flex">
+                                    <span class="material-icons text-sm">star</span>
+                                    <span class="material-icons text-sm">star</span>
+                                    <span class="material-icons text-sm">star</span>
+                                    <span class="material-icons text-sm">star</span>
+                                    <span class="material-icons text-sm">star</span>
+                                </span>
+                                <span class="text-xs text-gray-400">(12)</span>
+                            </div>
+                            <div class="mt-auto flex items-center justify-between">
+                                <div class="flex flex-col">
+                                    <span class="text-lg font-bold text-primary">$4.20</span>
+                                </div>
+                                <button
+                                    class="bg-secondary/20 hover:bg-primary hover:text-white text-primary rounded-full w-10 h-10 flex items-center justify-center transition-all duration-300">
+                                    <span class="material-icons text-xl">add_shopping_cart</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-1 truncate">Té Matcha Ceremonial</h3>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Energía y antioxidantes</p>
-                    <div class="flex items-center justify-between">
-                        <span class="font-bold text-primary text-lg">$22.00</span>
-                        <button
-                            class="w-8 h-8 rounded-full bg-secondary/30 text-primary-dark flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
-                            <span class="material-icons text-sm">add</span>
-                        </button>
-                    </div>
-                </div>
-                <div
-                    class="bg-white dark:bg-surface-dark border border-gray-100 dark:border-gray-700 rounded-2xl p-4 hover:border-primary transition-colors cursor-pointer group">
                     <div
-                        class="bg-gray-50 dark:bg-gray-800 rounded-xl aspect-square flex items-center justify-center mb-4 relative overflow-hidden">
-                        <span
-                            class="material-symbols-outlined text-6xl text-primary/30 group-hover:scale-110 transition-transform duration-500">grass</span>
+                        class="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-all duration-300 group flex flex-col">
+                        <div class="relative p-4 flex-shrink-0">
+                            <button
+                                class="absolute top-4 right-4 text-gray-300 hover:text-red-500 transition-colors z-10">
+                                <span class="material-icons">favorite_border</span>
+                            </button>
+                            <div
+                                class="bg-background-light dark:bg-gray-800 rounded-lg aspect-square flex items-center justify-center overflow-hidden relative">
+                                <span
+                                    class="material-symbols-outlined text-primary/30 text-8xl group-hover:scale-105 transition-transform duration-500">nutrition</span>
+                            </div>
+                        </div>
+                        <div class="px-4 pb-4 flex flex-col flex-grow">
+                            <div class="mb-2">
+                                <span class="text-xs text-gray-400 font-medium">Frutas &amp; Verduras</span>
+                                <h3
+                                    class="text-base font-bold text-gray-800 dark:text-gray-100 line-clamp-2 h-12 group-hover:text-primary transition-colors cursor-pointer">
+                                    Mix de Frutos Secos 250g
+                                </h3>
+                            </div>
+                            <div class="flex items-center gap-1 mb-3">
+                                <span class="text-yellow-400 text-xs flex">
+                                    <span class="material-icons text-sm">star</span>
+                                    <span class="material-icons text-sm">star</span>
+                                    <span class="material-icons text-sm">star</span>
+                                    <span class="material-icons text-sm">star_half</span>
+                                    <span class="material-icons text-sm text-gray-300">star</span>
+                                </span>
+                                <span class="text-xs text-gray-400">(45)</span>
+                            </div>
+                            <div class="mt-auto flex items-center justify-between">
+                                <div class="flex flex-col">
+                                    <span class="text-lg font-bold text-primary">$8.50</span>
+                                </div>
+                                <button
+                                    class="bg-secondary/20 hover:bg-primary hover:text-white text-primary rounded-full w-10 h-10 flex items-center justify-center transition-all duration-300">
+                                    <span class="material-icons text-xl">add_shopping_cart</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-1 truncate">Quinoa Real Orgánica</h3>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Proteína vegetal completa</p>
-                    <div class="flex items-center justify-between">
-                        <span class="font-bold text-primary text-lg">$6.75</span>
-                        <button
-                            class="w-8 h-8 rounded-full bg-secondary/30 text-primary-dark flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
-                            <span class="material-icons text-sm">add</span>
-                        </button>
+                    <div
+                        class="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-all duration-300 group flex flex-col">
+                        <div class="relative p-4 flex-shrink-0">
+                            <div
+                                class="absolute top-4 left-4 bg-orange-400 text-white text-[10px] font-bold px-2 py-1 rounded-full z-10">
+                                HOT</div>
+                            <button
+                                class="absolute top-4 right-4 text-gray-300 hover:text-red-500 transition-colors z-10">
+                                <span class="material-icons">favorite_border</span>
+                            </button>
+                            <div
+                                class="bg-background-light dark:bg-gray-800 rounded-lg aspect-square flex items-center justify-center overflow-hidden relative">
+                                <span
+                                    class="material-symbols-outlined text-primary/30 text-8xl group-hover:scale-105 transition-transform duration-500">set_meal</span>
+                            </div>
+                        </div>
+                        <div class="px-4 pb-4 flex flex-col flex-grow">
+                            <div class="mb-2">
+                                <span class="text-xs text-gray-400 font-medium">Pastas</span>
+                                <h3
+                                    class="text-base font-bold text-gray-800 dark:text-gray-100 line-clamp-2 h-12 group-hover:text-primary transition-colors cursor-pointer">
+                                    Pasta Integral Fusilli
+                                </h3>
+                            </div>
+                            <div class="flex items-center gap-1 mb-3">
+                                <span class="text-yellow-400 text-xs flex">
+                                    <span class="material-icons text-sm">star</span>
+                                    <span class="material-icons text-sm">star</span>
+                                    <span class="material-icons text-sm">star</span>
+                                    <span class="material-icons text-sm">star</span>
+                                    <span class="material-icons text-sm">star</span>
+                                </span>
+                                <span class="text-xs text-gray-400">(89)</span>
+                            </div>
+                            <div class="mt-auto flex items-center justify-between">
+                                <div class="flex flex-col">
+                                    <span class="text-lg font-bold text-primary">$3.10</span>
+                                </div>
+                                <button
+                                    class="bg-secondary/20 hover:bg-primary hover:text-white text-primary rounded-full w-10 h-10 flex items-center justify-center transition-all duration-300">
+                                    <span class="material-icons text-xl">add_shopping_cart</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-all duration-300 group flex flex-col">
+                        <div class="relative p-4 flex-shrink-0">
+                            <button
+                                class="absolute top-4 right-4 text-gray-300 hover:text-red-500 transition-colors z-10">
+                                <span class="material-icons">favorite_border</span>
+                            </button>
+                            <div
+                                class="bg-background-light dark:bg-gray-800 rounded-lg aspect-square flex items-center justify-center overflow-hidden relative">
+                                <span
+                                    class="material-symbols-outlined text-primary/30 text-8xl group-hover:scale-105 transition-transform duration-500">eco</span>
+                            </div>
+                        </div>
+                        <div class="px-4 pb-4 flex flex-col flex-grow">
+                            <div class="mb-2">
+                                <span class="text-xs text-gray-400 font-medium">Verduras</span>
+                                <h3
+                                    class="text-base font-bold text-gray-800 dark:text-gray-100 line-clamp-2 h-12 group-hover:text-primary transition-colors cursor-pointer">
+                                    Espinaca Orgánica Fresca
+                                </h3>
+                            </div>
+                            <div class="flex items-center gap-1 mb-3">
+                                <span class="text-yellow-400 text-xs flex">
+                                    <span class="material-icons text-sm">star</span>
+                                    <span class="material-icons text-sm">star</span>
+                                    <span class="material-icons text-sm">star</span>
+                                    <span class="material-icons text-sm">star</span>
+                                    <span class="material-icons text-sm text-gray-300">star</span>
+                                </span>
+                                <span class="text-xs text-gray-400">(32)</span>
+                            </div>
+                            <div class="mt-auto flex items-center justify-between">
+                                <div class="flex flex-col">
+                                    <span class="text-lg font-bold text-primary">$2.50</span>
+                                </div>
+                                <button
+                                    class="bg-secondary/20 hover:bg-primary hover:text-white text-primary rounded-full w-10 h-10 flex items-center justify-center transition-all duration-300">
+                                    <span class="material-icons text-xl">add_shopping_cart</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-all duration-300 group flex flex-col">
+                        <div class="relative p-4 flex-shrink-0">
+                            <button
+                                class="absolute top-4 right-4 text-gray-300 hover:text-red-500 transition-colors z-10">
+                                <span class="material-icons">favorite_border</span>
+                            </button>
+                            <div
+                                class="bg-background-light dark:bg-gray-800 rounded-lg aspect-square flex items-center justify-center overflow-hidden relative">
+                                <span
+                                    class="material-symbols-outlined text-primary/30 text-8xl group-hover:scale-105 transition-transform duration-500">bakery_dining</span>
+                            </div>
+                        </div>
+                        <div class="px-4 pb-4 flex flex-col flex-grow">
+                            <div class="mb-2">
+                                <span class="text-xs text-gray-400 font-medium">Panadería</span>
+                                <h3
+                                    class="text-base font-bold text-gray-800 dark:text-gray-100 line-clamp-2 h-12 group-hover:text-primary transition-colors cursor-pointer">
+                                    Pan de Masa Madre Integral
+                                </h3>
+                            </div>
+                            <div class="flex items-center gap-1 mb-3">
+                                <span class="text-yellow-400 text-xs flex">
+                                    <span class="material-icons text-sm">star</span>
+                                    <span class="material-icons text-sm">star</span>
+                                    <span class="material-icons text-sm">star</span>
+                                    <span class="material-icons text-sm">star</span>
+                                    <span class="material-icons text-sm">star</span>
+                                </span>
+                                <span class="text-xs text-gray-400">(156)</span>
+                            </div>
+                            <div class="mt-auto flex items-center justify-between">
+                                <div class="flex flex-col">
+                                    <span class="text-lg font-bold text-primary">$4.00</span>
+                                </div>
+                                <button
+                                    class="bg-secondary/20 hover:bg-primary hover:text-white text-primary rounded-full w-10 h-10 flex items-center justify-center transition-all duration-300">
+                                    <span class="material-icons text-xl">add_shopping_cart</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
+        <section
+            class="rounded-2xl overflow-hidden bg-secondary/30 mb-8 p-6 md:p-10 flex flex-col md:flex-row items-center gap-8 relative">
+            <div
+                class="absolute inset-0 z-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/leaf.png')]">
+            </div>
+            <div class="md:w-1/2 relative z-10">
+                <span class="text-primary-dark font-bold uppercase tracking-widest text-sm mb-2 block">Oferta
+                    Especial</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-4">Envío Gratis en
+                    tu<br />Primera Compra</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-6 max-w-md">Únete a nuestra comunidad saludable y recibe
+                    tus productos orgánicos favoritos en la puerta de tu casa sin costo de envío.</p>
+                <button
+                    class="bg-primary text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-primary-dark transition-all duration-300 transform hover:-translate-y-1">
+                    Registrarme Ahora
+                </button>
+            </div>
+            <div class="md:w-1/2 flex justify-center relative z-10">
+                <div class="bg-white p-6 rounded-full shadow-xl animate-bounce">
+                    <span class="material-symbols-outlined text-primary text-8xl">local_shipping</span>
+                </div>
+            </div>
+        </section>
     </main>
-    <footer class="bg-white dark:bg-surface-dark border-t border-gray-200 dark:border-gray-700 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-12 mb-12">
+    <footer class="bg-gray-100 dark:bg-surface-dark border-t border-gray-200 dark:border-gray-700 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 py-10 md:py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
                 <div class="col-span-1 md:col-span-1">
-                    <a class="flex items-end gap-2 group cursor-pointer mb-6" href="#">
+                    <a class="flex items-end gap-2 group cursor-pointer mb-4" href="#">
                         <div class="relative h-10 w-10 flex-shrink-0">
                             <div
                                 class="absolute top-0 left-0 h-7 w-3.5 bg-secondary rounded-tl-md rounded-bl-md opacity-80">
@@ -664,30 +884,30 @@
                                 GEEK</h3>
                         </div>
                     </a>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
                         Tu tienda de confianza para productos orgánicos, naturales y saludables. Cuidamos de ti y del
-                        planeta con cada entrega.
+                        planeta.
                     </p>
-                    <div class="flex gap-3">
-                        <a class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white transition-all"
+                    <div class="flex gap-4">
+                        <a class="w-10 h-10 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white transition-all shadow-sm"
                             href="#">
-                            <svg aria-hidden="true" class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                            <svg aria-hidden="true" class="w-5 h-5 fill-current" viewBox="0 0 24 24">
                                 <path clip-rule="evenodd"
                                     d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"
                                     fill-rule="evenodd"></path>
                             </svg>
                         </a>
-                        <a class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white transition-all"
+                        <a class="w-10 h-10 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white transition-all shadow-sm"
                             href="#">
-                            <svg aria-hidden="true" class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                            <svg aria-hidden="true" class="w-5 h-5 fill-current" viewBox="0 0 24 24">
                                 <path clip-rule="evenodd"
                                     d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.468 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"
                                     fill-rule="evenodd"></path>
                             </svg>
                         </a>
-                        <a class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white transition-all"
+                        <a class="w-10 h-10 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white transition-all shadow-sm"
                             href="#">
-                            <svg aria-hidden="true" class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                            <svg aria-hidden="true" class="w-5 h-5 fill-current" viewBox="0 0 24 24">
                                 <path
                                     d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84">
                                 </path>
@@ -696,58 +916,64 @@
                     </div>
                 </div>
                 <div>
-                    <h4 class="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-5">Compañía
-                    </h4>
+                    <h4
+                        class="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-4 border-b-2 border-primary inline-block pb-1">
+                        Enlaces Rápidos</h4>
                     <ul class="space-y-3 text-sm">
-                        <li><a class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors"
-                                href="#">Acerca de Nosotros</a></li>
-                        <li><a class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors"
-                                href="#">Contacto</a></li>
-                        <li><a class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors"
-                                href="#">Carreras</a></li>
-                        <li><a class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors"
-                                href="#">Sostenibilidad</a></li>
+                        <li><a class="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"
+                                href="#"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Acerca de
+                                Nosotros</a></li>
+                        <li><a class="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"
+                                href="#"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Contacto</a></li>
+                        <li><a class="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"
+                                href="#"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Términos y
+                                Condiciones</a></li>
+                        <li><a class="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"
+                                href="#"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Política de
+                                Privacidad</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-5">Asistencia
-                    </h4>
+                    <h4
+                        class="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-4 border-b-2 border-primary inline-block pb-1">
+                        Categorías</h4>
                     <ul class="space-y-3 text-sm">
-                        <li><a class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors"
-                                href="#">Envíos y Entregas</a></li>
-                        <li><a class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors"
-                                href="#">Devoluciones</a></li>
-                        <li><a class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors"
-                                href="#">Preguntas Frecuentes</a></li>
-                        <li><a class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors"
-                                href="#">Política de Privacidad</a></li>
+                        <li><a class="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors"
+                                href="#">Orgánicos</a></li>
+                        <li><a class="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors"
+                                href="#">Sin Gluten</a></li>
+                        <li><a class="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors"
+                                href="#">Veganos</a></li>
+                        <li><a class="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors"
+                                href="#">Suplementos</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-5">
+                    <h4
+                        class="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-4 border-b-2 border-primary inline-block pb-1">
                         Contáctanos</h4>
-                    <ul class="space-y-4 text-sm text-gray-600 dark:text-gray-400">
+                    <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-400">
                         <li class="flex items-start gap-3">
-                            <span class="material-icons text-primary text-sm mt-0.5">location_on</span>
-                            <span>Av. Siempre Viva 123, Ciudad Saludable, CP 12345</span>
+                            <span class="material-icons text-primary text-lg">location_on</span>
+                            <span>Av. Siempre Viva 123, Ciudad Saludable</span>
                         </li>
-                        <li class="flex items-center gap-3">
-                            <span class="material-icons text-primary text-sm">phone</span>
+                        <li class="flex items-start gap-3">
+                            <span class="material-icons text-primary text-lg">phone</span>
                             <span>+1 234 567 890</span>
                         </li>
-                        <li class="flex items-center gap-3">
-                            <span class="material-icons text-primary text-sm">email</span>
+                        <li class="flex items-start gap-3">
+                            <span class="material-icons text-primary text-lg">email</span>
                             <span>hola@geeknaturalstore.com</span>
                         </li>
                     </ul>
                 </div>
             </div>
             <div
-                class="border-t border-gray-100 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-xs text-gray-400 dark:text-gray-500 text-center md:text-left">
+                class="border-t border-gray-200 dark:border-gray-700 pt-8 mt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-xs text-gray-500 dark:text-gray-500 text-center md:text-left">
                     © 2023 GEEK Natural Store. Todos los derechos reservados.
                 </p>
-                <div class="flex items-center gap-2 opacity-60 grayscale hover:grayscale-0 transition-all">
+                <div class="flex items-center gap-2">
                     <div class="h-6 w-10 bg-gray-200 rounded"></div>
                     <div class="h-6 w-10 bg-gray-200 rounded"></div>
                     <div class="h-6 w-10 bg-gray-200 rounded"></div>
@@ -755,214 +981,11 @@
             </div>
         </div>
     </footer>
-    <input checked="" class="peer hidden" id="auth-modal" type="checkbox" />
-    <div
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none peer-checked:opacity-100 peer-checked:pointer-events-auto transition-opacity duration-300 p-4">
-        <label class="absolute inset-0 cursor-pointer" for="auth-modal"></label>
-        <div
-            class="bg-white dark:bg-surface-dark w-full max-w-[580px] rounded-3xl shadow-2xl overflow-hidden relative z-10 flex flex-col max-h-[90vh] overflow-y-auto scrollbar-hide">
-            <input checked="" class="peer/login hidden" id="tab-login" name="auth_mode" type="radio" />
-            <input class="peer/register hidden" id="tab-register" name="auth_mode" type="radio" />
-            <div class="relative h-28 md:h-32 bg-secondary/30 flex items-center justify-center flex-shrink-0">
-                <div class="absolute top-4 right-4 z-20">
-                    <label
-                        class="w-8 h-8 flex items-center justify-center bg-white/50 hover:bg-white rounded-full text-gray-500 hover:text-gray-800 transition-colors cursor-pointer"
-                        for="auth-modal">
-                        <span class="material-icons text-lg">close</span>
-                    </label>
-                </div>
-                <div class="flex flex-col items-center">
-                    <div class="relative h-12 w-12 mb-2">
-                        <div class="absolute top-0 left-0 h-8 w-4 bg-secondary rounded-tl-lg rounded-bl-lg opacity-80">
-                        </div>
-                        <div class="absolute top-1 left-3 h-10 w-5 bg-primary rounded-t-lg rounded-br-lg z-10"></div>
-                    </div>
-                    <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white font-display tracking-tight">GEEK
-                    </h2>
-                </div>
-            </div>
-            <div
-                class="flex w-[200%] transition-transform duration-500 ease-in-out peer-checked/register:-translate-x-1/2 h-full">
-                <div class="w-1/2 p-6 md:p-8 pt-6 flex flex-col">
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Iniciar Sesión</h3>
-                    <form class="space-y-5 flex-grow">
-                        <div>
-                            <label
-                                class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5"
-                                for="login-email">Correo electrónico</label>
-                            <input
-                                class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:ring-0 focus:border-primary transition-colors"
-                                id="login-email" placeholder="tu@email.com" type="email" />
-                        </div>
-                        <div>
-                            <label
-                                class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5"
-                                for="login-password">Contraseña</label>
-                            <div class="relative">
-                                <input
-                                    class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 pr-10 text-gray-900 dark:text-white focus:ring-0 focus:border-primary transition-colors"
-                                    id="login-password" placeholder="••••••••" type="password" />
-                                <button
-                                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-primary transition-colors focus:outline-none"
-                                    type="button">
-                                    <span class="material-icons text-xl">visibility</span>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <label class="flex items-center gap-2 cursor-pointer">
-                                <input class="w-4 h-4 rounded text-primary border-gray-300 focus:ring-primary"
-                                    type="checkbox" />
-                                <span class="text-sm text-gray-600 dark:text-gray-400">Recordarme</span>
-                            </label>
-                            <a class="text-sm font-bold text-primary hover:text-primary-dark transition-colors"
-                                href="#">¿Olvidaste tu contraseña?</a>
-                        </div>
-                        <button
-                            class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-3.5 rounded-xl shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all transform hover:-translate-y-0.5 mt-2"
-                            type="button">
-                            Iniciar Sesión
-                        </button>
-                    </form>
-                    <div class="mt-8 pt-6 border-t border-gray-100 dark:border-gray-700 text-center">
-                        <p class="text-sm text-gray-600 dark:text-gray-400">
-                            ¿No tienes una cuenta?
-                            <label
-                                class="font-bold text-primary hover:text-primary-dark cursor-pointer ml-1 transition-colors"
-                                for="tab-register">Regístrate aquí</label>
-                        </p>
-                    </div>
-                </div>
-                <div class="w-1/2 p-6 md:p-8 pt-6 flex flex-col h-auto overflow-y-auto">
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Crear Cuenta</h3>
-                    <form class="space-y-4 flex-grow">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label
-                                    class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5"
-                                    for="reg-first-name">Primer Nombre</label>
-                                <input
-                                    class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2.5 text-gray-900 dark:text-white focus:ring-0 focus:border-primary transition-colors"
-                                    id="reg-first-name" placeholder="Juan" type="text" />
-                            </div>
-                            <div>
-                                <label
-                                    class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5"
-                                    for="reg-middle-name">Segundo Nombre (Opcional)</label>
-                                <input
-                                    class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2.5 text-gray-900 dark:text-white focus:ring-0 focus:border-primary transition-colors"
-                                    id="reg-middle-name" placeholder="" type="text" />
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label
-                                    class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5"
-                                    for="reg-last-name-p">Apellido Paterno</label>
-                                <input
-                                    class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2.5 text-gray-900 dark:text-white focus:ring-0 focus:border-primary transition-colors"
-                                    id="reg-last-name-p" placeholder="Pérez" type="text" />
-                            </div>
-                            <div>
-                                <label
-                                    class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5"
-                                    for="reg-last-name-m">Apellido Materno</label>
-                                <input
-                                    class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2.5 text-gray-900 dark:text-white focus:ring-0 focus:border-primary transition-colors"
-                                    id="reg-last-name-m" placeholder="González" type="text" />
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label
-                                    class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5"
-                                    for="reg-ci">C.I. (Carnet de Identidad)</label>
-                                <input
-                                    class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2.5 text-gray-900 dark:text-white focus:ring-0 focus:border-primary transition-colors"
-                                    id="reg-ci" placeholder="1234567" type="text" />
-                            </div>
-                            <div>
-                                <label
-                                    class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5"
-                                    for="reg-mobile">Celular</label>
-                                <input
-                                    class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2.5 text-gray-900 dark:text-white focus:ring-0 focus:border-primary transition-colors"
-                                    id="reg-mobile" placeholder="70012345" type="tel" />
-                            </div>
-                        </div>
-                        <div>
-                            <label
-                                class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5"
-                                for="reg-email">Correo electrónico</label>
-                            <input
-                                class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2.5 text-gray-900 dark:text-white focus:ring-0 focus:border-primary transition-colors"
-                                id="reg-email" placeholder="tu@email.com" type="email" />
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label
-                                    class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5"
-                                    for="reg-password">Contraseña</label>
-                                <div class="relative">
-                                    <input
-                                        class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2.5 pr-10 text-gray-900 dark:text-white focus:ring-0 focus:border-primary transition-colors"
-                                        id="reg-password" placeholder="••••••••" type="password" />
-                                    <button
-                                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-primary transition-colors focus:outline-none"
-                                        type="button">
-                                        <span class="material-icons text-lg">visibility</span>
-                                    </button>
-                                </div>
-                            </div>
-                            <div>
-                                <label
-                                    class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5"
-                                    for="reg-confirm">Confirmar</label>
-                                <div class="relative">
-                                    <input
-                                        class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2.5 pr-10 text-gray-900 dark:text-white focus:ring-0 focus:border-primary transition-colors"
-                                        id="reg-confirm" placeholder="••••••••" type="password" />
-                                    <button
-                                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-primary transition-colors focus:outline-none"
-                                        type="button">
-                                        <span class="material-icons text-lg">visibility</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-2 pt-1">
-                            <input class="mt-1 w-4 h-4 rounded text-primary border-gray-300 focus:ring-primary"
-                                id="terms" type="checkbox" />
-                            <label class="text-xs text-gray-600 dark:text-gray-400 leading-snug cursor-pointer"
-                                for="terms">
-                                Acepto los <a class="text-primary hover:underline" href="#">términos y condiciones</a> y
-                                la política de privacidad.
-                            </label>
-                        </div>
-                        <button
-                            class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-3.5 rounded-xl shadow-lg shadow-secondary/20 hover:shadow-primary/40 transition-all transform hover:-translate-y-0.5 mt-2"
-                            type="button">
-                            Crear Cuenta
-                        </button>
-                    </form>
-                    <div class="mt-6 pt-6 border-t border-gray-100 dark:border-gray-700 text-center">
-                        <p class="text-sm text-gray-600 dark:text-gray-400">
-                            ¿Ya tienes una cuenta?
-                            <label
-                                class="font-bold text-primary hover:text-primary-dark cursor-pointer ml-1 transition-colors"
-                                for="tab-login">Inicia sesión</label>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <script>
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             document.documentElement.classList.add('dark');
         }
     </script>
-    <script s></script>
 </body>
 
 </html>
